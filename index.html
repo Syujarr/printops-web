@@ -134,8 +134,8 @@
           <h3 id="card-running" class="text-3xl font-bold text-cyan-700 leading-none">0</h3>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-purple-600 tracking-wider uppercase">MEMBUTUHKAN PERHATIAN</span>
-          <h3 id="card-attention" class="text-3xl font-bold text-purple-700 leading-none">0</h3>
+          <span class="text-[10px] font-bold text-emerald-600 tracking-wider uppercase">PO SELESAI (ARSIP)</span>
+          <h3 id="card-finished" class="text-3xl font-bold text-emerald-700 leading-none">0</h3>
         </div>
       </div>
 
@@ -144,7 +144,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
-              <div><h4 class="font-bold text-gray-900 text-base uppercase">1. ANTRIAN & DETAIL PO</h4><p class="text-xs text-gray-500">Status antrian order Purchase Order aktif</p></div>
+              <div><h4 class="font-bold text-gray-900 text-base uppercase">1. ANTRIAN & DETAIL PO</h4><p class="text-xs text-gray-500">Status antrian order Purchase Order aktif & selesai</p></div>
               <button onclick="switchTab('poTab')" class="text-xs font-bold text-blue-600 hover:underline">Lihat Semua &rarr;</button>
             </div>
             <div id="dashPoPreview" class="space-y-2"><p class="text-xs text-gray-400">Memuat data PO...</p></div>
@@ -182,7 +182,7 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">ANTRIAN & DETAIL PO</h2>
-          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow.</p>
+          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, edit, update status, dan penghapusan otomatis H+7 selesai.</p>
         </div>
         <button onclick="openPOModal()" class="bg-[#E06D53] text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm">+ Input PO Baru</button>
       </div>
@@ -200,9 +200,9 @@
                 <th class="pb-3">Customer & Detail Produk</th>
                 <th class="pb-3">QTY Target</th>
                 <th class="pb-3">PIC</th>
-                <th class="pb-3">Prioritas</th>
                 <th class="pb-3">Status Flow</th>
-                <th class="pb-3">Aksi</th>
+                <th class="pb-3">Tanggal Selesai</th>
+                <th class="pb-3">Aksi (Edit / Hapus / Status)</th>
               </tr>
             </thead>
             <tbody id="po-table-body" class="divide-y divide-gray-100 text-sm">
@@ -588,15 +588,16 @@
   <!-- MODAL MODUL -->
   <div id="poModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-6">
-      <div class="flex justify-between items-center border-b pb-4"><h3 class="text-lg font-bold uppercase">Input PO Baru</h3><button onclick="closePOModal()" class="text-xl font-bold">&times;</button></div>
+      <div class="flex justify-between items-center border-b pb-4"><h3 id="poModalTitle" class="text-lg font-bold uppercase">Input PO Baru</h3><button onclick="closePOModal()" class="text-xl font-bold">&times;</button></div>
       <form id="poForm" onsubmit="savePO(event)" class="space-y-4">
+        <input type="hidden" id="editPoIndex" value="-1">
         <div class="grid grid-cols-2 gap-4">
           <div><label class="block text-xs font-bold uppercase mb-1">Nomor PO *</label><input type="text" id="poNumber" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="customer" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required class="w-full p-2.5 border rounded-xl text-sm"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"><option value="RIO">RIO</option><option value="RIVAN">RIVAN</option><option value="SALMAN">SALMAN</option><option value="SYUJA">SYUJA</option></select></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="ANTRIAN PEMBAGIAN">ANTRIAN PEMBAGIAN</option><option value="SEDANG DIKERJAKAN">SEDANG DIKERJAKAN</option><option value="SELESAI">SELESAI</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow *</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="ANTRIAN PEMBAGIAN">ANTRIAN PEMBAGIAN</option><option value="READY TO PRINT">READY TO PRINT</option><option value="SEDANG DIKERJAKAN">SEDANG DIKERJAKAN</option><option value="SELESAI">SELESAI</option></select></div>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePOModal()" class="px-5 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-[#E06D53] text-white rounded-xl text-xs font-bold uppercase">Simpan PO</button></div>
       </form>
@@ -740,7 +741,7 @@
     let currentUser = null;
 
     let poList = [
-      { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "ANTRIAN PEMBAGIAN" }
+      { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "ANTRIAN PEMBAGIAN", finishedDate: null }
     ];
     let materials = [
       { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 },
@@ -754,6 +755,24 @@
       { id: 1, poNumber: "PO-2026-001", customer: "PT SERI RASA", outputType: "DESAIN", version: "V1", link: "https://drive.google.com/sample", pic: "RIO", status: "DRAFTING LAYOUT" }
     ];
     let dailyReports = [];
+
+    // Cek otomatis pembersihan PO yang sudah Selesai > H+7 (Simulasi tanggal saat ini: 2026-08-09)
+    function checkAutoDeleteFinishedPOs() {
+      const today = new Date("2026-08-09");
+      poList = poList.filter(p => {
+        if (p.status === "SELESAI" && p.finishedDate) {
+          const finishedDt = new Date(p.finishedDate);
+          const diffTime = today - finishedDt;
+          const diffDays = diffTime / (1000 * 60 * 60 * 24);
+          if (diffDays > 7) {
+            // Hapus juga layout/approval yang terhubung dengan PO ini
+            layoutList = layoutList.filter(l => l.poNumber !== p.number);
+            return false; // Hapus PO
+          }
+        }
+        return true;
+      });
+    }
 
     function handleLogin() {
       const uInput = document.getElementById('loginUsername').value.trim();
@@ -773,6 +792,7 @@
         document.getElementById('maintTech').value = currentUser.name;
         document.getElementById('layoutPic').value = currentUser.name;
 
+        checkAutoDeleteFinishedPOs();
         applyRoleRestrictions();
         switchTab('dashTab');
       } else {
@@ -808,6 +828,8 @@
         alert("Akses Ditolak! Anda tidak memiliki izin ke modul ini.");
         return;
       }
+
+      checkAutoDeleteFinishedPOs();
 
       document.getElementById('dashTabSection').classList.add('hidden');
       document.getElementById('poTabSection').classList.add('hidden');
@@ -869,7 +891,6 @@
         selRibbon.innerHTML += opt;
       });
 
-      // Dropdown PO pada Laporan PIC (hanya PO yang sudah 'READY TO PRINT' atau 'SELESAI')
       const selPo = document.getElementById('reportPoSelect');
       selPo.innerHTML = '';
       const readyPoList = poList.filter(p => p.status === 'READY TO PRINT' || p.status === 'SELESAI' || p.status === 'SEDANG DIKERJAKAN');
@@ -895,36 +916,124 @@
     }
 
     function renderDashboardCatalogPreviews() {
+      const finishedCount = poList.filter(p => p.status === "SELESAI").length;
+      document.getElementById('card-finished').innerText = finishedCount;
+
       const poBox = document.getElementById('dashPoPreview');
       poBox.innerHTML = '';
       poList.slice(0, 3).forEach(p => {
-        poBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${p.number} - ${p.customer}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">${p.status}</span></div>`;
+        let badgeColor = p.status === "SELESAI" ? "bg-emerald-100 text-emerald-800" : "bg-blue-100 text-blue-700";
+        poBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${p.number} - ${p.customer}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded ${badgeColor}">${p.status}</span></div>`;
       });
     }
 
-    function openPOModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
-    function closePOModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
+    function openPOModal(editIndex = -1) {
+      document.getElementById('editPoIndex').value = editIndex;
+      if (editIndex > -1) {
+        document.getElementById('poModalTitle').innerText = "Edit Purchase Order";
+        const p = poList[editIndex];
+        document.getElementById('poNumber').value = p.number;
+        document.getElementById('customer').value = p.customer;
+        document.getElementById('product').value = p.product;
+        document.getElementById('quantity').value = p.qty;
+        document.getElementById('poPic').value = p.pic;
+        document.getElementById('poStatusFlow').value = p.status;
+      } else {
+        document.getElementById('poModalTitle').innerText = "Input PO Baru";
+        document.getElementById('poForm').reset();
+      }
+      document.getElementById('poModal').classList.remove('hidden'); 
+      document.getElementById('poModal').classList.add('flex');
+    }
+
+    function closePOModal() { 
+      document.getElementById('poModal').classList.add('hidden'); 
+      document.getElementById('poModal').classList.remove('flex'); 
+    }
+
     function savePO(e) {
       e.preventDefault();
-      poList.push({
-        id: poList.length + 1,
-        number: document.getElementById('poNumber').value.toUpperCase(),
-        customer: document.getElementById('customer').value.toUpperCase(),
-        product: document.getElementById('product').value.toUpperCase(),
-        qty: Number(document.getElementById('quantity').value),
-        priority: "NORMAL",
-        deadline: "2026-08-30",
-        pic: document.getElementById('poPic').value.toUpperCase(),
-        status: document.getElementById('poStatusFlow').value.toUpperCase()
-      });
-      alert("PO BERHASIL DISIMPAN!"); closePOModal(); renderPoTable();
+      const idx = Number(document.getElementById('editPoIndex').value);
+      const num = document.getElementById('poNumber').value.toUpperCase();
+      const cust = document.getElementById('customer').value.toUpperCase();
+      const prod = document.getElementById('product').value.toUpperCase();
+      const qtyVal = Number(document.getElementById('quantity').value);
+      const picVal = document.getElementById('poPic').value.toUpperCase();
+      const statusVal = document.getElementById('poStatusFlow').value.toUpperCase();
+
+      let finishedDt = null;
+      if (statusVal === "SELESAI") {
+        finishedDt = new Date().toISOString().split('T')[0];
+      }
+
+      if (idx > -1) {
+        // Edit PO
+        poList[idx].number = num;
+        poList[idx].customer = cust;
+        poList[idx].product = prod;
+        poList[idx].qty = qtyVal;
+        poList[idx].pic = picVal;
+        if (poList[idx].status !== "SELESAI" && statusVal === "SELESAI") {
+          poList[idx].finishedDate = finishedDt;
+        }
+        poList[idx].status = statusVal;
+        alert("PO BERHASIL DIPERBARUI!");
+      } else {
+        // Input Baru
+        poList.push({
+          id: poList.length + 1,
+          number: num,
+          customer: cust,
+          product: prod,
+          qty: qtyVal,
+          priority: "NORMAL",
+          deadline: "2026-08-30",
+          pic: picVal,
+          status: statusVal,
+          finishedDate: finishedDt
+        });
+        alert("PO BARU BERHASIL DISIMPAN!");
+      }
+
+      closePOModal(); 
+      renderPoTable();
+    }
+
+    function deletePO(idx) {
+      if (confirm(`Yakin ingin menghapus PO ${poList[idx].number}? Layout/Approval yang terhubung juga akan terhapus.`)) {
+        const poNum = poList[idx].number;
+        poList.splice(idx, 1);
+        // Hapus juga layout yang terhubung
+        layoutList = layoutList.filter(l => l.poNumber !== poNum);
+        renderPoTable();
+        renderLayoutTable();
+        alert("PO BERHASIL DIHAPUS.");
+      }
     }
     
     function renderPoTable() {
       const tbody = document.getElementById('po-table-body');
       tbody.innerHTML = '';
-      poList.forEach(p => {
-        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td><td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td><td class="py-3 text-xs">${p.qty.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${p.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100">${p.priority}</span></td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-blue-100">${p.status}</span></td><td class="py-3 text-xs"><button onclick="alert('EDIT PO')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
+      if (poList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-gray-400">Tidak ada antrian PO aktif.</td></tr>`;
+        return;
+      }
+      poList.forEach((p, idx) => {
+        let statusBadgeColor = p.status === "SELESAI" ? "bg-emerald-100 text-emerald-800" : (p.status === "READY TO PRINT" ? "bg-cyan-100 text-cyan-800" : "bg-blue-100 text-blue-700");
+        let finDateText = p.finishedDate ? p.finishedDate : "-";
+
+        tbody.innerHTML += `<tr class="hover:bg-gray-50">
+          <td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td>
+          <td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td>
+          <td class="py-3 text-xs">${p.qty.toLocaleString('id-ID')}</td>
+          <td class="py-3 text-xs">${p.pic}</td>
+          <td class="py-3 text-xs"><span class="px-2 py-0.5 rounded ${statusBadgeColor} font-bold">${p.status}</span></td>
+          <td class="py-3 text-xs font-mono">${finDateText}</td>
+          <td class="py-3 text-xs space-x-2">
+            <button onclick="openPOModal(${idx})" class="text-blue-600 font-bold hover:underline">Edit</button>
+            <button onclick="deletePO(${idx})" class="text-red-600 font-bold hover:underline">Hapus</button>
+          </td>
+        </tr>`;
       });
     }
 
@@ -1049,7 +1158,6 @@
     }
 
     function openLayoutModal() {
-      // Isi dropdown PO dari poList
       const sel = document.getElementById('layoutPoSelect');
       sel.innerHTML = '';
       if (poList.length === 0) {
@@ -1060,6 +1168,7 @@
         });
         fillCustomerFromPo();
       }
+      document.getElementById('layoutPic').value = currentUser.name;
       document.getElementById('layoutModal').classList.remove('hidden'); 
       document.getElementById('layoutModal').classList.add('flex');
     }
@@ -1093,7 +1202,6 @@
       const l = layoutList.find(item => item.id === layoutId);
       if (l) {
         l.status = "APPROVED (DISETUJUI)";
-        // Update status PO terkait menjadi 'READY TO PRINT'
         const p = poList.find(item => item.number === l.poNumber);
         if (p) {
           p.status = "READY TO PRINT";
@@ -1107,6 +1215,10 @@
     function renderLayoutTable() {
       const body = document.getElementById('layout-table-active');
       body.innerHTML = '';
+      if (layoutList.length === 0) {
+        body.innerHTML = `<tr><td colspan="8" class="py-3 text-center text-gray-400">Belum ada data layout & approval.</td></tr>`;
+        return;
+      }
       layoutList.forEach(l => {
         let actionBtn = l.status.includes('APPROVED') 
           ? `<span class="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-100 px-2 py-1 rounded">Sudah Ready to Print</span>`
