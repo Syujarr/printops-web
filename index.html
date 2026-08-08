@@ -10,14 +10,9 @@
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     
-    /* CSS ISOLASI KHUSUS METODE PRINT */
     @media print {
-      body * {
-        visibility: hidden !important;
-      }
-      #printableArea, #printableArea * {
-        visibility: visible !important;
-      }
+      body * { visibility: hidden !important; }
+      #printableArea, #printableArea * { visibility: visible !important; }
       #printableArea {
         position: absolute !important;
         left: 0 !important;
@@ -67,12 +62,22 @@
           <span>Laporan Pekerjaan PIC</span>
         </button>
 
+        <!-- STOK GUDANG (RIVAN) -->
         <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <div class="flex items-center space-x-3">
             <span class="text-blue-400 font-bold">📦</span>
-            <span>Inventory Label & Ribbon</span>
+            <span>Stok Gudang Printing</span>
           </div>
-          <span class="text-[10px] bg-emerald-900/50 text-emerald-300 px-2 py-0.5 rounded font-bold uppercase">MVP 2</span>
+          <span class="text-[10px] bg-emerald-900/50 text-emerald-300 px-2 py-0.5 rounded font-bold uppercase">RIVAN</span>
+        </button>
+
+        <!-- PRINTER & DEVICE (SALMAN) -->
+        <button onclick="switchTab('deviceTab')" id="nav-device" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <div class="flex items-center space-x-3">
+            <span class="text-purple-400 font-bold">🖨️</span>
+            <span>Printer & Device</span>
+          </div>
+          <span class="text-[10px] bg-purple-900/50 text-purple-300 px-2 py-0.5 rounded font-bold uppercase">SALMAN</span>
         </button>
       </nav>
     </div>
@@ -263,15 +268,13 @@
       </div>
     </div>
 
-    <!-- TAB 5: MANAGEMENT STOK GUDANG PRINTING -->
+    <!-- TAB 5: MANAGEMENT STOK GUDANG PRINTING (ROLE: RIVAN) -->
     <div id="inventoryTabSection" class="space-y-8 hidden">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">MANAGEMENT STOK GUDANG PRINTING</h2>
           <p class="text-sm text-gray-500 mt-1">Pengaturan stok kebutuhan printing & stok opname</p>
         </div>
-        
-        <!-- 3 TOMBOL UTAMA (CLEAN TEXT TANPA ICON) -->
         <div class="flex items-center space-x-3">
           <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">Barang/Jasa Baru</button>
           <button onclick="openOpnameModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">Stock Opname</button>
@@ -279,10 +282,8 @@
         </div>
       </div>
 
-      <!-- Grid Ringkasan Stok Fast-View -->
       <div id="material-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
 
-      <!-- TABEL MASTER BARANG & JASA (KATALOG MANAGEMENT) -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <h3 class="text-lg font-bold text-gray-900">Katalog Master Barang & Jasa</h3>
         <div class="overflow-x-auto">
@@ -305,7 +306,6 @@
         </div>
       </div>
 
-      <!-- TABEL HISTORI MUTASI STOK -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <div class="flex justify-between items-center">
           <h3 class="text-lg font-bold text-gray-900">Histori Mutasi Stok & Audit Opname</h3>
@@ -334,9 +334,94 @@
       </div>
     </div>
 
+    <!-- TAB 6: INVENTORY PRINTER & DEVICE (ROLE: SALMAN) -->
+    <div id="deviceTabSection" class="space-y-8 hidden">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">INVENTORY PRINTER & DEVICE</h2>
+          <p class="text-sm text-gray-500 mt-1">Pemantauan unit printer barcode, ketersediaan sparepart, dan log maintenance (PIC: Salman)</p>
+        </div>
+        
+        <!-- 3 TOMBOL UTAMA SALMAN (CLEAN TEXT) -->
+        <div class="flex items-center space-x-3">
+          <button onclick="openPrinterModal()" class="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">Tambah Printer/Device</button>
+          <button onclick="openSparepartModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">Tambah Sparepart</button>
+          <button onclick="openMaintenanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">Catat Maintenance</button>
+        </div>
+      </div>
+
+      <!-- BAGIAN 1: REKAPAN UNIT PRINTER BARCODE & DEVICE -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900">Rekapan Unit Printer Barcode & Device</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Nama / Tipe Printer</th>
+                <th class="pb-3">Serial Number (SN)</th>
+                <th class="pb-3">Kondisi Mesin</th>
+                <th class="pb-3">Dipakai Oleh</th>
+                <th class="pb-3">Status Pinjam</th>
+                <th class="pb-3">Ket. Dipinjam</th>
+                <th class="pb-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="printer-list-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada unit printer terdaftar.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BAGIAN 2: KATALOG INVENTORY SPAREPART -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900">Katalog Inventory Sparepart Printer</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Kode Part</th>
+                <th class="pb-3">Nama Sparepart</th>
+                <th class="pb-3">Satuan</th>
+                <th class="pb-3">Stok Saat Ini</th>
+                <th class="pb-3">Batas Min. Stok</th>
+                <th class="pb-3">Catatan / Vendor</th>
+                <th class="pb-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="sparepart-list-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada sparepart terdaftar.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- BAGIAN 3: HISTORI LOG MAINTENANCE & PERGANTIAN PART -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900">Histori Maintenance & Pergantian Part</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Tanggal</th>
+                <th class="pb-3">Unit Printer</th>
+                <th class="pb-3">Jenis Perawatan / Part</th>
+                <th class="pb-3">Qty Terpakai</th>
+                <th class="pb-3">Teknisi / PIC</th>
+                <th class="pb-3">Catatan Kendala / Tindakan</th>
+              </tr>
+            </thead>
+            <tbody id="maintenance-history-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada catatan maintenance.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <!-- MODAL 1: BARANG/JASA BARU -->
+  <!-- MODAL RIVAN 1: BARANG/JASA BARU -->
   <div id="newMaterialModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
@@ -383,7 +468,7 @@
     </div>
   </div>
 
-  <!-- MODAL 2: STOCK OPNAME (SEARCHABLE + AUTO LOCK UNIT) -->
+  <!-- MODAL RIVAN 2: STOCK OPNAME -->
   <div id="opnameModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
@@ -440,7 +525,7 @@
     </div>
   </div>
 
-  <!-- MODAL 3: BARANG MASUK (SEARCHABLE + AUTO LOCK UNIT) -->
+  <!-- MODAL RIVAN 3: BARANG MASUK -->
   <div id="stockModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
@@ -494,7 +579,152 @@
     </div>
   </div>
 
-  <!-- TEMPLATE LAYOUT CETAK LAPORAN (SISTEMIS TERISOLASI PRINT) -->
+  <!-- MODAL SALMAN 1: TAMBAH / EDIT PRINTER DEVICE -->
+  <div id="printerModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="printerModalTitle" class="text-lg font-bold text-gray-900">Tambah Unit Printer / Device</h3>
+        <button onclick="closePrinterModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="savePrinterUnit(event)" class="space-y-4">
+        <input type="hidden" id="editPrinterId">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama / Tipe Printer *</label>
+          <input type="text" id="printerName" required placeholder="Contoh: Honeywell PC42t atau Zebra ZT411" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Serial Number (SN) *</label>
+          <input type="text" id="printerSn" required placeholder="Contoh: SN-HW2026-9901" class="w-full p-2.5 border rounded-xl text-sm outline-none font-mono">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Kondisi Mesin *</label>
+            <select id="printerCondition" class="w-full p-2.5 border rounded-xl text-sm outline-none font-semibold">
+              <option value="Normal / Good">Normal / Good</option>
+              <option value="Butuh Maintenance">Butuh Maintenance</option>
+              <option value="Rusak / Repair">Rusak / Repair</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Dipakai Oleh *</label>
+            <input type="text" id="printerUsedBy" required placeholder="misal: Area Cetak / Rio" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pinjam *</label>
+            <select id="printerBorrowStatus" onchange="toggleBorrowNoteField()" class="w-full p-2.5 border rounded-xl text-sm outline-none font-semibold">
+              <option value="Tersedia / Internal">Tersedia / Internal</option>
+              <option value="Dipinjam">Dipinjam</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Keterangan Dipinjam</label>
+            <input type="text" id="printerBorrowNote" disabled placeholder="Nama peminjam / divisi..." class="w-full p-2.5 border rounded-xl text-sm outline-none bg-gray-100">
+          </div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" onclick="closePrinterModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" id="btnSubmitPrinter" class="px-5 py-2 rounded-xl bg-purple-700 text-white text-sm font-semibold">Simpan Unit Printer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL SALMAN 2: TAMBAH / EDIT SPAREPART -->
+  <div id="sparepartModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="sparepartModalTitle" class="text-lg font-bold text-gray-900">Tambah Sparepart Baru</h3>
+        <button onclick="closeSparepartModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="saveSparepartItem(event)" class="space-y-4">
+        <input type="hidden" id="editSparepartId">
+        <div>
+          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kode Sparepart</label>
+          <input type="text" id="spCode" readonly class="w-full p-2.5 bg-gray-100 font-mono font-bold text-gray-600 border rounded-xl text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Sparepart *</label>
+          <input type="text" id="spName" required placeholder="Contoh: Printhead Honeywell PC42t 203dpi" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan *</label>
+            <select id="spUnit" class="w-full p-2.5 border rounded-xl text-sm outline-none font-semibold">
+              <option value="pcs">pcs</option>
+              <option value="set">set</option>
+              <option value="unit">unit</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Stok Awal</label>
+            <input type="number" id="spStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Batas Minimum Stok (Alert)</label>
+          <input type="number" id="spMinStock" min="1" value="2" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan / Vendor</label>
+          <input type="text" id="spNotes" placeholder="misal: Supplier Jakarta / Garansi 3 Bulan" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" onclick="closeSparepartModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" id="btnSubmitSparepart" class="px-5 py-2 rounded-xl bg-amber-600 text-white text-sm font-semibold">Simpan Sparepart</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL SALMAN 3: CATAT MAINTENANCE / PERGANTIAN PART -->
+  <div id="maintenanceModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-lg font-bold text-gray-900">Catat Maintenance / Perbaikan</h3>
+        <button onclick="closeMaintenanceModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="saveMaintenanceLog(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Unit Printer *</label>
+          <select id="maintPrinterSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Sparepart yang Diganti (Opsional)</label>
+          <select id="maintSparepartSelect" onchange="toggleMaintQtyField()" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="">-- Tanpa Pergantian Part (Pembersihan / Setting) --</option>
+          </select>
+        </div>
+
+        <div id="maintQtyContainer" class="hidden">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Sparepart Terpakai *</label>
+          <input type="number" id="maintSparepartQty" min="1" value="1" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Teknisi / PIC *</label>
+          <select id="maintPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="Salman">Salman</option>
+            <option value="Syuja">Syuja</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan Kendala & Tindakan *</label>
+          <textarea id="maintNotes" required placeholder="Contoh: Hasil cetak garis putih, ganti printhead baru dan cleaning sensor" rows="3" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" onclick="closeMaintenanceModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold">Simpan Log Maintenance</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TEMPLATE LAYOUT CETAK LAPORAN -->
   <div id="printableArea" style="display: none;">
     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
       <h1 style="font-size: 20px; font-weight: bold; margin: 0; text-transform: uppercase;">Laporan & Berita Acara Stok Printing</h1>
@@ -563,7 +793,7 @@
     const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ";
     let _supabase;
 
-    // Master Inventory Array
+    // DATA MASTER STOK GUDANG (RIVAN)
     let materials = [
       { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000, notes: "Bahan utama sticker botol" },
       { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110mm", unit: "roll", stock: 15, minStock: 5, notes: "Untuk Printer Honeywell & Zebra" },
@@ -571,6 +801,19 @@
     ];
 
     let stockHistory = [];
+
+    // DATA PRINTER & SPAREPART (SALMAN)
+    let printers = [
+      { id: 1, name: "Honeywell PC42t", sn: "SN-HW2026-001", condition: "Normal / Good", usedBy: "Meja Packing 1", borrowStatus: "Tersedia / Internal", borrowNote: "-" },
+      { id: 2, name: "Zebra ZT411", sn: "SN-ZB2026-004", condition: "Butuh Maintenance", usedBy: "Area Cetak Utama", borrowStatus: "Tersedia / Internal", borrowNote: "-" }
+    ];
+
+    let spareparts = [
+      { id: 1, code: "SP-001", name: "Printhead Honeywell PC42t 203dpi", unit: "pcs", stock: 3, minStock: 1, notes: "Garansi Supplier 3 Bulan" },
+      { id: 2, code: "SP-002", name: "Roller Platen Zebra ZT411", unit: "pcs", stock: 2, minStock: 1, notes: "Stok Cadangan" }
+    ];
+
+    let maintenanceHistory = [];
 
     function initSupabase() { _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
 
@@ -580,6 +823,7 @@
       document.getElementById('poTabSection').classList.add('hidden');
       document.getElementById('reportTabSection').classList.add('hidden');
       document.getElementById('inventoryTabSection').classList.add('hidden');
+      document.getElementById('deviceTabSection').classList.add('hidden');
 
       if (tab === 'dashTab') document.getElementById('dashTabSection').classList.remove('hidden');
       else if (tab === 'kpiTab') document.getElementById('kpiTabSection').classList.remove('hidden');
@@ -592,9 +836,13 @@
         document.getElementById('inventoryTabSection').classList.remove('hidden');
         renderMaterials();
       }
+      else if (tab === 'deviceTab') {
+        document.getElementById('deviceTabSection').classList.remove('hidden');
+        renderDevicesAndSpareparts();
+      }
     }
 
-    // Generator Kode Barang Otomatis EHG0001
+    /* --- LOGIKA RIVAN (STOK GUDANG) --- */
     function openNewMaterialModal() {
       document.getElementById('editMaterialDbId').value = '';
       document.getElementById('modalMaterialTitle').innerText = 'Barang/Jasa Baru';
@@ -670,16 +918,12 @@
       });
     }
 
-    // Fitur Search Material untuk Stock In
     function filterStockMaterialList() {
       const query = document.getElementById('stockSearchInput').value.toLowerCase();
       const stockSel = document.getElementById('stockItemSelect');
       stockSel.innerHTML = '';
 
-      const filtered = materials.filter(m => 
-        m.code.toLowerCase().includes(query) || 
-        m.name.toLowerCase().includes(query)
-      );
+      const filtered = materials.filter(m => m.code.toLowerCase().includes(query) || m.name.toLowerCase().includes(query));
 
       if (filtered.length === 0) {
         stockSel.innerHTML = `<option value="">-- Material Tidak Ditemukan --</option>`;
@@ -687,22 +931,16 @@
         return;
       }
 
-      filtered.forEach(m => {
-        stockSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`;
-      });
+      filtered.forEach(m => { stockSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`; });
       updateStockInUnitLock();
     }
 
-    // Fitur Search Material untuk Stock Opname
     function filterOpnameMaterialList() {
       const query = document.getElementById('stockOpnameSearchInput').value.toLowerCase();
       const opSel = document.getElementById('opnameItemSelect');
       opSel.innerHTML = '';
 
-      const filtered = materials.filter(m => 
-        m.code.toLowerCase().includes(query) || 
-        m.name.toLowerCase().includes(query)
-      );
+      const filtered = materials.filter(m => m.code.toLowerCase().includes(query) || m.name.toLowerCase().includes(query));
 
       if (filtered.length === 0) {
         opSel.innerHTML = `<option value="">-- Material Tidak Ditemukan --</option>`;
@@ -710,13 +948,10 @@
         return;
       }
 
-      filtered.forEach(m => {
-        opSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock} ${m.unit})</option>`;
-      });
+      filtered.forEach(m => { opSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock} ${m.unit})</option>`; });
       updateOpnameUnitLock();
     }
 
-    // Auto Lock Satuan berdasarkan Pilihan
     function updateStockInUnitLock() {
       const matId = document.getElementById('stockItemSelect').value;
       const mat = materials.find(m => m.id == matId);
@@ -733,9 +968,7 @@
       const repSel = document.getElementById('reportMaterialSelect');
       if (!repSel) return;
       repSel.innerHTML = '';
-      materials.forEach(m => {
-        repSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Sisa Stok: ${m.stock} ${m.unit})</option>`;
-      });
+      materials.forEach(m => { repSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Sisa Stok: ${m.stock} ${m.unit})</option>`; });
     }
 
     function renderMaterials() {
@@ -750,7 +983,6 @@
           ? `<p class="text-xs text-red-600 mt-1 font-semibold">⚠️ Low Stock Alert (Min. ${m.minStock.toLocaleString('id-ID')} ${m.unit})</p>`
           : `<p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman (Min. ${m.minStock.toLocaleString('id-ID')} ${m.unit})</p>`;
 
-        // Render Kartu Fast-View
         grid.innerHTML += `
           <div class="bg-white p-5 rounded-2xl border ${isLow ? 'border-red-200 bg-red-50/20' : 'border-gray-100'} shadow-sm space-y-1">
             <div class="flex justify-between items-center">
@@ -764,7 +996,6 @@
           </div>
         `;
 
-        // Render Tabel Master Katalogue
         masterBody.innerHTML += `
           <tr class="hover:bg-gray-50 transition">
             <td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td>
@@ -808,7 +1039,6 @@
       });
     }
 
-    // Save Barang/Jasa Baru atau Edit
     function saveNewMaterial(e) {
       e.preventDefault();
       const editId = document.getElementById('editMaterialDbId').value;
@@ -822,26 +1052,13 @@
       if (editId) {
         const mat = materials.find(m => m.id == editId);
         if (mat) {
-          mat.name = name;
-          mat.unit = unit;
-          mat.stock = initStock;
-          mat.minStock = minStock;
-          mat.notes = notes;
+          mat.name = name; mat.unit = unit; mat.stock = initStock; mat.minStock = minStock; mat.notes = notes;
           alert(`Barang/Jasa "${name}" [${code}] berhasil diperbarui!`);
         }
       } else {
         const newId = materials.length + 1;
         materials.push({ id: newId, code: code, name: name, unit: unit, stock: initStock, minStock: minStock, notes: notes });
-
-        stockHistory.unshift({
-          date: new Date().toISOString().split('T')[0],
-          matName: `[${code}] ${name}`,
-          warehouse: 'Gudang Utama',
-          type: 'MASTER BARU',
-          qty: `+${initStock} ${unit}`,
-          pic: 'Rivan',
-          notes: notes || 'Pendaftaran Barang/Jasa Baru'
-        });
+        stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: `[${code}] ${name}`, warehouse: 'Gudang Utama', type: 'MASTER BARU', qty: `+${initStock} ${unit}`, pic: 'Rivan', notes: notes || 'Pendaftaran Barang/Jasa Baru' });
         alert(`Barang/Jasa Baru "${name}" [${code}] Berhasil Ditambahkan!`);
       }
 
@@ -849,7 +1066,6 @@
       renderMaterials();
     }
 
-    // Save Barang Masuk
     function saveStockIn(e) {
       e.preventDefault();
       const matId = document.getElementById('stockItemSelect').value;
@@ -861,15 +1077,7 @@
       const mat = materials.find(m => m.id == matId);
       if (mat) {
         mat.stock += qty;
-        stockHistory.unshift({
-          date: new Date().toISOString().split('T')[0],
-          matName: `[${mat.code}] ${mat.name}`,
-          warehouse: warehouse,
-          type: 'BARANG MASUK',
-          qty: `+${qty} ${mat.unit}`,
-          pic: pic,
-          notes: spk ? `No. SPK: ${spk}` : 'Penerimaan Stok'
-        });
+        stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: `[${mat.code}] ${mat.name}`, warehouse: warehouse, type: 'BARANG MASUK', qty: `+${qty} ${mat.unit}`, pic: pic, notes: spk ? `No. SPK: ${spk}` : 'Penerimaan Stok' });
       }
 
       alert("Barang Masuk Berhasil Disimpan!");
@@ -877,7 +1085,6 @@
       renderMaterials();
     }
 
-    // Save Stock Opname
     function saveOpname(e) {
       e.preventDefault();
       const matId = document.getElementById('opnameItemSelect').value;
@@ -890,16 +1097,7 @@
       if (mat) {
         let diff = balancedQty - mat.stock;
         mat.stock = balancedQty;
-
-        stockHistory.unshift({
-          date: new Date().toISOString().split('T')[0],
-          matName: `[${mat.code}] ${mat.name}`,
-          warehouse: warehouse,
-          type: 'STOCK OPNAME',
-          qty: `${diff >= 0 ? '+' : ''}${diff} ${mat.unit} (Balanced: ${balancedQty})`,
-          pic: pic,
-          notes: reason
-        });
+        stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: `[${mat.code}] ${mat.name}`, warehouse: warehouse, type: 'STOCK OPNAME', qty: `${diff >= 0 ? '+' : ''}${diff} ${mat.unit} (Balanced: ${balancedQty})`, pic: pic, notes: reason });
       }
 
       alert("Audit Stock Opname Berhasil Disimpan!");
@@ -907,7 +1105,6 @@
       renderMaterials();
     }
 
-    // Function Print Laporan
     function printStockReport() {
       document.getElementById('printDate').innerText = new Date().toLocaleDateString('id-ID');
       const pBody = document.getElementById('printTableBody');
@@ -934,6 +1131,303 @@
       window.print();
     }
 
+    /* --- LOGIKA SALMAN (PRINTER & DEVICE) --- */
+    function toggleBorrowNoteField() {
+      const status = document.getElementById('printerBorrowStatus').value;
+      const noteInput = document.getElementById('printerBorrowNote');
+      if (status === 'Dipinjam') {
+        noteInput.disabled = false;
+        noteInput.classList.remove('bg-gray-100');
+        noteInput.required = true;
+      } else {
+        noteInput.disabled = true;
+        noteInput.classList.add('bg-gray-100');
+        noteInput.value = '-';
+        noteInput.required = false;
+      }
+    }
+
+    function openPrinterModal() {
+      document.getElementById('editPrinterId').value = '';
+      document.getElementById('printerModalTitle').innerText = 'Tambah Unit Printer / Device';
+      document.getElementById('btnSubmitPrinter').innerText = 'Simpan Unit Printer';
+      document.getElementById('printerName').value = '';
+      document.getElementById('printerSn').value = '';
+      document.getElementById('printerCondition').value = 'Normal / Good';
+      document.getElementById('printerUsedBy').value = '';
+      document.getElementById('printerBorrowStatus').value = 'Tersedia / Internal';
+      toggleBorrowNoteField();
+
+      document.getElementById('printerModal').classList.remove('hidden');
+      document.getElementById('printerModal').classList.add('flex');
+    }
+    function closePrinterModal() { document.getElementById('printerModal').classList.add('hidden'); document.getElementById('printerModal').classList.remove('flex'); }
+
+    function openEditPrinterModal(id) {
+      const p = printers.find(item => item.id == id);
+      if (!p) return;
+
+      document.getElementById('editPrinterId').value = p.id;
+      document.getElementById('printerModalTitle').innerText = 'Edit Unit Printer / Device';
+      document.getElementById('btnSubmitPrinter').innerText = 'Update Unit Printer';
+      document.getElementById('printerName').value = p.name;
+      document.getElementById('printerSn').value = p.sn;
+      document.getElementById('printerCondition').value = p.condition;
+      document.getElementById('printerUsedBy').value = p.usedBy;
+      document.getElementById('printerBorrowStatus').value = p.borrowStatus;
+      toggleBorrowNoteField();
+      if (p.borrowStatus === 'Dipinjam') { document.getElementById('printerBorrowNote').value = p.borrowNote; }
+
+      document.getElementById('printerModal').classList.remove('hidden');
+      document.getElementById('printerModal').classList.add('flex');
+    }
+
+    function deletePrinterUnit(id) {
+      const p = printers.find(item => item.id == id);
+      if (!p) return;
+      if (confirm(`Apakah Anda yakin ingin menghapus unit printer "${p.name}" (${p.sn})?`)) {
+        printers = printers.filter(item => item.id != id);
+        alert("Unit printer berhasil dihapus.");
+        renderDevicesAndSpareparts();
+      }
+    }
+
+    function savePrinterUnit(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editPrinterId').value;
+      const name = document.getElementById('printerName').value;
+      const sn = document.getElementById('printerSn').value;
+      const condition = document.getElementById('printerCondition').value;
+      const usedBy = document.getElementById('printerUsedBy').value;
+      const borrowStatus = document.getElementById('printerBorrowStatus').value;
+      const borrowNote = document.getElementById('printerBorrowNote').value;
+
+      if (editId) {
+        const p = printers.find(item => item.id == editId);
+        if (p) {
+          p.name = name; p.sn = sn; p.condition = condition; p.usedBy = usedBy; p.borrowStatus = borrowStatus; p.borrowNote = borrowNote;
+          alert(`Unit "${name}" berhasil diperbarui!`);
+        }
+      } else {
+        const newId = printers.length + 1;
+        printers.push({ id: newId, name: name, sn: sn, condition: condition, usedBy: usedBy, borrowStatus: borrowStatus, borrowNote: borrowNote });
+        alert(`Unit Printer Baru "${name}" berhasil ditambahkan!`);
+      }
+
+      closePrinterModal();
+      renderDevicesAndSpareparts();
+    }
+
+    /* LOGIKA SPAREPART (SALMAN) */
+    function openSparepartModal() {
+      document.getElementById('editSparepartId').value = '';
+      document.getElementById('sparepartModalTitle').innerText = 'Tambah Sparepart Baru';
+      document.getElementById('btnSubmitSparepart').innerText = 'Simpan Sparepart';
+      
+      const nextNum = String(spareparts.length + 1).padStart(3, '0');
+      document.getElementById('spCode').value = `SP-${nextNum}`;
+      document.getElementById('spName').value = '';
+      document.getElementById('spUnit').value = 'pcs';
+      document.getElementById('spStock').value = 0;
+      document.getElementById('spMinStock').value = 1;
+      document.getElementById('spNotes').value = '';
+
+      document.getElementById('sparepartModal').classList.remove('hidden');
+      document.getElementById('sparepartModal').classList.add('flex');
+    }
+    function closeSparepartModal() { document.getElementById('sparepartModal').classList.add('hidden'); document.getElementById('sparepartModal').classList.remove('flex'); }
+
+    function openEditSparepartModal(id) {
+      const sp = spareparts.find(item => item.id == id);
+      if (!sp) return;
+
+      document.getElementById('editSparepartId').value = sp.id;
+      document.getElementById('sparepartModalTitle').innerText = 'Edit Sparepart';
+      document.getElementById('btnSubmitSparepart').innerText = 'Update Sparepart';
+      document.getElementById('spCode').value = sp.code;
+      document.getElementById('spName').value = sp.name;
+      document.getElementById('spUnit').value = sp.unit;
+      document.getElementById('spStock').value = sp.stock;
+      document.getElementById('spMinStock').value = sp.minStock;
+      document.getElementById('spNotes').value = sp.notes || '';
+
+      document.getElementById('sparepartModal').classList.remove('hidden');
+      document.getElementById('sparepartModal').classList.add('flex');
+    }
+
+    function deleteSparepartItem(id) {
+      const sp = spareparts.find(item => item.id == id);
+      if (!sp) return;
+      if (confirm(`Hapus sparepart "${sp.name}" [${sp.code}] dari katalog?`)) {
+        spareparts = spareparts.filter(item => item.id != id);
+        alert("Sparepart berhasil dihapus.");
+        renderDevicesAndSpareparts();
+      }
+    }
+
+    function saveSparepartItem(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editSparepartId').value;
+      const code = document.getElementById('spCode').value;
+      const name = document.getElementById('spName').value;
+      const unit = document.getElementById('spUnit').value;
+      const stock = Number(document.getElementById('spStock').value);
+      const minStock = Number(document.getElementById('spMinStock').value);
+      const notes = document.getElementById('spNotes').value;
+
+      if (editId) {
+        const sp = spareparts.find(item => item.id == editId);
+        if (sp) {
+          sp.name = name; sp.unit = unit; sp.stock = stock; sp.minStock = minStock; sp.notes = notes;
+          alert(`Sparepart "${name}" berhasil diperbarui!`);
+        }
+      } else {
+        const newId = spareparts.length + 1;
+        spareparts.push({ id: newId, code: code, name: name, unit: unit, stock: stock, minStock: minStock, notes: notes });
+        alert(`Sparepart Baru "${name}" [${code}] berhasil ditambahkan!`);
+      }
+
+      closeSparepartModal();
+      renderDevicesAndSpareparts();
+    }
+
+    /* LOGIKA MAINTENANCE (SALMAN) */
+    function toggleMaintQtyField() {
+      const spId = document.getElementById('maintSparepartSelect').value;
+      const container = document.getElementById('maintQtyContainer');
+      if (spId) {
+        container.classList.remove('hidden');
+      } else {
+        container.classList.add('hidden');
+      }
+    }
+
+    function openMaintenanceModal() {
+      const pSel = document.getElementById('maintPrinterSelect');
+      const spSel = document.getElementById('maintSparepartSelect');
+      pSel.innerHTML = '';
+      spSel.innerHTML = '<option value="">-- Tanpa Pergantian Part (Pembersihan / Setting) --</option>';
+
+      printers.forEach(p => { pSel.innerHTML += `<option value="${p.id}">${p.name} (${p.sn})</option>`; });
+      spareparts.forEach(sp => { spSel.innerHTML += `<option value="${sp.id}">${sp.code} - ${sp.name} (Stok: ${sp.stock} ${sp.unit})</option>`; });
+
+      toggleMaintQtyField();
+      document.getElementById('maintenanceModal').classList.remove('hidden');
+      document.getElementById('maintenanceModal').classList.add('flex');
+    }
+    function closeMaintenanceModal() { document.getElementById('maintenanceModal').classList.add('hidden'); document.getElementById('maintenanceModal').classList.remove('flex'); }
+
+    function saveMaintenanceLog(e) {
+      e.preventDefault();
+      const printerId = document.getElementById('maintPrinterSelect').value;
+      const spId = document.getElementById('maintSparepartSelect').value;
+      const qty = Number(document.getElementById('maintSparepartQty').value || 1);
+      const pic = document.getElementById('maintPic').value;
+      const notes = document.getElementById('maintNotes').value;
+
+      const p = printers.find(item => item.id == printerId);
+      const sp = spareparts.find(item => item.id == spId);
+
+      let partName = 'Routine Maintenance / Cleaning';
+      if (sp) {
+        if (sp.stock < qty) {
+          alert(`Stok sparepart ${sp.name} tidak cukup! (Sisa: ${sp.stock} ${sp.unit})`);
+          return;
+        }
+        sp.stock -= qty;
+        partName = `${sp.name} (-${qty} ${sp.unit})`;
+      }
+
+      maintenanceHistory.unshift({
+        date: new Date().toISOString().split('T')[0],
+        printerName: p ? `${p.name} (${p.sn})` : '-',
+        partName: partName,
+        qty: sp ? `${qty} ${sp.unit}` : '-',
+        pic: pic,
+        notes: notes
+      });
+
+      alert("Log maintenance berhasil dicatat!");
+      closeMaintenanceModal();
+      renderDevicesAndSpareparts();
+    }
+
+    function renderDevicesAndSpareparts() {
+      const printerBody = document.getElementById('printer-list-body');
+      const sparepartBody = document.getElementById('sparepart-list-body');
+      const maintBody = document.getElementById('maintenance-history-body');
+
+      printerBody.innerHTML = '';
+      sparepartBody.innerHTML = '';
+      maintBody.innerHTML = '';
+
+      // 1. Render Tabel Printer
+      if (printers.length === 0) {
+        printerBody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada unit printer terdaftar.</td></tr>';
+      } else {
+        printers.forEach(p => {
+          let condColor = p.condition === 'Normal / Good' ? 'bg-emerald-100 text-emerald-700' : (p.condition === 'Butuh Maintenance' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700');
+          let borrowColor = p.borrowStatus === 'Dipinjam' ? 'bg-purple-100 text-purple-700' : 'bg-gray-100 text-gray-600';
+
+          printerBody.innerHTML += `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-3 text-xs font-bold text-gray-900">${p.name}</td>
+              <td class="py-3 text-xs font-mono text-gray-600">${p.sn}</td>
+              <td class="py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${condColor}">${p.condition}</span></td>
+              <td class="py-3 text-xs font-medium text-gray-700">${p.usedBy}</td>
+              <td class="py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${borrowColor}">${p.borrowStatus}</span></td>
+              <td class="py-3 text-xs text-gray-500">${p.borrowNote || '-'}</td>
+              <td class="py-3 text-xs space-x-2">
+                <button onclick="openEditPrinterModal(${p.id})" class="font-bold text-blue-600 hover:text-blue-800">Edit</button>
+                <button onclick="deletePrinterUnit(${p.id})" class="font-bold text-red-600 hover:text-red-800">Hapus</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      // 2. Render Tabel Sparepart
+      if (spareparts.length === 0) {
+        sparepartBody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada sparepart terdaftar.</td></tr>';
+      } else {
+        spareparts.forEach(sp => {
+          let isLow = sp.stock <= sp.minStock;
+          sparepartBody.innerHTML += `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-3 text-xs font-bold font-mono text-purple-700">${sp.code}</td>
+              <td class="py-3 text-xs font-bold text-gray-900">${sp.name}</td>
+              <td class="py-3 text-xs font-semibold text-gray-600 uppercase">${sp.unit}</td>
+              <td class="py-3 text-xs font-bold ${isLow ? 'text-red-600' : 'text-gray-900'}">${sp.stock.toLocaleString('id-ID')} ${isLow ? '⚠️' : ''}</td>
+              <td class="py-3 text-xs text-gray-500">${sp.minStock}</td>
+              <td class="py-3 text-xs text-gray-500">${sp.notes || '-'}</td>
+              <td class="py-3 text-xs space-x-2">
+                <button onclick="openEditSparepartModal(${sp.id})" class="font-bold text-blue-600 hover:text-blue-800">Edit</button>
+                <button onclick="deleteSparepartItem(${sp.id})" class="font-bold text-red-600 hover:text-red-800">Hapus</button>
+              </td>
+            </tr>
+          `;
+        });
+      }
+
+      // 3. Render Tabel Histori Maintenance
+      if (maintenanceHistory.length === 0) {
+        maintBody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada catatan maintenance.</td></tr>';
+      } else {
+        maintenanceHistory.forEach(h => {
+          maintBody.innerHTML += `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-3 text-xs text-gray-500">${h.date}</td>
+              <td class="py-3 font-bold text-gray-900 text-xs">${h.printerName}</td>
+              <td class="py-3 text-xs font-bold text-purple-700">${h.partName}</td>
+              <td class="py-3 text-xs font-bold text-gray-700">${h.qty}</td>
+              <td class="py-3 text-xs font-bold text-gray-700">${h.pic}</td>
+              <td class="py-3 text-xs text-gray-500">${h.notes}</td>
+            </tr>
+          `;
+        });
+      }
+    }
+
     // Auto Deduct Pemakaian Laporan PIC
     function saveDailyReport(e) {
       e.preventDefault();
@@ -945,15 +1439,7 @@
       const mat = materials.find(m => m.id == matId);
       if (mat) {
         mat.stock = Math.max(0, mat.stock - totalUsed);
-        stockHistory.unshift({
-          date: new Date().toISOString().split('T')[0],
-          matName: `[${mat.code}] ${mat.name}`,
-          warehouse: 'Gudang Utama',
-          type: 'PEMAKAIAN CETAK',
-          qty: `-${totalUsed} ${mat.unit}`,
-          pic: document.getElementById('operatorName').value,
-          notes: `Produksi Cetak (Good: ${good}, Reject: ${reject})`
-        });
+        stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: `[${mat.code}] ${mat.name}`, warehouse: 'Gudang Utama', type: 'PEMAKAIAN CETAK', qty: `-${totalUsed} ${mat.unit}`, pic: document.getElementById('operatorName').value, notes: `Produksi Cetak (Good: ${good}, Reject: ${reject})` });
         alert(`Laporan PIC tersimpan! Stok ${mat.name} terpotong otomatis -${totalUsed} ${mat.unit}.`);
       }
 
