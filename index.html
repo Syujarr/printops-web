@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrintOps V1 - Antrian Cetak</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold mb-2 text-gray-800">PrintOps V1 - Divisi Printing</h1>
+    <p class="text-gray-600 mb-6">Pusat Pengendalian Pekerjaan & Progress Cetak</p>
+
+    <!-- Ringkasan Singkat -->
+    <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <span class="text-sm text-blue-600 font-semibold">Total Antrian</span>
+        <h2 id="total-jobs" class="text-2xl font-bold text-blue-900">0</h2>
+      </div>
+      <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+        <span class="text-sm text-yellow-600 font-semibold">Sedang Berjalan</span>
+        <h2 id="running-jobs" class="text-2xl font-bold text-yellow-900">0</h2>
+      </div>
+      <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+        <span class="text-sm text-green-600 font-semibold">Selesai</span>
+        <h2 id="done-jobs" class="text-2xl font-bold text-green-900">0</h2>
+      </div>
+    </div>
+
+    <!-- Tabel Antrian Cetak -->
+    <h3 class="text-lg font-semibold mb-3">Antrian Cetak Aktif</h3>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse border border-gray-200">
+        <thead>
+          <tr class="bg-gray-50 text-sm font-semibold text-gray-700 border-b">
+            <th class="p-3">Job ID / PO</th>
+            <th class="p-3">Customer & Produk</th>
+            <th class="p-3">PIC</th>
+            <th class="p-3">Status</th>
+            <th class="p-3">Deadline</th>
+            <th class="p-3">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="job-list-table">
+          <tr>
+            <td colspan="6" class="p-4 text-center text-gray-500">Memuat data dari Supabase...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Koneksi ke Supabase menggunakan Environment Variables
+    const SUPABASE_URL = "YOUR_SUPABASE_URL";
+    const SUPABASE_KEY = "YOUR_SUPABASE_KEY";
+    
+    // Inisialisasi
+    console.log("PrintOps V1 Ready");
+  </script>
+</body>
+</html>
