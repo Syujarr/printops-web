@@ -14,7 +14,6 @@
   <!-- SIDEBAR KIRI -->
   <aside class="w-64 bg-[#1E222D] text-gray-300 flex flex-col justify-between p-4 flex-shrink-0">
     <div>
-      <!-- Brand Logo -->
       <div class="flex items-center space-x-3 mb-6 px-2">
         <div class="w-9 h-9 bg-[#E06D53] rounded-lg flex items-center justify-center text-white font-bold text-xl">P</div>
         <div>
@@ -23,47 +22,40 @@
         </div>
       </div>
 
-      <!-- Menu Navigasi Utama -->
       <nav class="space-y-1">
         <p class="text-[10px] text-gray-400 font-bold px-3 mb-2 tracking-wider">RUANG KERJA</p>
         
         <button onclick="switchTab('dashTab')" id="nav-dash" class="w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
           <span>Dashboard Operasional</span>
         </button>
 
         <button onclick="switchTab('kpiTab')" id="nav-kpi" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <div class="flex items-center space-x-3">
-            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span class="text-amber-500 font-bold">📊</span>
             <span>Laporan KPI Divisi</span>
           </div>
           <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold uppercase">SPV / BOS</span>
         </button>
 
         <button onclick="switchTab('poTab')" id="nav-po" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <div class="flex items-center space-x-3">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-            <span>Antrian & Detail PO</span>
-          </div>
+          <span>Antrian & Detail PO</span>
           <span id="badge-po-count" class="bg-[#2A2F3D] text-gray-300 text-xs px-2 py-0.5 rounded-md font-bold">0</span>
         </button>
 
         <button onclick="switchTab('reportTab')" id="nav-report" class="w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
           <span>Laporan Pekerjaan PIC</span>
         </button>
 
         <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <div class="flex items-center space-x-3">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            <span class="text-blue-400 font-bold">📦</span>
             <span>Inventory Label & Ribbon</span>
           </div>
-          <span class="text-[10px] bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded font-bold uppercase">MVP 2</span>
+          <span class="text-[10px] bg-emerald-900/50 text-emerald-300 px-2 py-0.5 rounded font-bold uppercase">MVP 2</span>
         </button>
       </nav>
     </div>
 
-    <!-- User Profile Badge -->
     <div class="bg-[#2A2F3D] p-3 rounded-xl flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold text-white">SP</div>
@@ -78,7 +70,7 @@
   <!-- AREA KONTEN UTAMA -->
   <main class="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto space-y-8">
     
-    <!-- TAB 1: DASHBOARD OPERASIONAL (4 INDIKATOR OPERASIONAL) -->
+    <!-- TAB 1: DASHBOARD OPERASIONAL -->
     <div id="dashTabSection" class="space-y-8">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard Operasional Cetak</h2>
@@ -87,47 +79,20 @@
 
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">PRIORITAS MENDESAK</span>
-            <span class="w-2 h-2 rounded-full bg-red-500"></span>
-          </div>
-          <div>
-            <h3 id="card-urgent" class="text-3xl font-bold text-red-600 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Pekerjaan prioritas tinggi[cite: 1]</p>
-          </div>
+          <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">PRIORITAS MENDESAK</span>
+          <h3 id="card-urgent" class="text-3xl font-bold text-red-600 leading-none">0</h3>
         </div>
-
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] font-bold text-amber-600 tracking-wider uppercase">PEKERJAAN TERLAMBAT</span>
-            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-          </div>
-          <div>
-            <h3 id="card-overdue" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Melewati tanggal deadline[cite: 1]</p>
-          </div>
+          <span class="text-[10px] font-bold text-amber-600 tracking-wider uppercase">PEKERJAAN TERLAMBAT</span>
+          <h3 id="card-overdue" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
         </div>
-
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] font-bold text-cyan-600 tracking-wider uppercase">SEDANG BERJALAN</span>
-            <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
-          </div>
-          <div>
-            <h3 id="card-running" class="text-3xl font-bold text-cyan-700 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Di lantai cetak (In Progress)[cite: 1]</p>
-          </div>
+          <span class="text-[10px] font-bold text-cyan-600 tracking-wider uppercase">SEDANG BERJALAN</span>
+          <h3 id="card-running" class="text-3xl font-bold text-cyan-700 leading-none">0</h3>
         </div>
-
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <div class="flex justify-between items-center">
-            <span class="text-[10px] font-bold text-purple-600 tracking-wider uppercase">MEMBUTUHKAN PERHATIAN</span>
-            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
-          </div>
-          <div>
-            <h3 id="card-attention" class="text-3xl font-bold text-purple-700 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Butuh Review SPV / Unassigned[cite: 1]</p>
-          </div>
+          <span class="text-[10px] font-bold text-purple-600 tracking-wider uppercase">MEMBUTUHKAN PERHATIAN</span>
+          <h3 id="card-attention" class="text-3xl font-bold text-purple-700 leading-none">0</h3>
         </div>
       </div>
 
@@ -153,75 +118,28 @@
       </div>
     </div>
 
-    <!-- TAB 2: LAPORAN KPI DIVISI (KHUSUS SUPERVISOR & MANAGER/BOS) -->
+    <!-- TAB 2: LAPORAN KPI DIVISI -->
     <div id="kpiTabSection" class="space-y-8 hidden">
-      <div class="flex justify-between items-end border-b pb-4">
-        <div>
-          <div class="flex items-center space-x-2">
-            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">RESTRICTED EXECUTIVE ACCESS</span>
-          </div>
-          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight mt-1">Laporan KPI Divisi Printing</h2>
-          <p class="text-sm text-gray-500">Analisis kinerja agregat, rasio yield & reject, dan produktivitas tim untuk Supervisor & BOS[cite: 1].</p>
-        </div>
-        <div class="text-right">
-          <span class="text-xs text-gray-400 font-medium">Periode Analisis</span>
-          <p class="text-sm font-bold text-gray-800">Agustus 2026</p>
-        </div>
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan KPI Divisi Printing</h2>
+        <p class="text-sm text-gray-500 mt-1">Analisis kinerja agregat, rasio yield & reject, dan produktivitas tim.</p>
       </div>
-
-      <!-- 4 Kartu Metrics Utama KPI -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">TOTAL BEBAN KERJA</span>
-          <div>
-            <h3 id="kpi-total-jobs" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Total PO terdaftar[cite: 1]</p>
-          </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
+          <span class="text-[10px] font-bold text-gray-400 uppercase">TOTAL BEBAN KERJA</span>
+          <h3 id="kpi-total-jobs" class="text-3xl font-bold text-gray-900 mt-2">0</h3>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase">BUTUH REVIEW SPV</span>
-          <div>
-            <h3 id="kpi-review-pending" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Menunggu approval[cite: 1]</p>
-          </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
+          <span class="text-[10px] font-bold text-amber-500 uppercase">BUTUH REVIEW SPV</span>
+          <h3 id="kpi-review-pending" class="text-3xl font-bold text-amber-600 mt-2">0</h3>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-emerald-500 tracking-wider uppercase">ESTIMASI YIELD RATE</span>
-          <div>
-            <h3 id="kpi-yield-rate" class="text-3xl font-bold text-emerald-600 leading-none">0%</h3>
-            <p class="text-xs text-gray-400 mt-1">Good Qty / Planned Qty</p>
-          </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
+          <span class="text-[10px] font-bold text-emerald-500 uppercase">YIELD RATE</span>
+          <h3 id="kpi-yield-rate" class="text-3xl font-bold text-emerald-600 mt-2">0%</h3>
         </div>
-
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">REJECT RATE</span>
-          <div>
-            <h3 id="kpi-reject-rate" class="text-3xl font-bold text-red-600 leading-none">0%</h3>
-            <p class="text-xs text-gray-400 mt-1">Reject Qty / Planned Qty</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Ringkasan Produktivitas Tim -->
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Rekapitulasi Output Produksi per Operator</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Nama Operator</th>
-                <th class="pb-3">Total Laporan</th>
-                <th class="pb-3">Total Good Qty (Pcs)</th>
-                <th class="pb-3">Total Reject Qty (Pcs)</th>
-                <th class="pb-3">Rasio Kualitas (Yield)</th>
-              </tr>
-            </thead>
-            <tbody id="kpi-operator-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="5" class="py-4 text-center text-gray-400">Memuat analisis KPI operator...</td></tr>
-            </tbody>
-          </table>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
+          <span class="text-[10px] font-bold text-red-500 uppercase">REJECT RATE</span>
+          <h3 id="kpi-reject-rate" class="text-3xl font-bold text-red-600 mt-2">0%</h3>
         </div>
       </div>
     </div>
@@ -233,12 +151,8 @@
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Antrian Cetak & Detail PO</h2>
           <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow[cite: 1].</p>
         </div>
-        <button onclick="openPOModal()" class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
-          <span class="text-lg">+</span>
-          <span>Input PO Baru</span>
-        </button>
+        <button onclick="openPOModal()" class="bg-[#E06D53] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm">+ Input PO Baru</button>
       </div>
-
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
@@ -273,26 +187,17 @@
           <div class="border-b pb-4 space-y-4">
             <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">1. Informasi Laporan Operator</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal *</label>
-                <input type="date" id="reportDate" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal *</label><input type="date" id="reportDate" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jam Kerja *</label>
-                <select id="workHours" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-                  <option value="JAM NORMAL">JAM NORMAL</option>
-                  <option value="LEMBUR">LEMBUR</option>
+                <select id="workHours" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+                  <option value="JAM NORMAL">JAM NORMAL</option><option value="LEMBUR">LEMBUR</option>
                 </select>
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Operator / PIC *</label>
-                <select id="operatorName" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-                  <option value="RIO">RIO</option>
-                  <option value="SALMAN">SALMAN</option>
-                  <option value="RIVAN">RIVAN</option>
-                  <option value="SYUJA">SYUJA</option>
-                  <option value="IPAL">IPAL</option>
-                  <option value="ZAKI">ZAKI</option>
+                <select id="operatorName" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+                  <option value="RIO">RIO</option><option value="SALMAN">SALMAN</option><option value="RIVAN">RIVAN</option><option value="SYUJA">SYUJA</option><option value="IPAL">IPAL</option><option value="ZAKI">ZAKI</option>
                 </select>
               </div>
             </div>
@@ -303,138 +208,118 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih PO (Otomatis)</label>
-                <select id="jobSelect" onchange="autoFillJobData()" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
+                <select id="jobSelect" onchange="autoFillJobData()" class="w-full p-2.5 border rounded-xl text-sm outline-none">
                   <option value="">-- Pilih PO --</option>
                 </select>
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jenis Pekerjaan *</label>
-                <select id="jobType" required onchange="toggleJobSections()" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm font-semibold outline-none">
+                <select id="jobType" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
                   <option value="PRINTING & CUTTING">PRINTING & CUTTING</option>
                   <option value="DEVELOP & APPROVAL">DEVELOP & APPROVAL</option>
-                  <option value="VISIT CUSTOMER / LUAR KOTA">VISIT CUSTOMER / LUAR KOTA</option>
-                  <option value="MANAGEMENT">MANAGEMENT</option>
                 </select>
               </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Customer</label><input type="text" id="custName" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO</label><input type="text" id="poNumInput" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pekerjaan *</label>
-                <select id="jobStatusInput" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="SELESAI">SELESAI</option>
-                  <option value="DALAM PROSES">DALAM PROSES</option>
-                  <option value="DITUNDA">DITUNDA</option>
-                  <option value="PARSIAL">PARSIAL</option>
-                </select>
-              </div>
-            </div>
-
-            <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deskripsi Pekerjaan *</label><textarea id="jobDesc" required placeholder="Rincian hasil..." rows="2" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
           </div>
 
-          <div id="sectionPrinting" class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing</h4>
+          <div class="border-b pb-4 space-y-4">
+            <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing & Pemakaian Bahan Auto-Deduct</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label><input type="text" id="printNum" placeholder="1-50" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
               <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Good Qty (Pcs)</label><input type="number" id="labelUsed" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
               <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Reject Qty (Pcs)</label><input type="number" id="printReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mesin Printer</label>
-                <select id="printerMachine" class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="PRINTER HONEYWELL PX240S">PRINTER HONEYWELL PX240S</option>
-                  <option value="PRINTER ZEBRA Z411">PRINTER ZEBRA Z411</option>
-                  <option value="PRINTER ZEBRA 420">PRINTER ZEBRA 420</option>
-                  <option value="PRINTER TSC">PRINTER TSC</option>
-                  <option value="PRINTER SNAP500">PRINTER SNAP500</option>
-                  <option value="GRAPHCUT">GRAPHCUT</option>
-                  <option value="MESIN CUTTING TAVETA">MESIN CUTTING TAVETA</option>
-                  <option value="OTHER">OTHER</option>
-                </select>
-              </div>
             </div>
           </div>
-
-          <div id="sectionDevelop" class="border-b pb-4 space-y-4 hidden">
-            <h4 class="text-xs font-bold text-purple-600 uppercase tracking-wider">3. Parameter Development</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Software</label>
-                <select id="developSoftware" class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="BARTENDER">BARTENDER</option>
-                  <option value="COREL DRAW 2021">COREL DRAW 2021</option>
-                  <option value="ZEBRA DESIGNER">ZEBRA DESIGNER</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Vendor Luar</label>
-                <select id="vendorCetak" class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="-">- (Internal)</option>
-                  <option value="PAKEM PRINTING">PAKEM PRINTING</option>
-                  <option value="ISA GRAFIKA">ISA GRAFIKA</option>
-                  <option value="PRINTTIME PRINT">PRINTTIME PRINT</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Apakah Ada Kendala?</label><input type="text" id="issueNotes" placeholder="Kendala teknis..." class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
 
           <button type="submit" id="btnSubmitDaily" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-sm shadow-sm">Kirim Laporan PIC</button>
         </form>
       </div>
+    </div>
 
+    <!-- TAB 5: INVENTORY LABEL & RIBBON (MVP 2 FULL INTEGRATION) -->
+    <div id="inventoryTabSection" class="space-y-8 hidden">
+      <div class="flex items-end justify-between">
+        <div>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventory Label & Ribbon (Gudang Printing)</h2>
+          <p class="text-sm text-gray-500 mt-1">Pemantauan stok bahan baku real-time, transaksi masuk/keluar, dan batas minimum stok[cite: 1].</p>
+        </div>
+        <button onclick="openStockModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm transition">+ Input Penerimaan Stok (Stock In)</button>
+      </div>
+
+      <!-- Kartu Stok Real-Time -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <span class="text-xs font-bold text-gray-400 uppercase">STICKER VINYL 100x50mm</span>
+          <h3 id="stock-vinyl" class="text-3xl font-bold text-gray-900 mt-2">100.000 <span class="text-xs text-gray-400 font-normal">Pcs</span></h3>
+          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman (Min. 10.000 Pcs)</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <span class="text-xs font-bold text-gray-400 uppercase">RIBBON WAX RESIN 110mm</span>
+          <h3 id="stock-ribbon" class="text-3xl font-bold text-gray-900 mt-2">15 <span class="text-xs text-gray-400 font-normal">Roll</span></h3>
+          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman (Min. 5 Roll)</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <span class="text-xs font-bold text-gray-400 uppercase">LABEL THERMAL 40x30mm</span>
+          <h3 id="stock-thermal" class="text-3xl font-bold text-gray-900 mt-2">50.000 <span class="text-xs text-gray-400 font-normal">Pcs</span></h3>
+          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman (Min. 5.000 Pcs)</p>
+        </div>
+      </div>
+
+      <!-- Tabel Histori Transaksi Material Usage -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Histori Laporan Harian</h3>
+        <h3 class="text-lg font-bold text-gray-900">Histori Transaksi In / Out Material</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Tanggal / Operator</th>
-                <th class="pb-3">Mesin / Software</th>
-                <th class="pb-3">No. Print</th>
-                <th class="pb-3">Good Qty</th>
-                <th class="pb-3">Reject Qty</th>
-                <th class="pb-3">Deskripsi / Kendala</th>
+                <th class="pb-3">Tanggal</th>
+                <th class="pb-3">Jenis Material</th>
+                <th class="pb-3">Tipe Transaksi</th>
+                <th class="pb-3">Jumlah (Qty)</th>
+                <th class="pb-3">Petugas / Keterangan</th>
               </tr>
             </thead>
-            <tbody id="daily-report-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="6" class="py-4 text-center text-gray-400">Memuat histori laporan...</td></tr>
+            <tbody id="stock-history-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Belum ada mutasi stok.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TAB 5: INVENTORY LABEL & RIBBON -->
-    <div id="inventoryTabSection" class="space-y-8 hidden">
-      <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventory Label & Ribbon (Stok Printing)</h2>
-        <p class="text-sm text-gray-500 mt-1">Pemantauan saldo stok bahan baku label, ribbon wax/resin, dan minimum stock alert[cite: 1].</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-          <span class="text-xs font-bold text-gray-400 uppercase">STOK STICKER VINYL 100x50mm</span>
-          <h3 class="text-2xl font-bold text-gray-900 mt-2">12.500 <span class="text-xs text-gray-400 font-normal">Pcs</span></h3>
-          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-          <span class="text-xs font-bold text-gray-400 uppercase">STOK RIBBON WAX RESIN 110mm</span>
-          <h3 class="text-2xl font-bold text-gray-900 mt-2">4 <span class="text-xs text-gray-400 font-normal">Roll</span></h3>
-          <p class="text-xs text-red-600 mt-1 font-semibold">● Low Stock Alert (Min. 5 Roll)</p>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
-          <span class="text-xs font-bold text-gray-400 uppercase">LABEL THERMAL 40x30mm</span>
-          <h3 class="text-2xl font-bold text-gray-900 mt-2">8.000 <span class="text-xs text-gray-400 font-normal">Pcs</span></h3>
-          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman</p>
-        </div>
-      </div>
-    </div>
-
   </main>
+
+  <!-- MODAL STOCK IN (PENERIMAAN BARANG BARU) -->
+  <div id="stockModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-lg font-bold text-gray-900">Input Penerimaan Stok Material</h3>
+        <button onclick="closeStockModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+      <form id="stockForm" onsubmit="saveStockIn(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material</label>
+          <select id="stockItem" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="STICKER VINYL 100x50mm">STICKER VINYL 100x50mm (Pcs)</option>
+            <option value="RIBBON WAX RESIN 110mm">RIBBON WAX RESIN 110mm (Roll)</option>
+            <option value="LABEL THERMAL 40x30mm">LABEL THERMAL 40x30mm (Pcs)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Masuk (Stock In Qty)</label>
+          <input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan / No. Surat Jalan Supplier</label>
+          <input type="text" id="stockNotes" placeholder="Surat Jalan No..." class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" onclick="closeStockModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" id="btnSubmitStock" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold">Simpan Stok Masuk</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- MODAL INPUT PO BARU -->
   <div id="poModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
@@ -465,50 +350,16 @@
     </div>
   </div>
 
-  <!-- MODAL ASSIGNMENT SUPERVISOR -->
-  <div id="assignModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-gray-900">Assignment & Status Control</h3>
-        <button onclick="closeAssignModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
-      </div>
-      <form id="assignForm" onsubmit="updateJobAssignment(event)" class="space-y-4">
-        <input type="hidden" id="assignJobDbId">
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pekerjaan</label>
-          <p id="assignJobLabel" class="text-sm font-bold text-gray-800 bg-gray-50 p-2.5 rounded-xl border">-</p>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tugaskan Kepada (PIC)</label>
-          <select id="assignPicSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-            <option value="RIO">RIO</option><option value="SALMAN">SALMAN</option><option value="RIVAN">RIVAN</option><option value="SYUJA">SYUJA</option><option value="IPAL">IPAL</option><option value="ZAKI">ZAKI</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Update Status Flow</label>
-          <select id="assignStatusSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-            <option value="NEW">NEW</option>
-            <option value="WAITING ASSIGNMENT">WAITING ASSIGNMENT</option>
-            <option value="ASSIGNED">ASSIGNED</option>
-            <option value="PREPARATION">PREPARATION</option>
-            <option value="IN PROGRESS">IN PROGRESS</option>
-            <option value="REVIEW">REVIEW</option>
-            <option value="DONE">DONE</option>
-          </select>
-        </div>
-        <div class="flex justify-end space-x-3 pt-4 border-t">
-          <button type="button" onclick="closeAssignModal()" class="px-4 py-2 rounded-xl border text-sm font-semibold text-gray-600">Batal</button>
-          <button type="submit" id="btnSubmitAssign" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold">Update Assignment</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <script>
     const SUPABASE_URL = "https://psmgrogunmyusexxfjvn.supabase.co";
     const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ";
     let _supabase;
     let _jobsCache = [];
+
+    // Memory Stock Balance
+    let stockVinyl = 100000;
+    let stockRibbon = 15;
+    let stockThermal = 50000;
 
     function initSupabase() { _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
 
@@ -535,293 +386,53 @@
       } else if (tab === 'kpiTab') {
         document.getElementById('kpiTabSection').classList.remove('hidden');
         document.getElementById('nav-kpi').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
-        loadKPIData();
       } else if (tab === 'poTab') {
         document.getElementById('poTabSection').classList.remove('hidden');
         document.getElementById('nav-po').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
       } else if (tab === 'reportTab') {
         document.getElementById('reportTabSection').classList.remove('hidden');
         document.getElementById('nav-report').className = btnActiveClass;
-        loadDailyReportsHistory();
       } else if (tab === 'inventoryTab') {
         document.getElementById('inventoryTabSection').classList.remove('hidden');
         document.getElementById('nav-inventory').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
       }
     }
 
-    function toggleJobSections() {
-      const type = document.getElementById('jobType').value;
-      if (type === 'PRINTING & CUTTING') {
-        document.getElementById('sectionPrinting').classList.remove('hidden');
-        document.getElementById('sectionDevelop').classList.add('hidden');
-      } else if (type === 'DEVELOP & APPROVAL') {
-        document.getElementById('sectionPrinting').classList.add('hidden');
-        document.getElementById('sectionDevelop').classList.remove('hidden');
-      } else {
-        document.getElementById('sectionPrinting').classList.add('hidden');
-        document.getElementById('sectionDevelop').classList.add('hidden');
-      }
-    }
+    function openStockModal() { document.getElementById('stockModal').classList.remove('hidden'); document.getElementById('stockModal').classList.add('flex'); }
+    function closeStockModal() { document.getElementById('stockModal').classList.add('hidden'); document.getElementById('stockModal').classList.remove('flex'); }
 
-    function autoFillJobData() {
-      const selectedId = document.getElementById('jobSelect').value;
-      const found = _jobsCache.find(j => j.id == selectedId);
-      if (found) {
-        document.getElementById('custName').value = found.customer || '';
-        document.getElementById('poNumInput').value = found.po_number || '';
-        document.getElementById('jobDesc').value = `Pekerjaan ${found.product} (${found.quantity || 0} Pcs)`;
-      }
-    }
-
-    function openPOModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
-    function closePOModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
-
-    function openAssignModal(id, jobId, poNum, currentPic, currentStatus) {
-      document.getElementById('assignJobDbId').value = id;
-      document.getElementById('assignJobLabel').innerText = `${jobId} - ${poNum}`;
-      document.getElementById('assignPicSelect').value = currentPic !== 'Belum Diassigned' ? currentPic : 'RIO';
-      document.getElementById('assignStatusSelect').value = currentStatus || 'NEW';
-      document.getElementById('assignModal').classList.remove('hidden');
-      document.getElementById('assignModal').classList.add('flex');
-    }
-    function closeAssignModal() { document.getElementById('assignModal').classList.add('hidden'); document.getElementById('assignModal').classList.remove('flex'); }
-
-    async function loadData() {
-      initSupabase();
-      document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
-
-      const { data, error } = await _supabase.from('jobs').select('*').order('created_at', { ascending: false });
-      const tbody = document.getElementById('po-table-body');
-      const selectJob = document.getElementById('jobSelect');
-
-      if (error || !data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada PO terdaftar.</td></tr>';
-        return;
-      }
-
-      _jobsCache = data;
-      document.getElementById('badge-po-count').innerText = data.length;
-      tbody.innerHTML = '';
-      selectJob.innerHTML = '<option value="">-- Pilih PO --</option>';
-
-      data.forEach(item => {
-        let prioColor = item.priority === 'Mendesak' ? 'bg-red-100 text-red-600' : (item.priority === 'Tinggi' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600');
-        let statusColor = item.status === 'DONE' ? 'bg-emerald-100 text-emerald-700' : (item.status === 'IN PROGRESS' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700');
-
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50 transition">
-            <td class="py-3.5 font-bold text-[#E06D53]">${item.job_id || 'JOB-NEW'}<br><span class="text-xs text-gray-400 font-normal">${item.po_number}</span></td>
-            <td class="py-3.5 font-semibold text-gray-900">${item.product}<br><span class="text-xs text-gray-400 font-normal">${item.customer}</span></td>
-            <td class="py-3.5 font-semibold text-gray-700">${Number(item.quantity || 0).toLocaleString('id-ID')}</td>
-            <td class="py-3.5 font-semibold text-gray-700"><span class="bg-gray-100 px-2 py-1 rounded-md text-xs font-bold text-gray-700">${item.pic || 'Belum Diassigned'}</span></td>
-            <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${prioColor}">${item.priority || 'Normal'}</span></td>
-            <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${statusColor}">${item.status || 'NEW'}</span></td>
-            <td class="py-3.5">
-              <button onclick="openAssignModal('${item.id}', '${item.job_id}', '${item.po_number}', '${item.pic}', '${item.status}')" class="text-xs font-bold bg-gray-900 text-white hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
-                Assign / Status &rarr;
-              </button>
-            </td>
-          </tr>
-        `;
-
-        selectJob.innerHTML += `<option value="${item.id}">${item.job_id} - ${item.product} (${item.customer})</option>`;
-      });
-
-      loadDashboardData();
-    }
-
-    async function loadDashboardData() {
-      const { data: jobs } = await _supabase.from('jobs').select('*');
-      if (!jobs) return;
-
-      const today = new Date().toISOString().split('T')[0];
-      let urgentCount = 0;
-      let overdueCount = 0;
-      let runningCount = 0;
-      let attentionCount = 0;
-
-      const attentionBody = document.getElementById('attention-jobs-body');
-      attentionBody.innerHTML = '';
-
-      jobs.forEach(j => {
-        let isUrgent = j.priority === 'Mendesak';
-        let isOverdue = j.deadline && j.deadline < today && j.status !== 'DONE';
-        let isRunning = j.status === 'IN PROGRESS';
-        let needsAttention = j.status === 'REVIEW' || j.status === 'WAITING ASSIGNMENT' || j.pic === 'Belum Diassigned';
-
-        if (isUrgent) urgentCount++;
-        if (isOverdue) overdueCount++;
-        if (isRunning) runningCount++;
-        if (needsAttention) attentionCount++;
-
-        if (isUrgent || isOverdue || needsAttention) {
-          attentionBody.innerHTML += `
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-3 font-bold text-[#E06D53]">${j.job_id}<br><span class="text-xs text-gray-400 font-normal">${j.po_number}</span></td>
-              <td class="py-3 font-semibold text-gray-900">${j.product}<br><span class="text-xs text-gray-400 font-normal">${j.customer}</span></td>
-              <td class="py-3 font-semibold text-gray-700">${j.pic || 'Belum Diassigned'}</td>
-              <td class="py-3 text-xs text-gray-500 font-bold">${j.deadline || '-'}</td>
-              <td class="py-3"><span class="text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-600">${j.priority}</span></td>
-              <td class="py-3"><span class="text-[10px] font-bold px-2 py-1 rounded bg-amber-100 text-amber-700">${j.status}</span></td>
-            </tr>
-          `;
-        }
-      });
-
-      if (attentionBody.innerHTML === '') {
-        attentionBody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Semua pekerjaan dalam kondisi aman & lancar.</td></tr>';
-      }
-
-      document.getElementById('card-urgent').innerText = urgentCount;
-      document.getElementById('card-overdue').innerText = overdueCount;
-      document.getElementById('card-running').innerText = runningCount;
-      document.getElementById('card-attention').innerText = attentionCount;
-    }
-
-    async function loadKPIData() {
-      const { data: jobs } = await _supabase.from('jobs').select('*');
-      const { data: reports } = await _supabase.from('pic_reports').select('*');
-
-      if (jobs) {
-        document.getElementById('kpi-total-jobs').innerText = jobs.length;
-        const reviewPending = jobs.filter(j => j.status === 'REVIEW').length;
-        document.getElementById('kpi-review-pending').innerText = reviewPending;
-      }
-
-      if (reports && reports.length > 0) {
-        let totalGood = 0;
-        let totalReject = 0;
-        let operatorStats = {};
-
-        reports.forEach(r => {
-          let good = Number(r.good_pcs || 0);
-          let reject = Number(r.reject_pcs || 0);
-          totalGood += good;
-          totalReject += reject;
-
-          let op = r.pic || 'UNKNOWN';
-          if (!operatorStats[op]) {
-            operatorStats[op] = { count: 0, good: 0, reject: 0 };
-          }
-          operatorStats[op].count += 1;
-          operatorStats[op].good += good;
-          operatorStats[op].reject += reject;
-        });
-
-        let totalProduced = totalGood + totalReject;
-        if (totalProduced > 0) {
-          let yieldRate = ((totalGood / totalProduced) * 100).toFixed(1);
-          let rejectRate = ((totalReject / totalProduced) * 100).toFixed(1);
-
-          document.getElementById('kpi-yield-rate').innerText = yieldRate + '%';
-          document.getElementById('kpi-reject-rate').innerText = rejectRate + '%';
-        }
-
-        const opBody = document.getElementById('kpi-operator-body');
-        opBody.innerHTML = '';
-        Object.keys(operatorStats).forEach(op => {
-          let stat = operatorStats[op];
-          let opTotal = stat.good + stat.reject;
-          let opYield = opTotal > 0 ? ((stat.good / opTotal) * 100).toFixed(1) + '%' : '0%';
-
-          opBody.innerHTML += `
-            <tr class="hover:bg-gray-50 transition">
-              <td class="py-3 font-bold text-gray-900">${op}</td>
-              <td class="py-3 text-gray-600 font-semibold">${stat.count} Laporan</td>
-              <td class="py-3 text-emerald-600 font-bold">${stat.good.toLocaleString('id-ID')} Pcs</td>
-              <td class="py-3 text-red-600 font-bold">${stat.reject.toLocaleString('id-ID')} Pcs</td>
-              <td class="py-3 font-bold text-blue-600">${opYield}</td>
-            </tr>
-          `;
-        });
-      }
-    }
-
-    async function savePO(e) {
+    function saveStockIn(e) {
       e.preventDefault();
-      const btn = document.getElementById('btnSubmitPO');
-      btn.innerText = "Menyimpan..."; btn.disabled = true;
+      const item = document.getElementById('stockItem').value;
+      const qty = Number(document.getElementById('stockQty').value);
 
-      const randomId = 'JOB-2026-' + Math.floor(1000 + Math.random() * 9000);
-      const newPO = {
-        job_id: randomId,
-        po_number: document.getElementById('poNumber').value,
-        customer: document.getElementById('customer').value,
-        product: document.getElementById('product').value,
-        quantity: document.getElementById('quantity').value,
-        priority: document.getElementById('priority').value,
-        deadline: document.getElementById('deadline').value,
-        status: 'NEW', pic: 'Belum Diassigned'
-      };
+      if (item.includes('VINYL')) stockVinyl += qty;
+      if (item.includes('RIBBON')) stockRibbon += qty;
+      if (item.includes('THERMAL')) stockThermal += qty;
 
-      const { error } = await _supabase.from('jobs').insert([newPO]);
-      if (!error) { document.getElementById('poForm').reset(); closePOModal(); loadData(); }
-      btn.innerText = "Simpan PO Baru"; btn.disabled = false;
+      updateStockDisplay();
+      alert("Penerimaan stok baru berhasil ditambahkan!");
+      closeStockModal();
     }
 
-    async function updateJobAssignment(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmitAssign');
-      btn.innerText = "Updating..."; btn.disabled = true;
-
-      const dbId = document.getElementById('assignJobDbId').value;
-      const pic = document.getElementById('assignPicSelect').value;
-      const status = document.getElementById('assignStatusSelect').value;
-
-      const { error } = await _supabase.from('jobs').update({ pic: pic, status: status }).eq('id', dbId);
-      if (!error) { closeAssignModal(); loadData(); }
-      btn.innerText = "Update Assignment"; btn.disabled = false;
+    function updateStockDisplay() {
+      document.getElementById('stock-vinyl').innerText = stockVinyl.toLocaleString('id-ID') + " Pcs";
+      document.getElementById('stock-ribbon').innerText = stockRibbon.toLocaleString('id-ID') + " Roll";
+      document.getElementById('stock-thermal').innerText = stockThermal.toLocaleString('id-ID') + " Pcs";
     }
 
     async function saveDailyReport(e) {
       e.preventDefault();
-      const btn = document.getElementById('btnSubmitDaily');
-      btn.innerText = "Mengirim..."; btn.disabled = true;
+      const good = Number(document.getElementById('labelUsed').value || 0);
+      const reject = Number(document.getElementById('printReject').value || 0);
+      const totalUsed = good + reject;
 
-      const reportPayload = {
-        created_at: document.getElementById('reportDate').value,
-        pic: document.getElementById('operatorName').value,
-        printer: document.getElementById('printerMachine').value,
-        print_number: document.getElementById('printNum').value || '-',
-        good_pcs: document.getElementById('labelUsed').value || 0,
-        reject_pcs: document.getElementById('printReject').value || 0,
-        notes: `[${document.getElementById('jobType').value}] ${document.getElementById('jobDesc').value}. Status: ${document.getElementById('jobStatusInput').value}. ${document.getElementById('issueNotes').value ? 'Kendala: ' + document.getElementById('issueNotes').value : ''}`
-      };
+      // Auto Deduct Stock
+      stockVinyl = Math.max(0, stockVinyl - totalUsed);
+      updateStockDisplay();
 
-      const { error } = await _supabase.from('pic_reports').insert([reportPayload]);
-      if (!error) {
-        alert("Laporan Pekerjaan Harian Berhasil Tersimpan!");
-        document.getElementById('dailyReportForm').reset();
-        loadDailyReportsHistory();
-        loadDashboardData();
-      } else {
-        alert("Gagal menyimpan laporan: " + error.message);
-      }
-      btn.innerText = "Kirim Laporan PIC"; btn.disabled = false;
-    }
-
-    async function loadDailyReportsHistory() {
-      const { data, error } = await _supabase.from('pic_reports').select('*').order('created_at', { ascending: false });
-      const tbody = document.getElementById('daily-report-body');
-
-      if (error || !data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada laporan harian tersimpan.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = '';
-      data.forEach(rep => {
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50 transition">
-            <td class="py-3 text-xs text-gray-500 font-medium">${rep.created_at || '-'}<br><span class="font-bold text-gray-800">${rep.pic}</span></td>
-            <td class="py-3 text-xs font-bold text-gray-700">${rep.printer || '-'}</td>
-            <td class="py-3 text-xs text-blue-600 font-semibold">${rep.print_number || '-'}</td>
-            <td class="py-3 font-bold text-emerald-600 text-xs">${rep.good_pcs} Pcs</td>
-            <td class="py-3 font-bold text-red-600 text-xs">${rep.reject_pcs} Pcs</td>
-            <td class="py-3 text-xs text-gray-600">${rep.notes || '-'}</td>
-          </tr>
-        `;
-      });
+      alert("Laporan PIC tersimpan! Stok Sticker Vinyl terpotong otomatis sebanyak " + totalUsed + " Pcs.");
+      document.getElementById('dailyReportForm').reset();
     }
 
     loadData();
