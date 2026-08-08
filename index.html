@@ -45,7 +45,7 @@
           <span>Dashboard Operasional</span>
         </button>
 
-        <button onclick="switchTab('kpiTab')" id="nav-kpi" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+        <button onclick="switchTab('kpiTab')" id="nav-kpi" class="role-nav w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <div class="flex items-center space-x-3">
             <span class="text-amber-500 font-bold">📊</span>
             <span>Laporan KPI Divisi</span>
@@ -53,17 +53,26 @@
           <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold uppercase">SPV / BOS</span>
         </button>
 
-        <button onclick="switchTab('poTab')" id="nav-po" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+        <button onclick="switchTab('poTab')" id="nav-po" class="role-nav w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <span>Antrian & Detail PO</span>
           <span id="badge-po-count" class="bg-[#2A2F3D] text-gray-300 text-xs px-2 py-0.5 rounded-md font-bold">0</span>
         </button>
 
-        <button onclick="switchTab('reportTab')" id="nav-report" class="w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+        <!-- MODAL / MENU RIO & SYUJA: DEVELOPMENT & APPROVAL LAYOUT -->
+        <button onclick="switchTab('layoutTab')" id="nav-layout" class="role-nav w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <div class="flex items-center space-x-3">
+            <span class="text-pink-400 font-bold">🎨</span>
+            <span>Layout & Approval</span>
+          </div>
+          <span class="text-[10px] bg-pink-900/50 text-pink-300 px-2 py-0.5 rounded font-bold uppercase">RIO/SYUJA</span>
+        </button>
+
+        <button onclick="switchTab('reportTab')" id="nav-report" class="role-nav w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <span>Laporan Pekerjaan PIC</span>
         </button>
 
         <!-- STOK GUDANG (RIVAN) -->
-        <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+        <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="role-nav w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <div class="flex items-center space-x-3">
             <span class="text-blue-400 font-bold">📦</span>
             <span>Stok Gudang Printing</span>
@@ -72,7 +81,7 @@
         </button>
 
         <!-- PRINTER & DEVICE (SALMAN) -->
-        <button onclick="switchTab('deviceTab')" id="nav-device" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+        <button onclick="switchTab('deviceTab')" id="nav-device" class="role-nav w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <div class="flex items-center space-x-3">
             <span class="text-purple-400 font-bold">🖨️</span>
             <span>Printer & Device</span>
@@ -82,13 +91,24 @@
       </nav>
     </div>
 
-    <div class="bg-[#2A2F3D] p-3 rounded-xl flex items-center justify-between">
+    <!-- SWITCH ROLE PROFILE USER -->
+    <div class="bg-[#2A2F3D] p-3 rounded-xl space-y-2">
       <div class="flex items-center space-x-3">
-        <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold text-white">SP</div>
+        <div id="userAvatar" class="w-8 h-8 rounded-full bg-[#E06D53] flex items-center justify-center text-xs font-bold text-white">SA</div>
         <div class="text-xs">
-          <p class="font-bold text-white leading-tight">Syuja (Supervisor)</p>
-          <p class="text-[10px] text-gray-400">SUPERVISOR / ADMIN</p>
+          <p id="userNameDisplay" class="font-bold text-white leading-tight">Syuja Arisyi</p>
+          <p id="userRoleDisplay" class="text-[10px] text-gray-400">SUPERVISOR (ALL ACCESS)</p>
         </div>
+      </div>
+      <div>
+        <label class="block text-[9px] font-bold text-gray-400 uppercase mb-1">Ganti Role User (Simulasi):</label>
+        <select id="roleSwitcher" onchange="changeUserRole()" class="w-full bg-[#1E222D] text-gray-200 border border-gray-700 rounded-lg text-xs p-1.5 outline-none font-semibold">
+          <option value="Syuja">Syuja (Supervisor - All Access)</option>
+          <option value="Rio">Rio (PIC Layout, Versant & Printing)</option>
+          <option value="Salman">Salman (PIC Printer & Maintenance)</option>
+          <option value="Rivan">Rivan (PIC Stok Gudang Printing)</option>
+          <option value="Manager">Manager / BOS (All Access Monitoring)</option>
+        </select>
       </div>
     </div>
   </aside>
@@ -201,6 +221,46 @@
       </div>
     </div>
 
+    <!-- TAB NEW: DEVELOPMENT & APPROVAL LAYOUT (SYUJA & RIO) -->
+    <div id="layoutTabSection" class="space-y-8 hidden">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">DEVELOPMENT & APPROVAL LAYOUT</h2>
+          <p class="text-sm text-gray-500 mt-1">Pencatatan draft layout, film cetak, cetakan A3 Versant, & tracking approval customer (PIC: Syuja & Rio)</p>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <button onclick="openLayoutModal()" class="bg-pink-700 hover:bg-pink-800 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">+ Input Layout / Sampling Baru</button>
+        </div>
+      </div>
+
+      <!-- TABEL DAFTAR DRAFT LAYOUT & STATUS APPROVAL -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <h3 class="text-lg font-bold text-gray-900">Antrian Layout, Film & Sampling Customer</h3>
+          <input type="text" id="searchLayoutInput" oninput="renderLayoutTable()" placeholder="🔍 Cari PO, ID Sampel, customer, atau produk..." class="p-2 border rounded-xl text-xs w-full md:w-72 outline-none bg-gray-50">
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Kode Layout / PO</th>
+                <th class="pb-3">Customer & Nama Produk</th>
+                <th class="pb-3">Jenis Output</th>
+                <th class="pb-3">Versi</th>
+                <th class="pb-3">PIC Designer</th>
+                <th class="pb-3">Status Approval</th>
+                <th class="pb-3">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="layout-table-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada antrian layout terdaftar.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- TAB 4: LAPORAN PEKERJAAN PIC -->
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
@@ -233,9 +293,9 @@
             <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Detail Pekerjaan & Status</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih PO (Otomatis)</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih PO / ID Sampel (Otomatis)</label>
                 <select id="jobSelect" onchange="autoFillJobData()" class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="">-- Pilih PO --</option>
+                  <option value="">-- Pilih PO atau Sampel --</option>
                 </select>
               </div>
               <div>
@@ -243,6 +303,7 @@
                 <select id="jobType" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
                   <option value="PRINTING & CUTTING">PRINTING & CUTTING</option>
                   <option value="DEVELOP & APPROVAL">DEVELOP & APPROVAL</option>
+                  <option value="SAMPLING / TRIAL">SAMPLING / TRIAL (NON-PO)</option>
                 </select>
               </div>
             </div>
@@ -593,6 +654,79 @@
     </div>
   </div>
 
+  <!-- MODAL LAYOUT / SAMPLING (SYUJA & RIO) -->
+  <div id="layoutModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 id="layoutModalTitle" class="text-lg font-bold text-gray-900">Input Layout / Sampling Baru</h3>
+        <button onclick="closeLayoutModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+      <form onsubmit="saveLayoutItem(event)" class="space-y-4">
+        <input type="hidden" id="editLayoutId">
+        
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO (Opsional - Kosongkan Jika Sampel/Pra-Cetak)</label>
+          <input type="text" id="layoutPoNumber" placeholder="Contoh: PO-2026-008 (Biarkan kosong jika Sampel)" class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase font-mono">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer *</label>
+            <input type="text" id="layoutCustomer" required placeholder="PT Seri Rasa" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Produk / Desain *</label>
+            <input type="text" id="layoutProduct" required placeholder="Label Botol / Stiker Versant A3" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jenis Output Layout *</label>
+            <select id="layoutOutputType" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+              <option value="Label Barcode / Roll">Label Barcode / Roll</option>
+              <option value="Desain Film Cetak">Desain Film Cetak</option>
+              <option value="Cetak A3+ Versant Digital">Cetak A3+ Versant Digital</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Versi Layout *</label>
+            <input type="text" id="layoutVersion" required value="V1" class="w-full p-2.5 border rounded-xl text-sm font-mono font-bold outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">PIC Designer / Developer *</label>
+            <select id="layoutPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+              <option value="Rio">Rio</option>
+              <option value="Syuja">Syuja</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Approval *</label>
+            <select id="layoutStatus" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+              <option value="Drafting Layout">Drafting Layout</option>
+              <option value="Menunggu Approval Customer">Menunggu Approval Customer</option>
+              <option value="Revisi Layout">Revisi Layout</option>
+              <option value="ACC Cetak">ACC Cetak (Siap Naik Cetak)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan Spesifikasi / Instruksi Revisi</label>
+          <textarea id="layoutNotes" placeholder="Catatan pisau potong, bleed, warna spot, atau instruksi revisi customer..." rows="2" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea>
+        </div>
+
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" onclick="closeLayoutModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" id="btnSubmitLayout" class="px-5 py-2 rounded-xl bg-pink-700 text-white text-sm font-semibold">Simpan Layout</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- MODAL SALMAN 1: TAMBAH / EDIT PRINTER DEVICE -->
   <div id="printerModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
@@ -765,7 +899,7 @@
     <div style="margin-top: 50px; display: flex; justify-content: space-between; text-align: center; font-size: 11px;">
       <div>
         <p style="margin-bottom: 50px;">Petugas / Teknisi Yang Bertanggung Jawab</p>
-        <p style="font-weight: bold; text-decoration: underline;" id="printSignPic">( Rivan / Salman )</p>
+        <p style="font-weight: bold; text-decoration: underline;" id="printSignPic">( Rivan / Salman / Rio )</p>
       </div>
       <div>
         <p style="margin-bottom: 50px;">Mengetahui (Supervisor)</p>
@@ -783,7 +917,7 @@
       </div>
       <form id="poForm" onsubmit="savePO(event)" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO</label><input type="text" id="poNumber" required placeholder="PO-2026-008" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO</label><input type="text" id="poNumber" required placeholder="PO-2026-008" class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase font-mono"></div>
           <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Customer</label><input type="text" id="customer" required placeholder="PT Seri Rasa" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
           <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Produk</label><input type="text" id="product" required placeholder="Label Botol" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
           <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">QTY Target</label><input type="number" id="quantity" required placeholder="25000" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
@@ -808,6 +942,19 @@
     const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ";
     let _supabase;
 
+    // SYSTEM USER ROLE STATE
+    let currentUser = {
+      name: "Syuja Arisyi",
+      role: "Syuja",
+      avatar: "SA",
+      title: "SUPERVISOR (ALL ACCESS)"
+    };
+
+    // DATA PO DUMMY SEMENTARA
+    let poList = [
+      { id: 1, number: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", qty: 25000, priority: "Normal", deadline: "2026-08-15", status: "Antrian Pembagian" }
+    ];
+
     // DATA MASTER STOK GUDANG (RIVAN)
     let materials = [
       { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000, notes: "Bahan utama sticker botol" },
@@ -830,12 +977,72 @@
 
     let maintenanceHistory = [];
 
+    // DATA LAYOUT & SAMPLING (SYUJA & RIO)
+    let layoutList = [
+      { id: 1, poNumber: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", outputType: "Label Barcode / Roll", version: "V1", pic: "Rio", status: "Drafting Layout", notes: "Ukuran Pisau 100x50mm R2" },
+      { id: 2, poNumber: "SMP-2026-001", customer: "Langkah Awal", product: "Stiker Kopi Versant A3", outputType: "Cetak A3+ Versant Digital", version: "V1", pic: "Rio", status: "Menunggu Approval Customer", notes: "Sampel Non-PO" }
+    ];
+
     function initSupabase() { _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+
+    // DYNAMIC ROLE SWITCHER & NAV ACCESS CONTROL
+    function changeUserRole() {
+      const selected = document.getElementById('roleSwitcher').value;
+      if (selected === 'Syuja') {
+        currentUser = { name: "Syuja Arisyi", role: "Syuja", avatar: "SA", title: "SUPERVISOR (ALL ACCESS)" };
+      } else if (selected === 'Rio') {
+        currentUser = { name: "Rio", role: "Rio", avatar: "RO", title: "PIC LAYOUT & PRINTING" };
+      } else if (selected === 'Salman') {
+        currentUser = { name: "Salman", role: "Salman", avatar: "SM", title: "PIC PRINTER & MAINTENANCE" };
+      } else if (selected === 'Rivan') {
+        currentUser = { name: "Rivan", role: "Rivan", avatar: "RV", title: "PIC STOK GUDANG PRINTING" };
+      } else if (selected === 'Manager') {
+        currentUser = { name: "Manager / BOS", role: "Manager", avatar: "BOS", title: "MANAGER (ALL ACCESS MONITOR)" };
+      }
+
+      document.getElementById('userNameDisplay').innerText = currentUser.name;
+      document.getElementById('userRoleDisplay').innerText = currentUser.title;
+      document.getElementById('userAvatar').innerText = currentUser.avatar;
+
+      // Filter Navigasi Sidebar Berdasarkan Role
+      const navKpi = document.getElementById('nav-kpi');
+      const navPo = document.getElementById('nav-po');
+      const navLayout = document.getElementById('nav-layout');
+      const navReport = document.getElementById('nav-report');
+      const navInventory = document.getElementById('nav-inventory');
+      const navDevice = document.getElementById('nav-device');
+
+      navKpi.classList.remove('hidden');
+      navPo.classList.remove('hidden');
+      navLayout.classList.remove('hidden');
+      navReport.classList.remove('hidden');
+      navInventory.classList.remove('hidden');
+      navDevice.classList.remove('hidden');
+
+      if (currentUser.role === 'Rio') {
+        navKpi.classList.add('hidden');
+        navInventory.classList.add('hidden');
+        navDevice.classList.add('hidden');
+      } else if (currentUser.role === 'Salman') {
+        navKpi.classList.add('hidden');
+        navPo.classList.add('hidden');
+        navLayout.classList.add('hidden');
+        navInventory.classList.add('hidden');
+      } else if (currentUser.role === 'Rivan') {
+        navKpi.classList.add('hidden');
+        navPo.classList.add('hidden');
+        navLayout.classList.add('hidden');
+        navDevice.classList.add('hidden');
+      }
+
+      switchTab('dashTab');
+    }
 
     function switchTab(tab) {
       document.getElementById('dashTabSection').classList.add('hidden');
       document.getElementById('kpiTabSection').classList.add('hidden');
       document.getElementById('poTabSection').classList.add('hidden');
+      document.getElementById('layoutTabSection').classList.add('hidden');
       document.getElementById('reportTabSection').classList.add('hidden');
       document.getElementById('inventoryTabSection').classList.add('hidden');
       document.getElementById('deviceTabSection').classList.add('hidden');
@@ -843,9 +1050,14 @@
       if (tab === 'dashTab') document.getElementById('dashTabSection').classList.remove('hidden');
       else if (tab === 'kpiTab') document.getElementById('kpiTabSection').classList.remove('hidden');
       else if (tab === 'poTab') document.getElementById('poTabSection').classList.remove('hidden');
+      else if (tab === 'layoutTab') {
+        document.getElementById('layoutTabSection').classList.remove('hidden');
+        renderLayoutTable();
+      }
       else if (tab === 'reportTab') {
         document.getElementById('reportTabSection').classList.remove('hidden');
         populateReportMaterialsDropdown();
+        populateReportJobsDropdown();
       }
       else if (tab === 'inventoryTab') {
         document.getElementById('inventoryTabSection').classList.remove('hidden');
@@ -855,6 +1067,138 @@
         document.getElementById('deviceTabSection').classList.remove('hidden');
         renderDevicesAndSpareparts();
       }
+    }
+
+    /* --- LOGIKA DEVELOPMENT & APPROVAL LAYOUT (SYUJA & RIO) --- */
+    function openLayoutModal() {
+      document.getElementById('editLayoutId').value = '';
+      document.getElementById('layoutModalTitle').innerText = 'Input Layout / Sampling Baru';
+      document.getElementById('btnSubmitLayout').innerText = 'Simpan Layout';
+      
+      document.getElementById('layoutPoNumber').value = '';
+      document.getElementById('layoutCustomer').value = '';
+      document.getElementById('layoutProduct').value = '';
+      document.getElementById('layoutOutputType').value = 'Label Barcode / Roll';
+      document.getElementById('layoutVersion').value = 'V1';
+      document.getElementById('layoutPic').value = currentUser.role === 'Rio' ? 'Rio' : 'Syuja';
+      document.getElementById('layoutStatus').value = 'Drafting Layout';
+      document.getElementById('layoutNotes').value = '';
+
+      document.getElementById('layoutModal').classList.remove('hidden');
+      document.getElementById('layoutModal').classList.add('flex');
+    }
+    function closeLayoutModal() { document.getElementById('layoutModal').classList.add('hidden'); document.getElementById('layoutModal').classList.remove('flex'); }
+
+    function saveLayoutItem(e) {
+      e.preventDefault();
+      const editId = document.getElementById('editLayoutId').value;
+      let poNum = document.getElementById('layoutPoNumber').value.trim().toUpperCase();
+      const customer = document.getElementById('layoutCustomer').value;
+      const product = document.getElementById('layoutProduct').value;
+      const outputType = document.getElementById('layoutOutputType').value;
+      const version = document.getElementById('layoutVersion').value;
+      const pic = document.getElementById('layoutPic').value;
+      const status = document.getElementById('layoutStatus').value;
+      const notes = document.getElementById('layoutNotes').value;
+
+      // Jika Tanpa PO (Sampling/Pra-Cetak), Generate Kode Sampel Otomatis
+      if (!poNum) {
+        const nextNum = String(layoutList.length + 1).padStart(3, '0');
+        poNum = `SMP-2026-${nextNum}`;
+      } else {
+        // Otomatis Kunci Status PO menjadi "Menunggu Konfirmasi Layout"
+        const po = poList.find(p => p.number === poNum);
+        if (po) {
+          po.status = status === 'ACC Cetak' ? 'Siap Naik Cetak' : 'Menunggu Konfirmasi Layout';
+        }
+      }
+
+      if (editId) {
+        const l = layoutList.find(item => item.id == editId);
+        if (l) {
+          l.poNumber = poNum; l.customer = customer; l.product = product; l.outputType = outputType;
+          l.version = version; l.pic = pic; l.status = status; l.notes = notes;
+          alert(`Layout ${poNum} berhasil diperbarui!`);
+        }
+      } else {
+        const newId = layoutList.length + 1;
+        layoutList.unshift({ id: newId, poNumber: poNum, customer: customer, product: product, outputType: outputType, version: version, pic: pic, status: status, notes: notes });
+        alert(`Layout / Sampel Baru "${poNum}" Berhasil Ditambahkan!`);
+      }
+
+      closeLayoutModal();
+      renderLayoutTable();
+    }
+
+    function renderLayoutTable() {
+      const tbody = document.getElementById('layout-table-body');
+      const query = (document.getElementById('searchLayoutInput') ? document.getElementById('searchLayoutInput').value : '').toLowerCase();
+
+      tbody.innerHTML = '';
+      const filtered = layoutList.filter(l => 
+        l.poNumber.toLowerCase().includes(query) ||
+        l.customer.toLowerCase().includes(query) ||
+        l.product.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada antrian layout terdaftar.</td></tr>';
+        return;
+      }
+
+      filtered.forEach(l => {
+        let statusBadge = 'bg-gray-100 text-gray-700';
+        if (l.status === 'Drafting Layout') statusBadge = 'bg-blue-100 text-blue-700';
+        else if (l.status === 'Menunggu Approval Customer') statusBadge = 'bg-amber-100 text-amber-700';
+        else if (l.status === 'Revisi Layout') statusBadge = 'bg-red-100 text-red-700';
+        else if (l.status === 'ACC Cetak') statusBadge = 'bg-emerald-100 text-emerald-700';
+
+        tbody.innerHTML += `
+          <tr class="hover:bg-gray-50 transition">
+            <td class="py-3 text-xs font-bold font-mono text-pink-700">${l.poNumber}</td>
+            <td class="py-3 text-xs font-bold text-gray-900">${l.customer} - ${l.product}</td>
+            <td class="py-3 text-xs text-gray-600 font-medium">${l.outputType}</td>
+            <td class="py-3 text-xs font-bold font-mono text-gray-700">${l.version}</td>
+            <td class="py-3 text-xs font-bold text-gray-700">${l.pic}</td>
+            <td class="py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${statusBadge}">${l.status}</span></td>
+            <td class="py-3 text-xs space-x-2">
+              <button onclick="editLayoutItem(${l.id})" class="font-bold text-blue-600 hover:text-blue-800">Edit / ACC</button>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function editLayoutItem(id) {
+      const l = layoutList.find(item => item.id == id);
+      if (!l) return;
+
+      document.getElementById('editLayoutId').value = l.id;
+      document.getElementById('layoutModalTitle').innerText = 'Edit / Update Status Layout';
+      document.getElementById('btnSubmitLayout').innerText = 'Update Layout';
+      
+      document.getElementById('layoutPoNumber').value = l.poNumber;
+      document.getElementById('layoutCustomer').value = l.customer;
+      document.getElementById('layoutProduct').value = l.product;
+      document.getElementById('layoutOutputType').value = l.outputType;
+      document.getElementById('layoutVersion').value = l.version;
+      document.getElementById('layoutPic').value = l.pic;
+      document.getElementById('layoutStatus').value = l.status;
+      document.getElementById('layoutNotes').value = l.notes || '';
+
+      document.getElementById('layoutModal').classList.remove('hidden');
+      document.getElementById('layoutModal').classList.add('flex');
+    }
+
+    function populateReportJobsDropdown() {
+      const jobSel = document.getElementById('jobSelect');
+      if (!jobSel) return;
+      jobSel.innerHTML = '<option value="">-- Pilih PO atau Sampel --</option>';
+
+      poList.forEach(p => { jobSel.innerHTML += `<option value="${p.number}">${p.number} - ${p.customer} (${p.product})</option>`; });
+      layoutList.filter(l => l.poNumber.startsWith('SMP')).forEach(s => {
+        jobSel.innerHTML += `<option value="${s.poNumber}">${s.poNumber} [SAMPEL] - ${s.customer} (${s.product})</option>`;
+      });
     }
 
     /* --- LOGIKA RIVAN (STOK GUDANG) --- */
@@ -1549,18 +1893,27 @@
       }
     }
 
-    // Auto Deduct Pemakaian Laporan PIC
+    // Auto Deduct Pemakaian Laporan PIC (Termasuk Sampling & Produksi)
     function saveDailyReport(e) {
       e.preventDefault();
       const matId = document.getElementById('reportMaterialSelect').value;
       const good = Number(document.getElementById('labelUsed').value || 0);
       const reject = Number(document.getElementById('printReject').value || 0);
       const totalUsed = good + reject;
+      const jobVal = document.getElementById('jobSelect').value;
 
       const mat = materials.find(m => m.id == matId);
       if (mat) {
         mat.stock = Math.max(0, mat.stock - totalUsed);
-        stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: `[${mat.code}] ${mat.name}`, warehouse: 'Gudang Utama', type: 'PEMAKAIAN CETAK', qty: `-${totalUsed} ${mat.unit}`, pic: document.getElementById('operatorName').value, notes: `Produksi Cetak (Good: ${good}, Reject: ${reject})` });
+        stockHistory.unshift({ 
+          date: new Date().toISOString().split('T')[0], 
+          matName: `[${mat.code}] ${mat.name}`, 
+          warehouse: 'Gudang Utama', 
+          type: 'PEMAKAIAN CETAK', 
+          qty: `-${totalUsed} ${mat.unit}`, 
+          pic: document.getElementById('operatorName').value, 
+          notes: `${jobVal || 'Produksi Cetak'} (Good: ${good}, Reject: ${reject})` 
+        });
         alert(`Laporan PIC tersimpan! Stok ${mat.name} terpotong otomatis -${totalUsed} ${mat.unit}.`);
       }
 
@@ -1569,6 +1922,31 @@
 
     function openPOModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
     function closePOModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
+
+    function savePO(e) {
+      e.preventDefault();
+      const num = document.getElementById('poNumber').value.trim().toUpperCase();
+      const cust = document.getElementById('customer').value;
+      const prod = document.getElementById('product').value;
+      const qty = Number(document.getElementById('quantity').value);
+      const prio = document.getElementById('priority').value;
+      const dead = document.getElementById('deadline').value;
+
+      poList.unshift({
+        id: poList.length + 1,
+        number: num,
+        customer: cust,
+        product: prod,
+        qty: qty,
+        priority: prio,
+        deadline: dead,
+        status: "Antrian Pembagian"
+      });
+
+      alert(`PO Baru "${num}" berhasil disimpan!`);
+      closePOModal();
+      document.getElementById('poForm').reset();
+    }
 
     renderMaterials();
   </script>
