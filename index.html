@@ -478,7 +478,10 @@
       <div id="material-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900 uppercase">Katalog Master Barang & Jasa</h3>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <h3 class="text-lg font-bold text-gray-900 uppercase">Katalog Master Barang & Jasa</h3>
+          <input type="text" id="searchMasterMaterialInput" oninput="renderMaterials()" placeholder="🔍 Cari kode atau nama barang/jasa..." class="p-2 border rounded-xl text-xs w-full md:w-72 outline-none bg-gray-50 uppercase">
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -678,25 +681,32 @@
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label>
-          <select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white"></select>
+          <label class="block text-xs font-bold uppercase mb-1">Cari & Pilih Material *</label>
+          <input type="text" id="opnameSearchInput" oninput="filterOpnameMaterialDropdown()" placeholder="🔍 Ketik kode atau nama material..." class="w-full p-2 mb-2 border rounded-xl text-xs uppercase outline-none bg-gray-50">
+          <select id="opnameItemSelect" onchange="updateOpnameBalancedUnitLabel()" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white"></select>
         </div>
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Balanced *</label>
-          <input type="number" id="opnameBalancedQty" min="0" placeholder="0" required class="w-full p-2.5 border rounded-xl text-sm font-bold text-amber-600">
+          <div class="relative flex items-center">
+            <input type="number" id="opnameBalancedQty" min="0" placeholder="0" required class="w-full p-2.5 pr-16 border rounded-xl text-sm font-bold text-amber-600 outline-none">
+            <span id="opnameBalancedUnitDisplay" class="absolute right-3 text-xs font-bold text-gray-500 uppercase bg-gray-100 px-2 py-1 rounded">PCS</span>
+          </div>
         </div>
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Petugas Audit *</label>
-          <select id="opnamePetugas" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-            <option value="RIVAN">RIVAN</option>
-            <option value="SYUJA">SYUJA</option>
-          </select>
+          <input type="text" id="opnamePetugas" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-gray-100 text-[#E06D53]">
         </div>
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Catatan *</label>
           <input type="text" id="opnameReason" placeholder="ALASAN PENYESUAIAN..." required class="w-full p-2.5 border rounded-xl text-sm uppercase">
         </div>
-        <div class="flex justify-end space-x-2 pt-4 border-t"><button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Stock Opname</button></div>
+        <div class="flex items-center justify-between pt-2 border-t">
+          <button type="button" onclick="printStockReport('STOK_OPNAME')" class="text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-lg transition border uppercase">Print Laporan</button>
+          <div class="space-x-2">
+            <button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button>
+            <button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Stock Opname</button>
+          </div>
+        </div>
       </form>
     </div>
   </div>
@@ -714,8 +724,8 @@
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Pilih Gudang *</label>
           <select id="stockWarehouse" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-            <option value="GUDANG UTAMA">Gudang Utama</option>
-            <option value="GUDANG SISA">Gudang Sisa</option>
+            <option value="GUDANG UTAMA">GUDANG UTAMA</option>
+            <option value="GUDANG SISA">GUDANG SISA</option>
           </select>
         </div>
         <div class="grid grid-cols-2 gap-3">
@@ -734,12 +744,7 @@
         </div>
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Petugas Penerima *</label>
-          <select id="stockPetugas" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-            <option value="RIVAN">RIVAN</option>
-            <option value="SYUJA">SYUJA</option>
-            <option value="SALMAN">SALMAN</option>
-            <option value="RIO">RIO</option>
-          </select>
+          <input type="text" id="stockPetugas" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-gray-100 text-[#E06D53]">
         </div>
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Nomor SPK (Jika Ada)</label>
@@ -825,8 +830,8 @@
       { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "PO MENUNGGU ANTRIAN", finishedDate: null }
     ];
     let materials = [
-      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000, notes: "UTAMA" },
-      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110x300", unit: "roll", stock: 50, minStock: 5, notes: "UTAMA" }
+      { id: 1, code: "EHG0001", name: "STICKER VINYL 100X50MM", unit: "pcs", stock: 100000, minStock: 10000, notes: "UTAMA" },
+      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110X300", unit: "roll", stock: 50, minStock: 5, notes: "UTAMA" }
     ];
     let stockHistory = [];
     let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
@@ -870,6 +875,8 @@
         document.getElementById('operatorNameDisplay').value = currentUser.name;
         document.getElementById('maintTech').value = currentUser.name;
         document.getElementById('layoutPic').value = currentUser.name;
+        document.getElementById('opnamePetugas').value = currentUser.name;
+        document.getElementById('stockPetugas').value = currentUser.name;
 
         checkAutoDeleteFinishedPOs();
         applyRoleRestrictions();
@@ -1396,20 +1403,49 @@
       });
     }
 
+    function deleteMasterMaterial(idx) {
+      if (confirm(`Yakin ingin menghapus master material ${materials[idx].name}?`)) {
+        materials.splice(idx, 1);
+        renderMaterials();
+        alert("MATERIAL BERHASIL DIHAPUS.");
+      }
+    }
+
     function renderMaterials() {
       const grid = document.getElementById('material-grid');
       const masterBody = document.getElementById('master-material-body');
       grid.innerHTML = ''; masterBody.innerHTML = '';
 
+      const searchKeyword = document.getElementById('searchMasterMaterialInput') ? document.getElementById('searchMasterMaterialInput').value.toLowerCase() : '';
+      const filteredMaterials = materials.filter(m => m.code.toLowerCase().includes(searchKeyword) || m.name.toLowerCase().includes(searchKeyword));
+
       materials.forEach(m => {
         grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold uppercase">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
-        masterBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td><td class="py-3 text-xs font-bold uppercase">${m.name}</td><td class="py-3 text-xs uppercase">${m.unit}</td><td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${m.minStock}</td><td class="py-3 text-xs"><button onclick="alert('EDIT')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
       });
+
+      if (filteredMaterials.length === 0) {
+        masterBody.innerHTML = `<tr><td colspan="6" class="py-3 text-center text-gray-400">Tidak ada material yang cocok.</td></tr>`;
+      } else {
+        filteredMaterials.forEach((m) => {
+          const actualIndex = materials.findIndex(item => item.id === m.id);
+          masterBody.innerHTML += `<tr class="hover:bg-gray-50">
+            <td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td>
+            <td class="py-3 text-xs font-bold uppercase">${m.name}</td>
+            <td class="py-3 text-xs uppercase">${m.unit}</td>
+            <td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')}</td>
+            <td class="py-3 text-xs">${m.minStock}</td>
+            <td class="py-3 text-xs space-x-2">
+              <button onclick="alert('EDIT')" class="text-blue-600 font-bold">EDIT</button>
+              <button onclick="deleteMasterMaterial(${actualIndex})" class="text-red-600 font-bold">HAPUS</button>
+            </td>
+          </tr>`;
+        });
+      }
 
       const historyBody = document.getElementById('stock-history-body');
       historyBody.innerHTML = stockHistory.length === 0 ? '<tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada mutasi stok.</td></tr>' : '';
       stockHistory.forEach(h => {
-        historyBody.innerHTML += `<tr><td class="py-3 text-xs">${h.date}</td><td class="py-3 text-xs font-bold uppercase">${h.matName}</td><td class="py-3 text-xs uppercase">${h.warehouse}</td><td class="py-3 text-xs font-bold uppercase">${h.type}</td><td class="py-3 text-xs font-bold">${h.qty}</td><td class="py-3 text-xs uppercase">${h.pic}</td><td class="py-3 text-xs uppercase">${h.notes}</td></tr>`;
+        historyBody.innerHTML += `<tr><td class="py-3 text-xs">${h.date}</td><td class="py-3 text-xs font-bold uppercase">${h.matName}</td><td class="py-3 text-xs uppercase">${h.warehouse}</td><td class="py-3 text-xs font-bold uppercase">${h.type}</td><td class="py-3 text-xs font-bold">${h.qty}</td><td class="py-3 text-xs uppercase">${h.petugas}</td><td class="py-3 text-xs uppercase">${h.notes}</td></tr>`;
       });
     }
 
@@ -1468,17 +1504,52 @@
 
     // TOMBOL 2: STOCK OPNAME
     function openOpnameModal() {
-      const sel = document.getElementById('opnameItemSelect');
-      sel.innerHTML = '';
-      materials.forEach(m => { 
-        sel.innerHTML += `<option value="${m.id}">[${m.code}] ${m.name} (Stok Sistem: ${m.stock} ${m.unit})</option>`; 
-      });
+      document.getElementById('opnameSearchInput').value = '';
+      populateOpnameMaterialDropdown(materials);
       document.getElementById('opnameBalancedQty').value = '';
       document.getElementById('opnameReason').value = '';
+      if(currentUser) {
+        document.getElementById('opnamePetugas').value = currentUser.name;
+      }
       document.getElementById('opnameModal').classList.remove('hidden'); 
       document.getElementById('opnameModal').classList.add('flex');
     }
+
+    function populateOpnameMaterialDropdown(list) {
+      const sel = document.getElementById('opnameItemSelect');
+      sel.innerHTML = '';
+      if (list.length === 0) {
+        sel.innerHTML = `<option value="">-- TIDAK DITEMUKAN --</option>`;
+        document.getElementById('opnameBalancedUnitDisplay').innerText = 'PCS';
+        return;
+      }
+      list.forEach(m => { 
+        sel.innerHTML += `<option value="${m.id}" data-unit="${m.unit}">[${m.code}] ${m.name} (Stok Sistem: ${m.stock} ${m.unit})</option>`; 
+      });
+      updateOpnameBalancedUnitLabel();
+    }
+
+    function filterOpnameMaterialDropdown() {
+      const keyword = document.getElementById('opnameSearchInput').value.toLowerCase();
+      const filtered = materials.filter(m => 
+        m.code.toLowerCase().includes(keyword) || 
+        m.name.toLowerCase().includes(keyword) || 
+        m.unit.toLowerCase().includes(keyword)
+      );
+      populateOpnameMaterialDropdown(filtered);
+    }
+
+    function updateOpnameBalancedUnitLabel() {
+      const sel = document.getElementById('opnameItemSelect');
+      const selectedOpt = sel.options[sel.selectedIndex];
+      if (selectedOpt) {
+        const unit = selectedOpt.getAttribute('data-unit') || 'PCS';
+        document.getElementById('opnameBalancedUnitDisplay').innerText = unit.toUpperCase();
+      }
+    }
+
     function closeOpnameModal() { document.getElementById('opnameModal').classList.add('hidden'); document.getElementById('opnameModal').classList.remove('flex'); }
+    
     function saveOpname(e) {
       e.preventDefault();
       const wh = document.getElementById('opnameWarehouse').value;
@@ -1510,6 +1581,9 @@
       populateStockMaterialDropdown(materials);
       document.getElementById('stockQty').value = '';
       document.getElementById('stockSpk').value = '';
+      if(currentUser) {
+        document.getElementById('stockPetugas').value = currentUser.name;
+      }
       document.getElementById('stockModal').classList.remove('hidden'); 
       document.getElementById('stockModal').classList.add('flex');
     }
@@ -1614,6 +1688,9 @@
         stockHistory.forEach(h => {
           tbody.innerHTML += `<tr><td>${h.date}</td><td>${h.matName}</td><td>${h.warehouse}</td><td>${h.type}</td><td>${h.qty}</td><td>${h.petugas}</td><td>${h.notes}</td></tr>`;
         });
+      }
+      if(currentUser) {
+        document.getElementById('printSignPetugas').innerText = `( ${currentUser.name} )`;
       }
       window.print();
     }
