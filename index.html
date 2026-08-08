@@ -660,6 +660,10 @@
           <div><label class="block text-xs font-bold uppercase mb-1">Stok Awal</label><input type="number" id="matInitStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
         </div>
         <div>
+          <label class="block text-xs font-bold uppercase mb-1">Batas Minimum Stok (Alert) *</label>
+          <input type="number" id="matMinStock" min="0" value="10000" required class="w-full p-2.5 border rounded-xl text-sm">
+        </div>
+        <div>
           <label class="block text-xs font-bold uppercase mb-1">Catatan</label>
           <input type="text" id="matNotes" placeholder="CATATAN TAMBAHAN..." class="w-full p-2.5 border rounded-xl text-sm uppercase">
         </div>
@@ -831,7 +835,7 @@
     ];
     let materials = [
       { id: 1, code: "EHG0001", name: "STICKER VINYL 100X50MM", unit: "pcs", stock: 100000, minStock: 10000, notes: "UTAMA" },
-      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110X300", unit: "roll", stock: 50, minStock: 5, notes: "UTAMA" }
+      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110X300", unit: "roll", stock: 3, minStock: 5, notes: "UTAMA" }
     ];
     let stockHistory = [];
     let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
@@ -930,7 +934,7 @@
       else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); setupReportFormMaterials(); renderDailyReports(); }
       else if (tab === 'layoutTab') { document.getElementById('layoutTabSection').classList.remove('hidden'); renderLayoutTable(); }
       else if (tab === 'inventoryTab') { document.getElementById('inventoryTabSection').classList.remove('hidden'); renderMaterials(); }
-      else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.remove('hidden'); renderDevicesAndSpareparts(); }
+      else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.add('hidden'); renderDevicesAndSpareparts(); }
       else if (tab === 'kpiTab') { document.getElementById('kpiTabSection').classList.remove('hidden'); renderKpiData(); }
     }
 
@@ -1416,12 +1420,19 @@
       const masterBody = document.getElementById('master-material-body');
       grid.innerHTML = ''; masterBody.innerHTML = '';
 
-      const searchKeyword = document.getElementById('searchMasterMaterialInput') ? document.getElementById('searchMasterMaterialInput').value.toLowerCase() : '';
+      const searchKeyword = document.getElementById('searchMasterMaterialInput') ? document.getElementById('searchMasterMaterialInput'].value.toLowerCase() : '';
       const filteredMaterials = materials.filter(m => m.code.toLowerCase().includes(searchKeyword) || m.name.toLowerCase().includes(searchKeyword));
 
-      materials.forEach(m => {
-        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold uppercase">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
-      });
+      // Filter khusus untuk kotak kartu di atas: HANYA material yang stoknya menipis (di bawah atau sama dengan minStock)
+      const lowStockMaterials = materials.filter(m => m.stock <= m.minStock);
+
+      if (lowStockMaterials.length === 0) {
+        grid.innerHTML = `<div class="col-span-3 bg-white p-5 rounded-2xl border shadow-sm text-center text-xs text-gray-400 uppercase font-bold">Tidak ada stok barang/jasa yang menipis</div>`;
+      } else {
+        lowStockMaterials.forEach(m => {
+          grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border border-red-200 shadow-sm space-y-1 relative"><span class="absolute top-3 right-3 text-[9px] font-bold bg-red-100 text-red-600 px-2 py-0.5 rounded uppercase">Stok Menipis</span><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold uppercase">${m.name}</h4><h3 class="text-2xl font-bold text-red-600">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
+        });
+      }
 
       if (filteredMaterials.length === 0) {
         masterBody.innerHTML = `<tr><td colspan="6" class="py-3 text-center text-gray-400">Tidak ada material yang cocok.</td></tr>`;
@@ -1483,6 +1494,7 @@
       document.getElementById('matCodeAuto').value = autoCode;
       document.getElementById('matName').value = '';
       document.getElementById('matInitStock').value = 0;
+      document.getElementById('matMinStock').value = 1000;
       document.getElementById('matNotes').value = '';
       document.getElementById('newMaterialModal').classList.remove('hidden'); 
       document.getElementById('newMaterialModal').classList.add('flex');
@@ -1494,9 +1506,10 @@
       const name = document.getElementById('matName').value.toUpperCase();
       const unit = document.getElementById('matUnit').value.toLowerCase();
       const stock = Number(document.getElementById('matInitStock').value);
+      const minStock = Number(document.getElementById('matMinStock').value);
       const notes = document.getElementById('matNotes').value.toUpperCase() || ' UTAMA';
 
-      materials.push({ id: materials.length + 1, code: code, name: name, unit: unit, stock: stock, minStock: 1000, notes: notes });
+      materials.push({ id: materials.length + 1, code: code, name: name, unit: unit, stock: stock, minStock: minStock, notes: notes });
       alert("BARANG/JASA BARU BERHASIL DISIMPAN!"); 
       closeNewMaterialModal(); 
       renderMaterials();
