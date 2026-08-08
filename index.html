@@ -29,7 +29,15 @@
         
         <button onclick="switchTab('dashTab')" id="nav-dash" class="w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-          <span>Dashboard Utama</span>
+          <span>Dashboard Operasional</span>
+        </button>
+
+        <button onclick="switchTab('kpiTab')" id="nav-kpi" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <div class="flex items-center space-x-3">
+            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+            <span>Laporan KPI Divisi</span>
+          </div>
+          <span class="text-[9px] bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold uppercase">SPV / BOS</span>
         </button>
 
         <button onclick="switchTab('poTab')" id="nav-po" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
@@ -70,17 +78,14 @@
   <!-- AREA KONTEN UTAMA -->
   <main class="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto space-y-8">
     
-    <!-- TAB 1: DASHBOARD UTAMA (4 RINGKASAN & ALERT) -->
+    <!-- TAB 1: DASHBOARD OPERASIONAL (4 INDIKATOR OPERASIONAL) -->
     <div id="dashTabSection" class="space-y-8">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard Operasional Cetak</h2>
         <p class="text-sm text-gray-500 mt-1">Pusat pemantauan status ritme kerja, kualifikasi pekerjaan, dan risiko delay.</p>
       </div>
 
-      <!-- 4 Ringkasan Utama sesuai Permintaan -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-        
-        <!-- Pekerjaan Mendesak -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
           <div class="flex justify-between items-center">
             <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">PRIORITAS MENDESAK</span>
@@ -88,11 +93,10 @@
           </div>
           <div>
             <h3 id="card-urgent" class="text-3xl font-bold text-red-600 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Pekerjaan prioritas tinggi</p>
+            <p class="text-xs text-gray-400 mt-1">Pekerjaan prioritas tinggi[cite: 1]</p>
           </div>
         </div>
 
-        <!-- Pekerjaan Terlambat -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
           <div class="flex justify-between items-center">
             <span class="text-[10px] font-bold text-amber-600 tracking-wider uppercase">PEKERJAAN TERLAMBAT</span>
@@ -100,11 +104,10 @@
           </div>
           <div>
             <h3 id="card-overdue" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Melewati tanggal deadline</p>
+            <p class="text-xs text-gray-400 mt-1">Melewati tanggal deadline[cite: 1]</p>
           </div>
         </div>
 
-        <!-- Pekerjaan Sedang Berjalan -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
           <div class="flex justify-between items-center">
             <span class="text-[10px] font-bold text-cyan-600 tracking-wider uppercase">SEDANG BERJALAN</span>
@@ -112,11 +115,10 @@
           </div>
           <div>
             <h3 id="card-running" class="text-3xl font-bold text-cyan-700 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Di lantai cetak (In Progress)</p>
+            <p class="text-xs text-gray-400 mt-1">Di lantai cetak (In Progress)[cite: 1]</p>
           </div>
         </div>
 
-        <!-- Pekerjaan Membutuhkan Perhatian -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
           <div class="flex justify-between items-center">
             <span class="text-[10px] font-bold text-purple-600 tracking-wider uppercase">MEMBUTUHKAN PERHATIAN</span>
@@ -124,13 +126,11 @@
           </div>
           <div>
             <h3 id="card-attention" class="text-3xl font-bold text-purple-700 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Butuh Review SPV / Unassigned</p>
+            <p class="text-xs text-gray-400 mt-1">Butuh Review SPV / Unassigned[cite: 1]</p>
           </div>
         </div>
-
       </div>
 
-      <!-- Tabel Pekerjaan yang Membutuhkan Perhatian Khusus -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <h3 class="text-lg font-bold text-gray-900">Daftar Pekerjaan Membutuhkan Perhatian / Urgent</h3>
         <div class="overflow-x-auto">
@@ -153,12 +153,85 @@
       </div>
     </div>
 
-    <!-- TAB 2: ANTRIAN CETAK & DETAIL PO -->
+    <!-- TAB 2: LAPORAN KPI DIVISI (KHUSUS SUPERVISOR & MANAGER/BOS) -->
+    <div id="kpiTabSection" class="space-y-8 hidden">
+      <div class="flex justify-between items-end border-b pb-4">
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">RESTRICTED EXECUTIVE ACCESS</span>
+          </div>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight mt-1">Laporan KPI Divisi Printing</h2>
+          <p class="text-sm text-gray-500">Analisis kinerja agregat, rasio yield & reject, dan produktivitas tim untuk Supervisor & BOS[cite: 1].</p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-gray-400 font-medium">Periode Analisis</span>
+          <p class="text-sm font-bold text-gray-800">Agustus 2026</p>
+        </div>
+      </div>
+
+      <!-- 4 Kartu Metrics Utama KPI -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">TOTAL BEBAN KERJA</span>
+          <div>
+            <h3 id="kpi-total-jobs" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Total PO terdaftar[cite: 1]</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-amber-500 tracking-wider uppercase">BUTUH REVIEW SPV</span>
+          <div>
+            <h3 id="kpi-review-pending" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Menunggu approval[cite: 1]</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-emerald-500 tracking-wider uppercase">ESTIMASI YIELD RATE</span>
+          <div>
+            <h3 id="kpi-yield-rate" class="text-3xl font-bold text-emerald-600 leading-none">0%</h3>
+            <p class="text-xs text-gray-400 mt-1">Good Qty / Planned Qty</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">REJECT RATE</span>
+          <div>
+            <h3 id="kpi-reject-rate" class="text-3xl font-bold text-red-600 leading-none">0%</h3>
+            <p class="text-xs text-gray-400 mt-1">Reject Qty / Planned Qty</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ringkasan Produktivitas Tim -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900">Rekapitulasi Output Produksi per Operator</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Nama Operator</th>
+                <th class="pb-3">Total Laporan</th>
+                <th class="pb-3">Total Good Qty (Pcs)</th>
+                <th class="pb-3">Total Reject Qty (Pcs)</th>
+                <th class="pb-3">Rasio Kualitas (Yield)</th>
+              </tr>
+            </thead>
+            <tbody id="kpi-operator-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Memuat analisis KPI operator...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: ANTRIAN CETAK & DETAIL PO -->
     <div id="poTabSection" class="space-y-8 hidden">
       <div class="flex items-end justify-between">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Antrian Cetak & Detail PO</h2>
-          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow.</p>
+          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow[cite: 1].</p>
         </div>
         <button onclick="openPOModal()" class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
           <span class="text-lg">+</span>
@@ -188,11 +261,11 @@
       </div>
     </div>
 
-    <!-- TAB 3: LAPORAN PEKERJAAN PIC -->
+    <!-- TAB 4: LAPORAN PEKERJAAN PIC -->
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan Pekerjaan PIC</h2>
-        <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report.</p>
+        <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report[cite: 1].</p>
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
@@ -313,7 +386,6 @@
         </form>
       </div>
 
-      <!-- Histori Table -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <h3 class="text-lg font-bold text-gray-900">Histori Laporan Harian</h3>
         <div class="overflow-x-auto">
@@ -336,11 +408,11 @@
       </div>
     </div>
 
-    <!-- TAB 4: INVENTORY LABEL & RIBBON (MVP 2 PREVIEW) -->
+    <!-- TAB 5: INVENTORY LABEL & RIBBON -->
     <div id="inventoryTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventory Label & Ribbon (Stok Printing)</h2>
-        <p class="text-sm text-gray-500 mt-1">Pemantauan saldo stok bahan baku label, ribbon wax/resin, dan minimum stock alert.</p>
+        <p class="text-sm text-gray-500 mt-1">Pemantauan saldo stok bahan baku label, ribbon wax/resin, dan minimum stock alert[cite: 1].</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
@@ -442,6 +514,7 @@
 
     function switchTab(tab) {
       document.getElementById('dashTabSection').classList.add('hidden');
+      document.getElementById('kpiTabSection').classList.add('hidden');
       document.getElementById('poTabSection').classList.add('hidden');
       document.getElementById('reportTabSection').classList.add('hidden');
       document.getElementById('inventoryTabSection').classList.add('hidden');
@@ -450,6 +523,7 @@
       const btnActiveClass = "w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
 
       document.getElementById('nav-dash').className = btnClass;
+      document.getElementById('nav-kpi').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
       document.getElementById('nav-po').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
       document.getElementById('nav-report').className = btnClass;
       document.getElementById('nav-inventory').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
@@ -458,6 +532,10 @@
         document.getElementById('dashTabSection').classList.remove('hidden');
         document.getElementById('nav-dash').className = btnActiveClass;
         loadDashboardData();
+      } else if (tab === 'kpiTab') {
+        document.getElementById('kpiTabSection').classList.remove('hidden');
+        document.getElementById('nav-kpi').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+        loadKPIData();
       } else if (tab === 'poTab') {
         document.getElementById('poTabSection').classList.remove('hidden');
         document.getElementById('nav-po').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
@@ -598,6 +676,65 @@
       document.getElementById('card-overdue').innerText = overdueCount;
       document.getElementById('card-running').innerText = runningCount;
       document.getElementById('card-attention').innerText = attentionCount;
+    }
+
+    async function loadKPIData() {
+      const { data: jobs } = await _supabase.from('jobs').select('*');
+      const { data: reports } = await _supabase.from('pic_reports').select('*');
+
+      if (jobs) {
+        document.getElementById('kpi-total-jobs').innerText = jobs.length;
+        const reviewPending = jobs.filter(j => j.status === 'REVIEW').length;
+        document.getElementById('kpi-review-pending').innerText = reviewPending;
+      }
+
+      if (reports && reports.length > 0) {
+        let totalGood = 0;
+        let totalReject = 0;
+        let operatorStats = {};
+
+        reports.forEach(r => {
+          let good = Number(r.good_pcs || 0);
+          let reject = Number(r.reject_pcs || 0);
+          totalGood += good;
+          totalReject += reject;
+
+          let op = r.pic || 'UNKNOWN';
+          if (!operatorStats[op]) {
+            operatorStats[op] = { count: 0, good: 0, reject: 0 };
+          }
+          operatorStats[op].count += 1;
+          operatorStats[op].good += good;
+          operatorStats[op].reject += reject;
+        });
+
+        let totalProduced = totalGood + totalReject;
+        if (totalProduced > 0) {
+          let yieldRate = ((totalGood / totalProduced) * 100).toFixed(1);
+          let rejectRate = ((totalReject / totalProduced) * 100).toFixed(1);
+
+          document.getElementById('kpi-yield-rate').innerText = yieldRate + '%';
+          document.getElementById('kpi-reject-rate').innerText = rejectRate + '%';
+        }
+
+        const opBody = document.getElementById('kpi-operator-body');
+        opBody.innerHTML = '';
+        Object.keys(operatorStats).forEach(op => {
+          let stat = operatorStats[op];
+          let opTotal = stat.good + stat.reject;
+          let opYield = opTotal > 0 ? ((stat.good / opTotal) * 100).toFixed(1) + '%' : '0%';
+
+          opBody.innerHTML += `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-3 font-bold text-gray-900">${op}</td>
+              <td class="py-3 text-gray-600 font-semibold">${stat.count} Laporan</td>
+              <td class="py-3 text-emerald-600 font-bold">${stat.good.toLocaleString('id-ID')} Pcs</td>
+              <td class="py-3 text-red-600 font-bold">${stat.reject.toLocaleString('id-ID')} Pcs</td>
+              <td class="py-3 font-bold text-blue-600">${opYield}</td>
+            </tr>
+          `;
+        });
+      }
     }
 
     async function savePO(e) {
