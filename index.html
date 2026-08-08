@@ -33,17 +33,17 @@
       <div id="loginError" class="hidden bg-red-100 text-red-700 p-3 rounded-xl text-xs font-bold text-center">
         Username atau Password salah!
       </div>
-      <div class="space-y-4">
+      <form onsubmit="handleLogin(event)" class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Username *</label>
-          <input type="text" id="loginUsername" placeholder="Syuja / Bos / Rio / Rivan / Salman" class="w-full p-3 border rounded-xl text-sm outline-none bg-gray-50">
+          <input type="text" id="loginUsername" placeholder="Syuja / Bos / Rio / Rivan / Salman" required class="w-full p-3 border rounded-xl text-sm outline-none bg-gray-50">
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Password *</label>
-          <input type="password" id="loginPassword" placeholder="••••" class="w-full p-3 border rounded-xl text-sm outline-none bg-gray-50">
+          <input type="password" id="loginPassword" placeholder="••••" required class="w-full p-3 border rounded-xl text-sm outline-none bg-gray-50">
         </div>
-        <button onclick="handleLogin()" class="w-full bg-[#E06D53] text-white py-3 rounded-xl font-bold text-xs uppercase shadow-md hover:bg-orange-600 transition">Masuk Sistem</button>
-      </div>
+        <button type="submit" class="w-full bg-[#E06D53] text-white py-3 rounded-xl font-bold text-xs uppercase shadow-md hover:bg-orange-600 transition">Masuk Sistem</button>
+      </form>
       <div class="border-t pt-3 text-[10px] text-gray-400 text-center space-y-1">
         <p><b>Password Default Semua Akun:</b> 1234</p>
       </div>
@@ -862,7 +862,8 @@
       });
     }
 
-    function handleLogin() {
+    function handleLogin(event) {
+      if (event) event.preventDefault();
       const uInput = document.getElementById('loginUsername').value.trim();
       const pInput = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
@@ -934,7 +935,7 @@
       else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); setupReportFormMaterials(); renderDailyReports(); }
       else if (tab === 'layoutTab') { document.getElementById('layoutTabSection').classList.remove('hidden'); renderLayoutTable(); }
       else if (tab === 'inventoryTab') { document.getElementById('inventoryTabSection').classList.remove('hidden'); renderMaterials(); }
-      else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.add('hidden'); renderDevicesAndSpareparts(); }
+      else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.remove('hidden'); renderDevicesAndSpareparts(); }
       else if (tab === 'kpiTab') { document.getElementById('kpiTabSection').classList.remove('hidden'); renderKpiData(); }
     }
 
@@ -1695,7 +1696,7 @@
     function printStockReport(t) {
       const tbody = document.getElementById('printTableBody');
       tbody.innerHTML = '';
-      if (stockHistory.length === 0) {
+      if (kode = stockHistory.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">Belum ada mutasi stok.</td></tr>`;
       } else {
         stockHistory.forEach(h => {
