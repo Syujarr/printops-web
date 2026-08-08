@@ -254,9 +254,9 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO (Pilih dari PO Siap Cetak) *</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO (Pilih dari PO) *</label>
                 <select id="reportPoSelect" onchange="fillPoDetailsForReport()" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-                  <!-- Dinamis sesuai PO berstatus Ready to Print -->
+                  <!-- Dinamis sesuai PO -->
                 </select>
               </div>
               <div>
@@ -469,7 +469,7 @@
           <p class="text-sm text-gray-500 mt-1">Pengaturan stok bahan baku & audit opname gudang</p>
         </div>
         <div class="flex items-center space-x-3">
-          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">+ Barang Baru</button>
+          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">+ Barang/Jasa Baru</button>
           <button onclick="openOpnameModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Stock Opname</button>
           <button onclick="openStockModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Barang Masuk</button>
         </div>
@@ -483,7 +483,7 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Kode Barang</th><th class="pb-3">Nama Barang / Jasa</th><th class="pb-3">Satuan</th><th class="pb-3">Stok Saat Ini</th><th class="pb-3">Batas Min.</th><th class="pb-3">Aksi</th>
+                <th class="pb-3">Kode Barang</th><th class="pb-3">Nama Barang/Jasa</th><th class="pb-3">Satuan</th><th class="pb-3">Stok Saat Ini</th><th class="pb-3">Batas Min.</th><th class="pb-3">Aksi</th>
               </tr>
             </thead>
             <tbody id="master-material-body" class="divide-y divide-gray-100 text-sm"></tbody>
@@ -632,39 +632,119 @@
     </div>
   </div>
 
+  <!-- TOMBOL 1: BARANG/JASA BARU -->
   <div id="newMaterialModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Baru</h3><button onclick="closeNewMaterialModal()" class="text-xl font-bold">&times;</button></div>
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang/Jasa Baru</h3><button onclick="closeNewMaterialModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveNewMaterial(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Nama Barang *</label><input type="text" id="matName" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Kode Barang (Otomatis) *</label>
+          <input type="text" id="matCodeAuto" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase font-mono bg-gray-100 font-bold text-[#E06D53]">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Nama Barang/Jasa *</label>
+          <input type="text" id="matName" placeholder="CONTOH: STICKER VINYL..." required class="w-full p-2.5 border rounded-xl text-sm uppercase">
+        </div>
         <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold uppercase mb-1">Satuan *</label><select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="pcs">pcs</option><option value="roll">roll</option><option value="sheet">sheet</option></select></div>
+          <div>
+            <label class="block text-xs font-bold uppercase mb-1">Satuan *</label>
+            <select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold">
+              <option value="pcs">pcs</option>
+              <option value="roll">roll</option>
+              <option value="sheet">sheet</option>
+            </select>
+          </div>
           <div><label class="block text-xs font-bold uppercase mb-1">Stok Awal</label><input type="number" id="matInitStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Catatan</label>
+          <input type="text" id="matNotes" placeholder="CATATAN TAMBAHAN..." class="w-full p-2.5 border rounded-xl text-sm uppercase">
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeNewMaterialModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase">Simpan</button></div>
       </form>
     </div>
   </div>
 
+  <!-- TOMBOL 2: STOCK OPNAME -->
   <div id="opnameModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Stock Opname</h3><button onclick="closeOpnameModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveOpname(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase"></select></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Jumlah Fisik (Balanced) *</label><input type="number" id="opnameBalancedQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Catatan *</label><input type="text" id="opnameReason" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
-        <div class="flex justify-end space-x-2 pt-4 border-t"><button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Opname</button></div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Pilih Gudang *</label>
+          <select id="opnameWarehouse" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+            <option value="GUDANG UTAMA">Gudang Utama (Label Full)</option>
+            <option value="GUDANG SISA">Gudang Sisa (Label Sisa Produksi Printing)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label>
+          <select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white"></select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Balanced *</label>
+          <input type="number" id="opnameBalancedQty" min="0" placeholder="0" required class="w-full p-2.5 border rounded-xl text-sm font-bold text-amber-600">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Petugas Audit *</label>
+          <select id="opnamePetugas" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+            <option value="RIVAN">RIVAN</option>
+            <option value="SYUJA">SYUJA</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Catatan *</label>
+          <input type="text" id="opnameReason" placeholder="ALASAN PENYESUAIAN..." required class="w-full p-2.5 border rounded-xl text-sm uppercase">
+        </div>
+        <div class="flex justify-end space-x-2 pt-4 border-t"><button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Stock Opname</button></div>
       </form>
     </div>
   </div>
 
+  <!-- TOMBOL 3: BARANG MASUK -->
   <div id="stockModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Masuk</h3><button onclick="closeStockModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveStockIn(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="stockItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase"></select></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Jumlah Masuk *</label><input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Nomor SPK / Catatan</label><input type="text" id="stockSpk" class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Cari Material (Kode / Nama / Ukuran) *</label>
+          <input type="text" id="stockSearchInput" oninput="filterStockMaterialDropdown()" placeholder="🔍 Ketik pencarian material..." class="w-full p-2 mb-2 border rounded-xl text-xs uppercase outline-none bg-gray-50">
+          <select id="stockItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white"></select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Pilih Gudang *</label>
+          <select id="stockWarehouse" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+            <option value="GUDANG UTAMA">Gudang Utama</option>
+            <option value="GUDANG SISA">Gudang Sisa</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase mb-1">Jumlah Stock In *</label>
+            <input type="number" id="stockQty" min="1" placeholder="0" required class="w-full p-2.5 border rounded-xl text-sm font-bold text-blue-600">
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase mb-1">Satuan *</label>
+            <select id="stockUnit" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+              <option value="PCS">PCS</option>
+              <option value="ROLL">ROLL</option>
+              <option value="SHEET">SHEET</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Petugas Penerima *</label>
+          <select id="stockPetugas" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+            <option value="RIVAN">RIVAN</option>
+            <option value="SYUJA">SYUJA</option>
+            <option value="SALMAN">SALMAN</option>
+            <option value="RIO">RIO</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Nomor SPK (Jika Ada)</label>
+          <input type="text" id="stockSpk" placeholder="NOMOR SPK..." class="w-full p-2.5 border rounded-xl text-sm uppercase">
+        </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeStockModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Masuk</button></div>
       </form>
     </div>
@@ -721,11 +801,11 @@
       <p style="font-size: 11px; margin: 2px 0 0 0;">PRINT MANAGEMENT SYSTEM V1</p>
     </div>
     <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
-      <thead id="printTableHead"><tr><th>Tanggal</th><th>Nama Bahan</th><th>Gudang</th><th>Tipe</th><th>Jumlah</th><th>Petugas</th></tr></thead>
+      <thead id="printTableHead"><tr><th>Tanggal</th><th>Nama Bahan</th><th>Gudang</th><th>Tipe</th><th>Jumlah</th><th>Petugas</th><th>Catatan</th></tr></thead>
       <tbody id="printTableBody"></tbody>
     </table>
     <div style="margin-top: 50px; display: flex; justify-content: space-between; text-align: center; font-size: 11px;">
-      <div><p style="margin-bottom: 50px;">Petugas</p><p style="font-weight: bold; text-decoration: underline;" id="printSignPetugas">( Rivan / Salman )</p></div>
+      <div><p style="margin-bottom: 50px;">Petugas</p><p style="font-weight: bold; text-decoration: underline;" id="printSignPetugas">( Rivan / Syuja )</p></div>
       <div><p style="margin-bottom: 50px;">Mengetahui (Supervisor)</p><p style="font-weight: bold; text-decoration: underline;">( Syuja Arisyi )</p></div>
     </div>
   </div>
@@ -745,8 +825,8 @@
       { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "PO MENUNGGU ANTRIAN", finishedDate: null }
     ];
     let materials = [
-      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 },
-      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110x300", unit: "roll", stock: 50, minStock: 5 }
+      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000, notes: "UTAMA" },
+      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110x300", unit: "roll", stock: 50, minStock: 5, notes: "UTAMA" }
     ];
     let stockHistory = [];
     let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
@@ -1360,42 +1440,127 @@
       document.getElementById('kpi-total-report').innerText = dailyReports.length;
     }
 
-    function openNewMaterialModal() { document.getElementById('newMaterialModal').classList.remove('hidden'); document.getElementById('newMaterialModal').classList.add('flex'); }
+    // TOMBOL 1: BARANG/JASA BARU
+    function openNewMaterialModal() {
+      const nextId = materials.length + 1;
+      const autoCode = `EHG${String(nextId).padStart(4, '0')}`;
+      document.getElementById('matCodeAuto').value = autoCode;
+      document.getElementById('matName').value = '';
+      document.getElementById('matInitStock').value = 0;
+      document.getElementById('matNotes').value = '';
+      document.getElementById('newMaterialModal').classList.remove('hidden'); 
+      document.getElementById('newMaterialModal').classList.add('flex');
+    }
     function closeNewMaterialModal() { document.getElementById('newMaterialModal').classList.add('hidden'); document.getElementById('newMaterialModal').classList.remove('flex'); }
     function saveNewMaterial(e) {
       e.preventDefault();
-      materials.push({ id: materials.length + 1, code: `EHG000${materials.length + 1}`, name: document.getElementById('matName').value.toUpperCase(), unit: document.getElementById('matUnit').value.toUpperCase(), stock: Number(document.getElementById('matInitStock').value), minStock: 1000 });
-      alert("BARANG BERHASIL DISIMPAN!"); closeNewMaterialModal(); renderMaterials();
+      const code = document.getElementById('matCodeAuto').value;
+      const name = document.getElementById('matName').value.toUpperCase();
+      const unit = document.getElementById('matUnit').value.toLowerCase();
+      const stock = Number(document.getElementById('matInitStock').value);
+      const notes = document.getElementById('matNotes').value.toUpperCase() || ' UTAMA';
+
+      materials.push({ id: materials.length + 1, code: code, name: name, unit: unit, stock: stock, minStock: 1000, notes: notes });
+      alert("BARANG/JASA BARU BERHASIL DISIMPAN!"); 
+      closeNewMaterialModal(); 
+      renderMaterials();
     }
 
+    // TOMBOL 2: STOCK OPNAME
     function openOpnameModal() {
       const sel = document.getElementById('opnameItemSelect');
       sel.innerHTML = '';
-      materials.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (STOK: ${m.stock} ${m.unit})</option>`; });
-      document.getElementById('opnameModal').classList.remove('hidden'); document.getElementById('opnameModal').classList.add('flex');
+      materials.forEach(m => { 
+        sel.innerHTML += `<option value="${m.id}">[${m.code}] ${m.name} (Stok Sistem: ${m.stock} ${m.unit})</option>`; 
+      });
+      document.getElementById('opnameBalancedQty').value = '';
+      document.getElementById('opnameReason').value = '';
+      document.getElementById('opnameModal').classList.remove('hidden'); 
+      document.getElementById('opnameModal').classList.add('flex');
     }
     function closeOpnameModal() { document.getElementById('opnameModal').classList.add('hidden'); document.getElementById('opnameModal').classList.remove('flex'); }
     function saveOpname(e) {
       e.preventDefault();
+      const wh = document.getElementById('opnameWarehouse').value;
       const m = materials.find(item => item.id == document.getElementById('opnameItemSelect').value);
       const bal = Number(document.getElementById('opnameBalancedQty').value);
-      if (m) { m.stock = bal; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'GUDANG UTAMA', type: 'STOCK OPNAME', qty: `${bal}`, pic: currentUser.name, notes: document.getElementById('opnameReason').value.toUpperCase() }); }
-      alert("STOCK OPNAME BERHASIL DISIMPAN!"); closeOpnameModal(); renderMaterials();
+      const petugas = document.getElementById('opnamePetugas').value;
+      const reason = document.getElementById('opnameReason').value.toUpperCase();
+
+      if (m) { 
+        m.stock = bal; 
+        stockHistory.unshift({ 
+          date: new Date().toISOString().split('T')[0], 
+          matName: `[${m.code}] ${m.name}`, 
+          warehouse: wh, 
+          type: 'STOCK OPNAME', 
+          qty: `${bal} ${m.unit}`, 
+          petugas: petugas, 
+          notes: reason 
+        }); 
+      }
+      alert("STOCK OPNAME BERHASIL DISIMPAN!"); 
+      closeOpnameModal(); 
+      renderMaterials();
     }
 
+    // TOMBOL 3: BARANG MASUK (STOCK IN)
     function openStockModal() {
-      const sel = document.getElementById('stockItemSelect');
-      sel.innerHTML = '';
-      materials.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`; });
-      document.getElementById('stockModal').classList.remove('hidden'); document.getElementById('stockModal').classList.add('flex');
+      document.getElementById('stockSearchInput').value = '';
+      populateStockMaterialDropdown(materials);
+      document.getElementById('stockQty').value = '';
+      document.getElementById('stockSpk').value = '';
+      document.getElementById('stockModal').classList.remove('hidden'); 
+      document.getElementById('stockModal').classList.add('flex');
     }
     function closeStockModal() { document.getElementById('stockModal').classList.add('hidden'); document.getElementById('stockModal').classList.remove('flex'); }
+
+    function populateStockMaterialDropdown(list) {
+      const sel = document.getElementById('stockItemSelect');
+      sel.innerHTML = '';
+      if (list.length === 0) {
+        sel.innerHTML = `<option value="">-- TIDAK DITEMUKAN --</option>`;
+        return;
+      }
+      list.forEach(m => { 
+        sel.innerHTML += `<option value="${m.id}">[${m.code}] ${m.name} (${m.unit})</option>`; 
+      });
+    }
+
+    function filterStockMaterialDropdown() {
+      const keyword = document.getElementById('stockSearchInput').value.toLowerCase();
+      const filtered = materials.filter(m => 
+        m.code.toLowerCase().includes(keyword) || 
+        m.name.toLowerCase().includes(keyword) || 
+        m.unit.toLowerCase().includes(keyword)
+      );
+      populateStockMaterialDropdown(filtered);
+    }
+
     function saveStockIn(e) {
       e.preventDefault();
       const m = materials.find(item => item.id == document.getElementById('stockItemSelect').value);
+      const wh = document.getElementById('stockWarehouse').value;
       const qty = Number(document.getElementById('stockQty').value);
-      if (m) { m.stock += qty; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'GUDANG UTAMA', type: 'BARANG MASUK', qty: `+${qty} ${m.unit}`, pic: currentUser.name, notes: document.getElementById('stockSpk').value.toUpperCase() || 'PENERIMAAN GUDANG' }); }
-      alert("BARANG MASUK BERHASIL DISIMPAN!"); closeStockModal(); renderMaterials();
+      const unit = document.getElementById('stockUnit').value;
+      const petugas = document.getElementById('stockPetugas').value;
+      const spk = document.getElementById('stockSpk').value.toUpperCase();
+
+      if (m) { 
+        m.stock += qty; 
+        stockHistory.unshift({ 
+          date: new Date().toISOString().split('T')[0], 
+          matName: `[${m.code}] ${m.name}`, 
+          warehouse: wh, 
+          type: 'BARANG MASUK', 
+          qty: `+${qty} ${unit}`, 
+          petugas: petugas, 
+          notes: spk ? `NO SPK: ${spk}` : 'TANPA SPK' 
+        }); 
+      }
+      alert("BARANG MASUK BERHASIL DISIMPAN!"); 
+      closeStockModal(); 
+      renderMaterials();
     }
 
     function openPrinterModal() { document.getElementById('printerModal').classList.remove('hidden'); document.getElementById('printerModal').classList.add('flex'); }
@@ -1440,7 +1605,18 @@
       alert("CATATAN MAINTENANCE BERHASIL DISIMPAN!"); closeMaintenanceModal(); renderDevicesAndSpareparts();
     }
 
-    function printStockReport(t) { window.print(); }
+    function printStockReport(t) {
+      const tbody = document.getElementById('printTableBody');
+      tbody.innerHTML = '';
+      if (stockHistory.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center;">Belum ada mutasi stok.</td></tr>`;
+      } else {
+        stockHistory.forEach(h => {
+          tbody.innerHTML += `<tr><td>${h.date}</td><td>${h.matName}</td><td>${h.warehouse}</td><td>${h.type}</td><td>${h.qty}</td><td>${h.petugas}</td><td>${h.notes}</td></tr>`;
+        });
+      }
+      window.print();
+    }
   </script>
 </body>
 </html>
