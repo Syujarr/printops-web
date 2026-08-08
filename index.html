@@ -219,6 +219,7 @@
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN PEKERJAAN PIC</h2>
         <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report.</p>
       </div>
+
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
         <form id="dailyReportForm" onsubmit="saveDailyReport(event)" class="space-y-6">
           <div class="border-b pb-4 space-y-4">
@@ -239,8 +240,39 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-xs uppercase shadow-sm">Kirim Laporan PIC</button>
+          <div class="space-y-4">
+            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Rincian Pekerjaan & Hasil Cetak</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO / Job *</label><input type="text" id="reportPoNumber" placeholder="Contoh: PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Produk *</label><input type="text" id="reportProduct" placeholder="Contoh: Label Jamu Botol" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Hasil Cetak (QTY Selesai) *</label><input type="number" id="reportQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pengerjaan *</label>
+                <select id="reportStatusResult" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+                  <option value="Selesai 100%">Selesai 100%</option><option value="Sebagian (Progress)">Sebagian (Progress)</option><option value="Kendala / Pending">Kendala / Pending</option>
+                </select>
+              </div>
+            </div>
+            <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan Kendala / Keterangan Tambahan</label><textarea id="reportNotes" rows="2" placeholder="Tuliskan kendala mesin, bahan, dll jika ada..." class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
+          </div>
+          <button type="submit" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-xs uppercase shadow-sm">Kirim & Simpan Laporan PIC</button>
         </form>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900 uppercase">Histori Laporan Harian Operator</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Tanggal</th><th class="pb-3">Operator</th><th class="pb-3">Jam Kerja</th><th class="pb-3">Nomor PO & Produk</th><th class="pb-3">QTY Selesai</th><th class="pb-3">Status</th><th class="pb-3">Catatan</th>
+              </tr>
+            </thead>
+            <tbody id="daily-report-history-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada laporan harian dikirim.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
 
@@ -255,7 +287,7 @@
       </div>
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <table class="w-full text-left border-collapse">
-          <thead><tr class="border-b text-xs font-bold text-gray-400 uppercase"><th class="pb-3">Kode PO</th><th class="pb-3">Customer</th><th class="pb-3">Output</th><th class="pb-3">Status</th></tr></thead>
+          <thead><tr class="border-b text-xs font-bold text-gray-400 uppercase"><th class="pb-3">Kode PO</th><th class="pb-3">Customer</th><th class="pb-3">Output</th><th class="pb-3">Versi</th><th class="pb-3">PIC</th><th class="pb-3">Status</th><th class="pb-3">Aksi</th></tr></thead>
           <tbody id="layout-table-active" class="divide-y text-sm"></tbody>
         </table>
       </div>
@@ -352,16 +384,72 @@
           </table>
         </div>
       </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900 uppercase">Histori Maintenance & Pergantian Part</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Tanggal</th><th class="pb-3">Unit Printer</th><th class="pb-3">Jenis Perawatan / Part</th><th class="pb-3">Teknisi</th><th class="pb-3">Catatan</th>
+              </tr>
+            </thead>
+            <tbody id="maintenance-history-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="5" class="py-3 text-center text-gray-400">Belum ada catatan maintenance.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- TAB 7: KPI -->
     <div id="kpiTabSection" class="space-y-8 hidden">
-      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN KPI DIVISI</h2>
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN KPI DIVISI PRINTING</h2>
+        <p class="text-sm text-gray-500 mt-1">Rekapitulasi kinerja dan produktivitas harian tim.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2"><span class="text-xs font-bold text-gray-400 uppercase">Total PO Dikerjakan</span><h3 id="kpi-total-po" class="text-3xl font-extrabold text-gray-900">0</h3></div>
+        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2"><span class="text-xs font-bold text-gray-400 uppercase">Total QTY Tercetak</span><h3 id="kpi-total-qty" class="text-3xl font-extrabold text-emerald-600">0</h3></div>
+        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2"><span class="text-xs font-bold text-gray-400 uppercase">Laporan PIC Masuk</span><h3 id="kpi-total-report" class="text-3xl font-extrabold text-blue-600">0</h3></div>
+      </div>
     </div>
 
   </main>
 
-  <!-- MODAL PENDUKUNG LENGKAP -->
+  <!-- MODAL MODUL LENGKAP -->
+  <div id="poModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-6">
+      <div class="flex justify-between items-center border-b pb-4"><h3 class="text-lg font-bold uppercase">Input PO Baru</h3><button onclick="closePOModal()" class="text-xl font-bold">&times;</button></div>
+      <form id="poForm" onsubmit="savePO(event)" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold uppercase mb-1">Nomor PO *</label><input type="text" id="poNumber" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="customer" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm"><option value="Rio">Rio</option><option value="Rivan">Rivan</option><option value="Salman">Salman</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm"><option value="Antrian Pembagian">Antrian Pembagian</option><option value="Sedang Dikerjakan">Sedang Dikerjakan</option><option value="Selesai">Selesai</option></select></div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePOModal()" class="px-5 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-[#E06D53] text-white rounded-xl text-xs font-bold uppercase">Simpan PO</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="layoutModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Input Layout & Approval</h3><button onclick="closeLayoutModal()" class="text-xl font-bold">&times;</button></div>
+      <form onsubmit="saveLayout(event)" class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase mb-1">Kode PO *</label><input type="text" id="layoutPoNumber" placeholder="PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="layoutCustomer" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Jenis Output *</label><select id="layoutOutputType" class="w-full p-2.5 border rounded-xl text-sm"><option value="Desain">Desain</option><option value="Film Cetak">Film Cetak</option><option value="Sampel Customer">Sampel Customer</option></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Versi *</label><input type="text" id="layoutVersion" value="V1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><input type="text" id="layoutPic" value="Rio" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Status Approval *</label><select id="layoutStatus" class="w-full p-2.5 border rounded-xl text-sm"><option value="Drafting Layout">Drafting Layout</option><option value="Menunggu Approval">Menunggu Approval</option><option value="Approved (Disetujui)">Approved (Disetujui)</option></select></div>
+        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeLayoutModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-pink-700 text-white rounded-xl text-xs font-bold uppercase">Simpan Layout</button></div>
+      </form>
+    </div>
+  </div>
+
   <div id="newMaterialModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Baru</h3><button onclick="closeNewMaterialModal()" class="text-xl font-bold">&times;</button></div>
@@ -413,6 +501,36 @@
     </div>
   </div>
 
+  <div id="sparepartModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Tambah Sparepart</h3><button onclick="closeSparepartModal()" class="text-xl font-bold">&times;</button></div>
+      <form onsubmit="saveSparepart(event)" class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase mb-1">Kode Part *</label><input type="text" id="spCode" placeholder="SP-002" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Nama Sparepart *</label><input type="text" id="spName" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs font-bold uppercase mb-1">Satuan *</label><input type="text" id="spUnit" value="pcs" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Stok *</label><input type="number" id="spStock" min="0" value="1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        </div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Catatan / Vendor</label><input type="text" id="spNotes" class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeSparepartModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Sparepart</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="maintenanceModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Catat Maintenance</h3><button onclick="closeMaintenanceModal()" class="text-xl font-bold">&times;</button></div>
+      <form onsubmit="saveMaintenance(event)" class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase mb-1">Tanggal *</label><input type="date" id="maintDate" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Unit Printer *</label><select id="maintPrinterSelect" class="w-full p-2.5 border rounded-xl text-sm"></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Jenis Perawatan / Part *</label><input type="text" id="maintType" placeholder="Contoh: Pembersihan Printhead / Ganti Roller" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Teknisi / PIC *</label><input type="text" id="maintTech" value="Salman" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Catatan</label><input type="text" id="maintNotes" class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeMaintenanceModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Maintenance</button></div>
+      </form>
+    </div>
+  </div>
+
   <!-- TEMPLATE CETAK RESMI CV. EXCELINDO -->
   <div id="printableArea" style="display: none;">
     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
@@ -446,7 +564,9 @@
     let stockHistory = [];
     let printers = [{ id: 1, name: "Honeywell PC42t", sn: "SN-HW2026-001", condition: "Normal / Good", usedBy: "Meja Packing 1", borrowStatus: "Tersedia" }];
     let spareparts = [{ id: 1, code: "SP-001", name: "Printhead Honeywell PC42t", unit: "pcs", stock: 3, notes: "Supplier Resmi" }];
+    let maintenanceHistory = [];
     let layoutList = [{ id: 1, poNumber: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", outputType: "Desain", version: "V1", pic: "Rio", status: "Drafting Layout" }];
+    let dailyReports = [];
 
     function handleLogin() {
       const uInput = document.getElementById('loginUsername').value.trim();
@@ -506,11 +626,11 @@
 
       if (tab === 'dashTab') { document.getElementById('dashTabSection').classList.remove('hidden'); renderDashboardCatalogPreviews(); }
       else if (tab === 'poTab') { document.getElementById('poTabSection').classList.remove('hidden'); renderPoTable(); }
-      else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); }
+      else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); renderDailyReports(); }
       else if (tab === 'layoutTab') { document.getElementById('layoutTabSection').classList.remove('hidden'); renderLayoutTable(); }
       else if (tab === 'inventoryTab') { document.getElementById('inventoryTabSection').classList.remove('hidden'); renderMaterials(); }
       else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.remove('hidden'); renderDevicesAndSpareparts(); }
-      else if (tab === 'kpiTab') { document.getElementById('kpiTabSection').classList.remove('hidden'); }
+      else if (tab === 'kpiTab') { document.getElementById('kpiTabSection').classList.remove('hidden'); renderKpiData(); }
     }
 
     function renderDashboardCatalogPreviews() {
@@ -523,13 +643,76 @@
 
     function openPOModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
     function closePOModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
-    function savePO(e) { e.preventDefault(); alert("PO Disimpan!"); closePOModal(); renderPoTable(); }
+    function savePO(e) {
+      e.preventDefault();
+      poList.push({
+        id: poList.length + 1,
+        number: document.getElementById('poNumber').value.toUpperCase(),
+        customer: document.getElementById('customer').value,
+        product: document.getElementById('product').value,
+        qty: Number(document.getElementById('quantity').value),
+        priority: "Normal",
+        deadline: "2026-08-30",
+        pic: document.getElementById('poPic').value,
+        status: document.getElementById('poStatusFlow').value
+      });
+      alert("PO berhasil disimpan!"); closePOModal(); renderPoTable();
+    }
     
     function renderPoTable() {
       const tbody = document.getElementById('po-table-body');
       tbody.innerHTML = '';
       poList.forEach(p => {
-        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td><td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td><td class="py-3 text-xs">${p.qty}</td><td class="py-3 text-xs">${p.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100">${p.priority}</span></td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-blue-100">${p.status}</span></td><td class="py-3 text-xs"><button onclick="openPOModal()" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td><td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td><td class="py-3 text-xs">${p.qty.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${p.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100">${p.priority}</span></td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-blue-100">${p.status}</span></td><td class="py-3 text-xs"><button onclick="alert('Edit PO')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+      });
+    }
+
+    function saveDailyReport(e) {
+      e.preventDefault();
+      dailyReports.unshift({
+        date: document.getElementById('reportDate').value || new Date().toISOString().split('T')[0],
+        operator: document.getElementById('operatorName').value,
+        workHours: document.getElementById('workHours').value,
+        poNumber: document.getElementById('reportPoNumber').value,
+        product: document.getElementById('reportProduct').value,
+        qty: document.getElementById('reportQty').value,
+        statusResult: document.getElementById('reportStatusResult').value,
+        notes: document.getElementById('reportNotes').value || '-'
+      });
+      alert("Laporan harian PIC berhasil dikirim!");
+      document.getElementById('dailyReportForm').reset();
+      renderDailyReports();
+    }
+
+    function renderDailyReports() {
+      const body = document.getElementById('daily-report-history-body');
+      body.innerHTML = dailyReports.length === 0 ? '<tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada laporan harian dikirim.</td></tr>' : '';
+      dailyReports.forEach(r => {
+        body.innerHTML += `<tr><td class="py-3 text-xs">${r.date}</td><td class="py-3 text-xs font-bold">${r.operator}</td><td class="py-3 text-xs">${r.workHours}</td><td class="py-3 text-xs">${r.poNumber} - ${r.product}</td><td class="py-3 text-xs font-bold">${Number(r.qty).toLocaleString('id-ID')}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${r.statusResult}</span></td><td class="py-3 text-xs">${r.notes}</td></tr>`;
+      });
+    }
+
+    function openLayoutModal() { document.getElementById('layoutModal').classList.remove('hidden'); document.getElementById('layoutModal').classList.add('flex'); }
+    function closeLayoutModal() { document.getElementById('layoutModal').classList.add('hidden'); document.getElementById('layoutModal').classList.remove('flex'); }
+    function saveLayout(e) {
+      e.preventDefault();
+      layoutList.push({
+        id: layoutList.length + 1,
+        poNumber: document.getElementById('layoutPoNumber').value.toUpperCase(),
+        customer: document.getElementById('layoutCustomer').value,
+        outputType: document.getElementById('layoutOutputType').value,
+        version: document.getElementById('layoutVersion').value,
+        pic: document.getElementById('layoutPic').value,
+        status: document.getElementById('layoutStatus').value
+      });
+      alert("Layout berhasil disimpan!"); closeLayoutModal(); renderLayoutTable();
+    }
+
+    function renderLayoutTable() {
+      const body = document.getElementById('layout-table-active');
+      body.innerHTML = '';
+      layoutList.forEach(l => {
+        body.innerHTML += `<tr><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs">${l.customer}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs font-mono">${l.version}</td><td class="py-3 text-xs">${l.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800">${l.status}</span></td><td class="py-3 text-xs"><button onclick="alert('Edit Layout')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
       });
     }
 
@@ -562,14 +745,19 @@
       spareparts.forEach(sp => {
         spBody.innerHTML += `<tr><td class="py-3 text-xs font-bold font-mono text-purple-700">${sp.code}</td><td class="py-3 text-xs font-bold">${sp.name}</td><td class="py-3 text-xs uppercase">${sp.unit}</td><td class="py-3 text-xs font-bold">${sp.stock}</td><td class="py-3 text-xs">${sp.notes}</td></tr>`;
       });
+
+      const maintBody = document.getElementById('maintenance-history-body');
+      maintBody.innerHTML = maintenanceHistory.length === 0 ? '<tr><td colspan="5" class="py-3 text-center text-gray-400">Belum ada catatan maintenance.</td></tr>' : '';
+      maintenanceHistory.forEach(mh => {
+        maintBody.innerHTML += `<tr><td class="py-3 text-xs">${mh.date}</td><td class="py-3 text-xs font-bold">${mh.printerName}</td><td class="py-3 text-xs">${mh.type}</td><td class="py-3 text-xs">${mh.tech}</td><td class="py-3 text-xs">${mh.notes}</td></tr>`;
+      });
     }
 
-    function renderLayoutTable() {
-      const body = document.getElementById('layout-table-active');
-      body.innerHTML = '';
-      layoutList.forEach(l => {
-        body.innerHTML += `<tr><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs">${l.customer}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs">${l.status}</td></tr>`;
-      });
+    function renderKpiData() {
+      document.getElementById('kpi-total-po').innerText = poList.length;
+      let totalQty = poList.reduce((acc, curr) => acc + curr.qty, 0);
+      document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
+      document.getElementById('kpi-total-report').innerText = dailyReports.length;
     }
 
     function openNewMaterialModal() { document.getElementById('newMaterialModal').classList.remove('hidden'); document.getElementById('newMaterialModal').classList.add('flex'); }
@@ -618,9 +806,40 @@
       alert("Printer disimpan!"); closePrinterModal(); renderDevicesAndSpareparts();
     }
 
-    function openSparepartModal() { alert("Modal Sparepart"); }
-    function openMaintenanceModal() { alert("Modal Maintenance"); }
-    function saveDailyReport(e) { e.preventDefault(); alert("Laporan tersimpan!"); }
+    function openSparepartModal() { document.getElementById('sparepartModal').classList.remove('hidden'); document.getElementById('sparepartModal').classList.add('flex'); }
+    function closeSparepartModal() { document.getElementById('sparepartModal').classList.add('hidden'); document.getElementById('sparepartModal').classList.remove('flex'); }
+    function saveSparepart(e) {
+      e.preventDefault();
+      spareparts.push({
+        id: spareparts.length + 1,
+        code: document.getElementById('spCode').value.toUpperCase(),
+        name: document.getElementById('spName').value,
+        unit: document.getElementById('spUnit').value,
+        stock: Number(document.getElementById('spStock').value),
+        notes: document.getElementById('spNotes').value || '-'
+      });
+      alert("Sparepart berhasil disimpan!"); closeSparepartModal(); renderDevicesAndSpareparts();
+    }
+
+    function openMaintenanceModal() {
+      const sel = document.getElementById('maintPrinterSelect');
+      sel.innerHTML = '';
+      printers.forEach(p => { sel.innerHTML += `<option value="${p.name}">${p.name} (${p.sn})</option>`; });
+      document.getElementById('maintenanceModal').classList.remove('hidden'); document.getElementById('maintenanceModal').classList.add('flex');
+    }
+    function closeMaintenanceModal() { document.getElementById('maintenanceModal').classList.add('hidden'); document.getElementById('maintenanceModal').classList.remove('flex'); }
+    function saveMaintenance(e) {
+      e.preventDefault();
+      maintenanceHistory.unshift({
+        date: document.getElementById('maintDate').value || new Date().toISOString().split('T')[0],
+        printerName: document.getElementById('maintPrinterSelect').value,
+        type: document.getElementById('maintType').value,
+        tech: document.getElementById('maintTech').value,
+        notes: document.getElementById('maintNotes').value || '-'
+      });
+      alert("Catatan maintenance berhasil disimpan!"); closeMaintenanceModal(); renderDevicesAndSpareparts();
+    }
+
     function printStockReport(t) { window.print(); }
   </script>
 </body>
