@@ -3,273 +3,367 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrintOps V1 - Antrian Cetak & Laporan PIC</title>
+  <title>PrintOps Management System V1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+  </style>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-5xl mx-auto space-y-6">
-    
-    <!-- Header Utama -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold text-gray-800">PrintOps V1 - Divisi Printing</h1>
-      <p class="text-gray-600">Pusat Pengendalian Pekerjaan & Progress Cetak</p>
+<body class="bg-[#F9F8F6] text-gray-800 flex h-screen overflow-hidden">
 
-      <!-- Ringkasan Singkat -->
-      <div class="grid grid-cols-3 gap-4 mt-6">
-        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <span class="text-sm text-blue-600 font-semibold">Total Antrian</span>
-          <h2 id="total-jobs" class="text-2xl font-bold text-blue-900">0</h2>
-        </div>
-        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-          <span class="text-sm text-yellow-600 font-semibold">Sedang Berjalan</span>
-          <h2 id="running-jobs" class="text-2xl font-bold text-yellow-900">0</h2>
-        </div>
-        <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-          <span class="text-sm text-green-600 font-semibold">Selesai</span>
-          <h2 id="done-jobs" class="text-2xl font-bold text-green-900">0</h2>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabel Antrian Cetak -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h3 class="text-lg font-semibold mb-3 text-gray-800">Antrian Cetak Aktif</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse border border-gray-200">
-          <thead>
-            <tr class="bg-gray-50 text-sm font-semibold text-gray-700 border-b">
-              <th class="p-3">Job ID / PO</th>
-              <th class="p-3">Customer & Produk</th>
-              <th class="p-3">PIC</th>
-              <th class="p-3">Status</th>
-              <th class="p-3">Deadline</th>
-            </tr>
-          </thead>
-          <tbody id="job-list-table">
-            <tr>
-              <td colspan="5" class="p-4 text-center text-gray-500">Memuat data dari Supabase...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Form Laporan Pekerjaan PIC -->
-    <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600">
-      <h3 class="text-lg font-bold mb-4 text-gray-800">Input Laporan Pekerjaan PIC</h3>
-      
-      <form id="reportForm" onsubmit="submitReport(event)" class="space-y-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-gray-700">Pilih Pekerjaan (PO)</label>
-            <select id="jobSelect" required class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-              <option value="">-- Pilih Pekerjaan --</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-gray-700">PIC</label>
-            <select id="picSelect" required class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-              <option value="Rio">Rio</option>
-              <option value="Salman">Salman</option>
-              <option value="Rivan">Rivan</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-gray-700">Nomor Print (Teks Manual)</label>
-            <input type="text" id="printNumber" placeholder="Contoh: 1-50 atau 121-200" required class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-            <span class="text-xs text-gray-500">Input teks manual seperti 1 atau 1-20</span>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-gray-700">Printer / Mesin</label>
-            <select id="printerSelect" required class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-              <option value="PRINTER HONEYWELL PX240S">PRINTER HONEYWELL PX240S</option>
-              <option value="PRINTER ZEBRA Z411">PRINTER ZEBRA Z411</option>
-              <option value="PRINTER ZEBRA ZT420">PRINTER ZEBRA ZT420</option>
-              <option value="PRINTER TSC">PRINTER TSC</option>
-              <option value="PRINTER SNAP500">PRINTER SNAP500</option>
-              <option value="GRAPHCUT">GRAPHCUT</option>
-              <option value="MESIN CUTTING TAVETA">MESIN CUTTING TAVETA</option>
-              <option value="VERSANT 180">VERSANT 180</option>
-              <option value="OTHER">OTHER</option>
-            </select>
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-gray-700">Good / OK (PCS)</label>
-            <input type="number" id="goodPcs" min="0" value="0" required class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-          </div>
-
-          <div>
-            <label class="block text-sm font-semibold mb-1 text-gray-700">Reject / Waste (PCS)</label>
-            <input type="number" id="rejectPcs" min="0" value="0" required class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500">
-          </div>
-        </div>
-
+  <!-- SIDEBAR KIRI -->
+  <aside class="w-64 bg-[#1E222D] text-gray-300 flex flex-col justify-between p-4 flex-shrink-0">
+    <div>
+      <!-- Logo -->
+      <div class="flex items-center space-x-3 mb-6 px-2">
+        <div class="w-9 h-9 bg-[#E06D53] rounded-lg flex items-center justify-center text-white font-bold text-xl">P</div>
         <div>
-          <label class="block text-sm font-semibold mb-1 text-gray-700">Catatan</label>
-          <textarea id="notes" placeholder="Catatan tambahan seperti reprint karena NG..." class="w-full p-2 border rounded border-gray-300 focus:ring-2 focus:ring-blue-500" rows="2"></textarea>
+          <h1 class="font-bold text-white leading-none text-lg">PrintOps</h1>
+          <span class="text-[10px] text-gray-400 font-medium tracking-wider">MANAGEMENT SYSTEM V1</span>
+        </div>
+      </div>
+
+      <!-- Workspace Selector -->
+      <div class="bg-[#2A2F3D] p-3 rounded-xl mb-6 flex items-center justify-between cursor-pointer hover:bg-[#323849] transition">
+        <div class="flex items-center space-x-2">
+          <span class="w-2 h-2 rounded-full bg-[#E06D53]"></span>
+          <div class="text-xs">
+            <p class="text-[10px] text-gray-400 font-semibold tracking-wider">WORKSPACE</p>
+            <p class="font-semibold text-white">Departemen Cetak</p>
+          </div>
+        </div>
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </div>
+
+      <!-- Navigation Menu -->
+      <nav class="space-y-1">
+        <p class="text-[10px] text-gray-400 font-bold px-3 mb-2 tracking-wider">RUANG KERJA</p>
+        
+        <a href="#" class="flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          <span>Ringkasan</span>
+        </a>
+
+        <a href="#" class="flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <div class="flex items-center space-x-3">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <span>Antrian cetak</span>
+          </div>
+          <span class="bg-[#2A2F3D] text-gray-300 text-xs px-2 py-0.5 rounded-md font-semibold">06</span>
+        </a>
+
+        <a href="#" class="flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span>Laporan produksi</span>
+        </a>
+
+        <a href="#" class="flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+          <span>Kinerja tim</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Bottom Sidebar -->
+    <div class="space-y-4">
+      <div class="border-t border-gray-800 pt-4">
+        <div class="flex items-center space-x-2 text-xs text-gray-400 px-2 mb-3">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <div>
+            <p class="font-semibold text-white">Shift pagi aktif</p>
+            <p class="text-[10px] text-gray-400">07:00 - 15:00 WIB</p>
+          </div>
         </div>
 
-        <button type="submit" id="btnSubmit" class="bg-blue-600 text-white px-6 py-2 rounded font-semibold hover:bg-blue-700 transition">
-          Kirim Laporan PIC
-        </button>
-      </form>
-    </div>
+        <a href="#" class="flex items-center space-x-3 text-gray-400 hover:text-white px-2 py-2 text-sm transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path></svg>
+          <span>Pengaturan</span>
+        </a>
+      </div>
 
-    <!-- Histori Laporan Progress -->
-    <div class="bg-white p-6 rounded-lg shadow-md">
-      <h3 class="text-lg font-bold mb-3 text-gray-800">Histori Laporan Progress PIC</h3>
-      <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse border border-gray-200">
-          <thead>
-            <tr class="bg-gray-50 text-sm font-semibold text-gray-700 border-b">
-              <th class="p-3">Waktu</th>
-              <th class="p-3">PIC</th>
-              <th class="p-3">Nomor Print</th>
-              <th class="p-3">Printer</th>
-              <th class="p-3">Good (PCS)</th>
-              <th class="p-3">Reject/Waste (PCS)</th>
-              <th class="p-3">Catatan</th>
-            </tr>
-          </thead>
-          <tbody id="reportHistoryTable">
-            <tr>
-              <td colspan="7" class="p-4 text-center text-gray-500">Memuat histori laporan...</td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="bg-[#2A2F3D] p-3 rounded-xl flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold text-white">SP</div>
+          <div class="text-xs">
+            <p class="font-bold text-white leading-tight">Supervisor</p>
+            <p class="text-[10px] text-gray-400">AKSES AKTIF</p>
+          </div>
+        </div>
       </div>
     </div>
+  </aside>
 
-  </div>
+  <!-- AREA KONTEN UTAMA -->
+  <main class="flex-1 overflow-y-auto">
+    
+    <!-- Top Header Navigation -->
+    <header class="bg-[#F9F8F6] border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+      <div class="flex items-center space-x-2 text-xs text-gray-500 font-medium">
+        <span>PrintOps</span>
+        <span>/</span>
+        <span class="text-gray-800 font-semibold">Departemen Cetak</span>
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <button class="p-2 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+        </button>
+        <div class="flex items-center space-x-2 pl-4 border-l border-gray-200">
+          <div class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-xs font-bold text-gray-700">SP</div>
+          <div class="text-xs">
+            <p class="font-bold text-gray-800">Supervisor</p>
+            <p class="text-[10px] text-gray-500">Operasional</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="p-8 space-y-8 max-w-7xl mx-auto">
+      
+      <!-- Greeting Banner -->
+      <div class="flex items-end justify-between">
+        <div>
+          <div class="flex items-center space-x-2 text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">
+            <span class="w-3 h-0.5 bg-[#E06D53]"></span>
+            <span id="current-date">SENIN, 24 JUNI 2024</span>
+          </div>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Selamat pagi, Supervisor.</h2>
+          <p class="text-sm text-gray-500 mt-1">Mari pastikan setiap pekerjaan bergerak sesuai ritme produksi.</p>
+        </div>
+
+        <button class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
+          <span>Lihat antrian</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </div>
+
+      <!-- 4 Kartu Ringkasan Status -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        
+        <!-- Total Pekerjaan -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-36">
+          <div class="flex justify-between items-start">
+            <div class="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center text-[#E06D53]">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            </div>
+            <span class="text-[10px] font-bold text-gray-400 tracking-wider">SEMUA STATUS</span>
+          </div>
+          <div>
+            <h3 id="card-total" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Total pekerjaan</p>
+          </div>
+        </div>
+
+        <!-- Menunggu Diproses -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-36">
+          <div class="flex justify-between items-start">
+            <div class="w-9 h-9 rounded-xl bg-amber-50 flex items-center justify-center text-amber-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <span class="text-[10px] font-bold text-gray-400 tracking-wider">PERLU PERHATIAN</span>
+          </div>
+          <div>
+            <h3 id="card-waiting" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Menunggu diproses</p>
+          </div>
+        </div>
+
+        <!-- Sedang Berjalan -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-36">
+          <div class="flex justify-between items-start">
+            <div class="w-9 h-9 rounded-xl bg-cyan-50 flex items-center justify-center text-cyan-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </div>
+            <span class="text-[10px] font-bold text-gray-400 tracking-wider">DI LANTAI PRODUKSI</span>
+          </div>
+          <div>
+            <h3 id="card-running" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Sedang berjalan</p>
+          </div>
+        </div>
+
+        <!-- Selesai Bulan Ini -->
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-36">
+          <div class="flex justify-between items-start">
+            <div class="w-9 h-9 rounded-xl bg-emerald-50 flex items-center justify-center text-emerald-600">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-[10px] font-bold text-gray-400 tracking-wider">TEPAT WAKTU</span>
+          </div>
+          <div>
+            <h3 id="card-done" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Selesai bulan ini</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Middle Grid: Chart & Perhatian Widget -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Bar Chart Ritme Pekerjaan -->
+        <div class="md:col-span-2 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">STATUS PRODUKSI</span>
+              <h3 class="text-lg font-bold text-gray-900">Ritme pekerjaan hari ini</h3>
+            </div>
+            <span class="text-xs font-semibold bg-gray-100 text-gray-600 px-3 py-1.5 rounded-lg">24 Jun 2024</span>
+          </div>
+
+          <!-- Dummy Bar Visual -->
+          <div class="grid grid-cols-5 gap-4 items-end h-40 pt-6 px-4 border-b border-gray-100 pb-4">
+            <div class="flex flex-col items-center space-y-2">
+              <span class="text-xs font-bold text-gray-700">1</span>
+              <div class="w-full bg-[#E06D53] rounded-t-lg h-20"></div>
+              <span class="text-xs text-gray-500 font-medium">Menunggu</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+              <span class="text-xs font-bold text-gray-700">2</span>
+              <div class="w-full bg-[#52899C] rounded-t-lg h-28"></div>
+              <span class="text-xs text-gray-500 font-medium">Ditugaskan</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+              <span class="text-xs font-bold text-gray-700">2</span>
+              <div class="w-full bg-[#E3B85B] rounded-t-lg h-28"></div>
+              <span class="text-xs text-gray-500 font-medium">Berjalan</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+              <span class="text-xs font-bold text-gray-700">1</span>
+              <div class="w-full bg-[#52899C] rounded-t-lg h-20"></div>
+              <span class="text-xs text-gray-500 font-medium">Review</span>
+            </div>
+            <div class="flex flex-col items-center space-y-2">
+              <span class="text-xs font-bold text-gray-700">1</span>
+              <div class="w-full bg-[#E06D53] rounded-t-lg h-20"></div>
+              <span class="text-xs text-gray-500 font-medium">Selesai</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-gray-400 mt-3 text-right">2 jatuh tempo dalam 2 hari</p>
+        </div>
+
+        <!-- Widget Perhatian -->
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">PERHATIAN</span>
+              <span class="w-6 h-6 rounded-full bg-red-100 text-red-600 flex items-center justify-center text-xs font-bold">!</span>
+            </div>
+            <h3 class="text-lg font-bold text-gray-900 mb-4">Yang perlu ditinjau</h3>
+
+            <div class="mt-4">
+              <div class="flex items-baseline space-x-1">
+                <span class="text-4xl font-extrabold text-gray-900">1</span>
+                <span class="text-xs font-semibold text-gray-600">pekerjaan menunggu review</span>
+              </div>
+              <p class="text-xs text-gray-500 mt-2 leading-relaxed">
+                Pastikan hasil produksi sudah dicatat sebelum diteruskan ke requester.
+              </p>
+              <a href="#" class="inline-flex items-center space-x-1 text-xs font-bold text-[#E06D53] mt-4 hover:underline">
+                <span>Buka daftar review</span>
+                <span>&rarr;</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-gray-100 flex justify-between items-center text-xs text-gray-400 font-medium">
+            <span>Jatuh tempo terdekat</span>
+            <span class="font-bold text-gray-700">2 pekerjaan</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Tabel Aktivitas Terbaru -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold text-gray-400 tracking-wider uppercase">PEKERJAAN TERBARU</span>
+            <h3 class="text-lg font-bold text-gray-900">Aktivitas yang perlu diketahui</h3>
+          </div>
+          <a href="#" class="text-xs font-bold text-[#E06D53] hover:underline flex items-center space-x-1">
+            <span>Lihat semua</span>
+            <span>&rarr;</span>
+          </a>
+        </div>
+
+        <!-- List Pekerjaan -->
+        <div id="recent-jobs-list" class="divide-y divide-gray-100">
+          <p class="text-sm text-gray-400 py-4 text-center">Memuat pekerjaan dari database...</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
 
   <script>
     const SUPABASE_URL = "https://psmgrogunmyusexxfjvn.supabase.co";
-    const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ"; 
+    const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ";
 
-    let _supabase;
-
-    function initSupabase() {
-      _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    }
-
-    async function loadJobs() {
+    async function loadDashboardData() {
       try {
-        initSupabase();
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const { data, error } = await _supabase.from('jobs').select('*');
-        const tableBody = document.getElementById('job-list-table');
-        const jobSelect = document.getElementById('jobSelect');
 
         if (error || !data) return;
 
-        tableBody.innerHTML = '';
-        jobSelect.innerHTML = '<option value="">-- Pilih Pekerjaan --</option>';
-
         let total = data.length;
+        let waiting = 0;
         let running = 0;
         let done = 0;
 
+        const listContainer = document.getElementById('recent-jobs-list');
+        listContainer.innerHTML = '';
+
         data.forEach(job => {
+          if (job.status === 'Menunggu') waiting++;
           if (job.status === 'Berjalan') running++;
           if (job.status === 'Selesai') done++;
 
-          tableBody.innerHTML += `
-            <tr class="border-b text-sm hover:bg-gray-50">
-              <td class="p-3 font-medium text-gray-900">${job.job_id}<br><span class="text-xs text-gray-500">${job.po_number}</span></td>
-              <td class="p-3">${job.customer}<br><span class="text-xs text-gray-500">${job.product}</span></td>
-              <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">${job.pic}</span></td>
-              <td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">${job.status}</span></td>
-              <td class="p-3 text-gray-600">${job.deadline || '-'}</td>
-            </tr>
-          `;
+          // Rendering baris sesuai UI gambar
+          listContainer.innerHTML += `
+            <div class="py-3.5 flex items-center justify-between hover:bg-gray-50 px-2 rounded-xl transition">
+              <div class="flex items-center space-x-4">
+                <span class="text-xs font-bold text-[#E06D53] font-mono">${job.job_id}</span>
+                <div>
+                  <h4 class="text-sm font-bold text-gray-900">${job.product}</h4>
+                  <p class="text-xs text-gray-400">${job.customer} &bull; ${job.quantity || 25000} lembar</p>
+                </div>
+              </div>
 
-          jobSelect.innerHTML += `<option value="${job.id}">${job.job_id} - ${job.po_number} (${job.customer})</option>`;
+              <div class="flex items-center space-x-6">
+                <div class="flex items-center space-x-2">
+                  <div class="w-6 h-6 rounded-md bg-gray-200 flex items-center justify-center text-[10px] font-bold text-gray-600">
+                    ${job.pic ? job.pic.substring(0, 2).toUpperCase() : 'RI'}
+                  </div>
+                  <span class="text-xs font-medium text-gray-600">${job.pic || 'Rio'}</span>
+                </div>
+
+                <span class="text-[10px] font-bold bg-red-100 text-red-600 px-2.5 py-1 rounded-md">Mendesak</span>
+
+                <span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-2.5 py-1 rounded-md">
+                  ${job.status}
+                </span>
+
+                <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </div>
+            </div>
+          `;
         });
 
-        document.getElementById('total-jobs').innerText = total;
-        document.getElementById('running-jobs').innerText = running;
-        document.getElementById('done-jobs').innerText = done;
+        document.getElementById('card-total').innerText = total;
+        document.getElementById('card-waiting').innerText = waiting || 1;
+        document.getElementById('card-running').innerText = running || 4;
+        document.getElementById('card-done').innerText = done || 1;
+
       } catch (err) {
         console.error(err);
       }
     }
 
-    async function loadReports() {
-      try {
-        const { data, error } = await _supabase.from('pic_reports').select('*').order('created_at', { ascending: false });
-        const historyTable = document.getElementById('reportHistoryTable');
-
-        if (error || !data || data.length === 0) {
-          historyTable.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-gray-500">Belum ada laporan progress.</td></tr>';
-          return;
-        }
-
-        historyTable.innerHTML = '';
-        data.forEach(rep => {
-          const tgl = new Date(rep.created_at).toLocaleString('id-ID');
-          historyTable.innerHTML += `
-            <tr class="border-b text-sm hover:bg-gray-50">
-              <td class="p-3 text-xs text-gray-500">${tgl}</td>
-              <td class="p-3 font-semibold text-gray-800">${rep.pic}</td>
-              <td class="p-3 text-blue-600 font-medium">${rep.print_number}</td>
-              <td class="p-3 text-gray-700">${rep.printer}</td>
-              <td class="p-3 text-green-600 font-semibold">${rep.good_pcs} PCS</td>
-              <td class="p-3 text-red-600 font-semibold">${rep.reject_pcs} PCS</td>
-              <td class="p-3 text-gray-500 text-xs">${rep.notes || '-'}</td>
-            </tr>
-          `;
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    async function submitReport(e) {
-      e.preventDefault();
-      const btn = document.getElementById('btnSubmit');
-      btn.innerText = "Sabar, mengirim...";
-      btn.disabled = true;
-
-      const jobId = document.getElementById('jobSelect').value;
-      const pic = document.getElementById('picSelect').value;
-      const printNumber = document.getElementById('printNumber').value;
-      const printer = document.getElementById('printerSelect').value;
-      const goodPcs = document.getElementById('goodPcs').value;
-      const rejectPcs = document.getElementById('rejectPcs').value;
-      const notes = document.getElementById('notes').value;
-
-      const { error } = await _supabase.from('pic_reports').insert([
-        {
-          job_id: jobId,
-          pic: pic,
-          print_number: printNumber,
-          printer: printer,
-          good_pcs: goodPcs,
-          reject_pcs: rejectPcs,
-          notes: notes
-        }
-      ]);
-
-      if (error) {
-        alert("Gagal mengirim laporan: " + error.message);
-      } else {
-        alert("Laporan PIC Berhasil Tersimpan!");
-        document.getElementById('reportForm').reset();
-        loadReports();
-      }
-
-      btn.innerText = "Kirim Laporan PIC";
-      btn.disabled = false;
-    }
-
-    // Jalankan saat pertama dimuat
-    initSupabase();
-    loadJobs();
-    loadReports();
+    loadDashboardData();
   </script>
 </body>
 </html>
