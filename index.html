@@ -122,16 +122,16 @@
 
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">PRIORITAS MENDESAK</span>
+          <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">PO URGENT</span>
           <h3 id="card-urgent" class="text-3xl font-bold text-red-600 leading-none">0</h3>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-amber-600 tracking-wider uppercase">PEKERJAAN TERLAMBAT</span>
-          <h3 id="card-overdue" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
+          <span class="text-[10px] font-bold text-blue-600 tracking-wider uppercase">PO MENUNGGU ANTRIAN</span>
+          <h3 id="card-queue" class="text-3xl font-bold text-blue-600 leading-none">0</h3>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-cyan-600 tracking-wider uppercase">SEDANG BERJALAN</span>
-          <h3 id="card-running" class="text-3xl font-bold text-cyan-700 leading-none">0</h3>
+          <span class="text-[10px] font-bold text-amber-600 tracking-wider uppercase">PO HOLD</span>
+          <h3 id="card-hold" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
         </div>
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
           <span class="text-[10px] font-bold text-emerald-600 tracking-wider uppercase">PO SELESAI (ARSIP)</span>
@@ -597,7 +597,7 @@
           <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required class="w-full p-2.5 border rounded-xl text-sm"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"><option value="RIO">RIO</option><option value="RIVAN">RIVAN</option><option value="SALMAN">SALMAN</option><option value="SYUJA">SYUJA</option></select></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow *</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="ANTRIAN PEMBAGIAN">ANTRIAN PEMBAGIAN</option><option value="READY TO PRINT">READY TO PRINT</option><option value="SEDANG DIKERJAKAN">SEDANG DIKERJAKAN</option><option value="SELESAI">SELESAI</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow *</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"><option value="PO URGENT">PO URGENT</option><option value="PO MENUNGGU ANTRIAN">PO MENUNGGU ANTRIAN</option><option value="PO HOLD">PO HOLD</option><option value="PO SELESAI (ARSIP)">PO SELESAI (ARSIP)</option></select></div>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePOModal()" class="px-5 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-[#E06D53] text-white rounded-xl text-xs font-bold uppercase">Simpan PO</button></div>
       </form>
@@ -742,7 +742,7 @@
     let currentUser = null;
 
     let poList = [
-      { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "ANTRIAN PEMBAGIAN", finishedDate: null }
+      { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "PO MENUNGGU ANTRIAN", finishedDate: null }
     ];
     let materials = [
       { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 },
@@ -760,7 +760,7 @@
     function checkAutoDeleteFinishedPOs() {
       const today = new Date("2026-08-09");
       poList = poList.filter(p => {
-        if (p.status === "SELESAI" && p.finishedDate) {
+        if (p.status === "PO SELESAI (ARSIP)" && p.finishedDate) {
           const finishedDt = new Date(p.finishedDate);
           const diffTime = today - finishedDt;
           const diffDays = diffTime / (1000 * 60 * 60 * 24);
@@ -892,9 +892,9 @@
 
       const selPo = document.getElementById('reportPoSelect');
       selPo.innerHTML = '';
-      const readyPoList = poList.filter(p => p.status === 'READY TO PRINT' || p.status === 'SELESAI' || p.status === 'SEDANG DIKERJAKAN');
+      const readyPoList = poList.filter(p => p.status === 'PO MENUNGGU ANTRIAN' || p.status === 'PO URGENT' || p.status === 'PO SELESAI (ARSIP)');
       if (readyPoList.length === 0) {
-        selPo.innerHTML = `<option value="">-- BELUM ADA PO SIAP CETAK (LAYOUT BELUM APPROVAL) --</option>`;
+        selPo.innerHTML = `<option value="">-- BELUM ADA PO TERSEDIA --</option>`;
       } else {
         readyPoList.forEach(p => {
           selPo.innerHTML += `<option value="${p.number}">${p.number} - ${p.customer} (${p.product})</option>`;
@@ -915,13 +915,24 @@
     }
 
     function renderDashboardCatalogPreviews() {
-      const finishedCount = poList.filter(p => p.status === "SELESAI").length;
+      const urgentCount = poList.filter(p => p.status === "PO URGENT").length;
+      const queueCount = poList.filter(p => p.status === "PO MENUNGGU ANTRIAN").length;
+      const holdCount = poList.filter(p => p.status === "PO HOLD").length;
+      const finishedCount = poList.filter(p => p.status === "PO SELESAI (ARSIP)").length;
+
+      document.getElementById('card-urgent').innerText = urgentCount;
+      document.getElementById('card-queue').innerText = queueCount;
+      document.getElementById('card-hold').innerText = holdCount;
       document.getElementById('card-finished').innerText = finishedCount;
 
       const poBox = document.getElementById('dashPoPreview');
       poBox.innerHTML = '';
       poList.slice(0, 3).forEach(p => {
-        let badgeColor = p.status === "SELESAI" ? "bg-emerald-100 text-emerald-800" : "bg-blue-100 text-blue-700";
+        let badgeColor = "bg-blue-100 text-blue-700";
+        if (p.status === "PO URGENT") badgeColor = "bg-red-100 text-red-700";
+        else if (p.status === "PO HOLD") badgeColor = "bg-amber-100 text-amber-700";
+        else if (p.status === "PO SELESAI (ARSIP)") badgeColor = "bg-emerald-100 text-emerald-800";
+
         poBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${p.number} - ${p.customer}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded ${badgeColor}">${p.status}</span></div>`;
       });
     }
@@ -961,7 +972,7 @@
       const statusVal = document.getElementById('poStatusFlow').value.toUpperCase();
 
       let finishedDt = null;
-      if (statusVal === "SELESAI") {
+      if (statusVal === "PO SELESAI (ARSIP)") {
         finishedDt = new Date().toISOString().split('T')[0];
       }
 
@@ -971,7 +982,7 @@
         poList[idx].product = prod;
         poList[idx].qty = qtyVal;
         poList[idx].pic = picVal;
-        if (poList[idx].status !== "SELESAI" && statusVal === "SELESAI") {
+        if (poList[idx].status !== "PO SELESAI (ARSIP)" && statusVal === "PO SELESAI (ARSIP)") {
           poList[idx].finishedDate = finishedDt;
         }
         poList[idx].status = statusVal;
@@ -993,6 +1004,7 @@
       }
 
       closePOModal(); 
+      renderPoTitleCount();
       renderPoTable();
     }
 
@@ -1001,13 +1013,19 @@
         const poNum = poList[idx].number;
         poList.splice(idx, 1);
         layoutList = layoutList.filter(l => l.poNumber !== poNum);
+        renderPoTitleCount();
         renderPoTable();
         renderLayoutTable();
         alert("PO BERHASIL DIHAPUS.");
       }
     }
     
+    function renderPoTitleCount() {
+      document.getElementById('badge-po-count').innerText = poList.length;
+    }
+
     function renderPoTable() {
+      renderPoTitleCount();
       const tbody = document.getElementById('po-table-body');
       tbody.innerHTML = '';
       if (poList.length === 0) {
@@ -1015,7 +1033,11 @@
         return;
       }
       poList.forEach((p, idx) => {
-        let statusBadgeColor = p.status === "SELESAI" ? "bg-emerald-100 text-emerald-800" : (p.status === "READY TO PRINT" ? "bg-cyan-100 text-cyan-800" : "bg-blue-100 text-blue-700");
+        let statusBadgeColor = "bg-blue-100 text-blue-700";
+        if (p.status === "PO URGENT") statusBadgeColor = "bg-red-100 text-red-700";
+        else if (p.status === "PO HOLD") statusBadgeColor = "bg-amber-100 text-amber-700";
+        else if (p.status === "PO SELESAI (ARSIP)") statusBadgeColor = "bg-emerald-100 text-emerald-800";
+
         let finDateText = p.finishedDate ? p.finishedDate : "-";
 
         tbody.innerHTML += `<tr class="hover:bg-gray-50">
@@ -1217,7 +1239,7 @@
         
         if (stat.includes('APPROVED')) {
           const p = poList.find(item => item.number === poNum);
-          if (p) p.status = "READY TO PRINT";
+          if (p) p.status = "PO MENUNGGU ANTRIAN";
         }
         alert("LAYOUT & APPROVAL BERHASIL DIPERBARUI!");
       } else {
@@ -1233,7 +1255,7 @@
         });
         if (stat.includes('APPROVED')) {
           const p = poList.find(item => item.number === poNum);
-          if (p) p.status = "READY TO PRINT";
+          if (p) p.status = "PO MENUNGGU ANTRIAN";
         }
         alert("LAYOUT BERHASIL DISIMPAN!");
       }
@@ -1257,9 +1279,9 @@
         l.status = "APPROVED (DISETUJUI)";
         const p = poList.find(item => item.number === l.poNumber);
         if (p) {
-          p.status = "READY TO PRINT";
+          p.status = "PO MENUNGGU ANTRIAN";
         }
-        alert(`Layout PO ${l.poNumber} telah di-APPROVE! Status PO kini berubah menjadi READY TO PRINT.`);
+        alert(`Layout PO ${l.poNumber} telah di-APPROVE! Status PO kini berubah menjadi PO MENUNGGU ANTRIAN.`);
         renderLayoutTable();
         renderPoTable();
       }
@@ -1274,7 +1296,7 @@
       }
       layoutList.forEach((l, idx) => {
         let actionBtn = l.status.includes('APPROVED') 
-          ? `<span class="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-100 px-2 py-1 rounded">Sudah Ready to Print</span>`
+          ? `<span class="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-100 px-2 py-1 rounded">Disetujui</span>`
           : `<button onclick="confirmLayoutApproval(${l.id})" class="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase shadow">Konfirmasi Approve</button>`;
 
         body.innerHTML += `<tr>
