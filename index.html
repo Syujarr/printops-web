@@ -24,8 +24,12 @@
 
       <nav class="space-y-1">
         <p class="text-[10px] text-gray-400 font-bold px-3 mb-2 tracking-wider">RUANG KERJA</p>
-        <button onclick="switchTab('poTab')" id="nav-po" class="w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <span>Ringkasan & PO</span>
+        <button onclick="switchTab('dashTab')" id="nav-dash" class="w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <span>Ringkasan Executive</span>
+        </button>
+        <button onclick="switchTab('poTab')" id="nav-po" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <span>Antrian & Approval PO</span>
+          <span id="badge-review-count" class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-md font-bold">0</span>
         </button>
         <button onclick="switchTab('reportTab')" id="nav-report" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
           <span>Laporan Harian (Form)</span>
@@ -47,12 +51,76 @@
   <!-- AREA KONTEN UTAMA -->
   <main class="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto space-y-8">
     
-    <!-- TAB 1: RINGKASAN & PO MANAGEMENT -->
-    <div id="poTabSection" class="space-y-8">
+    <!-- TAB 1: EXECUTIVE DASHBOARD KPI -->
+    <div id="dashTabSection" class="space-y-8">
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Executive Summary & KPI Divisi</h2>
+        <p class="text-sm text-gray-500 mt-1">Pemantauan performa produksi, rasio kelayakan (yield), dan kontrol kualitas.</p>
+      </div>
+
+      <!-- 4 Kartu KPI -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-gray-400 tracking-wider">TOTAL WORKLOAD</span>
+          <div>
+            <h3 id="kpi-total" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Pekerjaan terdaftar</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-amber-500 tracking-wider">BUTUH REVIEW</span>
+          <div>
+            <h3 id="kpi-review" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Menunggu approval supervisor</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-emerald-500 tracking-wider">ESTIMASI YIELD RATE</span>
+          <div>
+            <h3 id="kpi-yield" class="text-3xl font-bold text-emerald-600 leading-none">0%</h3>
+            <p class="text-xs text-gray-400 mt-1">Rasio hasil cetak bagus (Good QTY)</p>
+          </div>
+        </div>
+
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
+          <span class="text-[10px] font-bold text-red-500 tracking-wider">REJECT RATE</span>
+          <div>
+            <h3 id="kpi-reject" class="text-3xl font-bold text-red-600 leading-none">0%</h3>
+            <p class="text-xs text-gray-400 mt-1">Persentase bahan terbuang/waste[cite: 1]</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Widget Prioritas Tinggi & Berisiko Overdue -->
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+        <h3 class="text-lg font-bold text-gray-900">Pekerjaan Prioritas Tinggi & Berisiko Overdue</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
+                <th class="pb-3">Job ID / PO</th>
+                <th class="pb-3">Customer & Produk</th>
+                <th class="pb-3">PIC</th>
+                <th class="pb-3">Deadline</th>
+                <th class="pb-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="urgent-jobs-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="5" class="py-4 text-center text-gray-400">Memuat pekerjaan prioritas...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: ANTRIAN & APPROVAL PO -->
+    <div id="poTabSection" class="space-y-8 hidden">
       <div class="flex items-end justify-between">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Purchase Order & Assignment</h2>
-          <p class="text-sm text-gray-500 mt-1">Kelola pembagian pekerjaan PIC dan alur status operasional.</p>
+          <p class="text-sm text-gray-500 mt-1">Kelola pembagian pekerjaan PIC, alur status, dan approval hasil cetak[cite: 1].</p>
         </div>
         <button onclick="openPOModal()" class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
           <span class="text-lg">+</span>
@@ -82,17 +150,15 @@
       </div>
     </div>
 
-    <!-- TAB 2: LAPORAN PEKERJAAN HARIAN (INTEGRASI FORM + IMPROVEMENT) -->
+    <!-- TAB 3: LAPORAN PEKERJAAN HARIAN -->
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan Pekerjaan Harian</h2>
-        <p class="text-sm text-gray-500 mt-1">Pencatatan terpadu produksi printing, layout development, dan kendala operasional.</p>
+        <p class="text-sm text-gray-500 mt-1">Pencatatan terpadu produksi printing, layout development, dan kendala operasional[cite: 1].</p>
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
         <form id="dailyReportForm" onsubmit="saveDailyReport(event)" class="space-y-6">
-          
-          <!-- SEKSI 1: INFORMASI DASAR -->
           <div class="border-b pb-4 space-y-4">
             <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">1. Informasi Dasar Laporan</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -121,7 +187,6 @@
             </div>
           </div>
 
-          <!-- SEKSI 2: DETAIL PEKERJAAN -->
           <div class="border-b pb-4 space-y-4">
             <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Detail Pekerjaan & Customer</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -168,7 +233,6 @@
             </div>
           </div>
 
-          <!-- SEKSI 3A: KHUSUS PRINTING & CUTTING -->
           <div id="sectionPrinting" class="border-b pb-4 space-y-4">
             <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing & Material Usage</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -204,7 +268,6 @@
             </div>
           </div>
 
-          <!-- SEKSI 3B: KHUSUS DEVELOP & APPROVAL -->
           <div id="sectionDevelop" class="border-b pb-4 space-y-4 hidden">
             <h4 class="text-xs font-bold text-purple-600 uppercase tracking-wider">3. Parameter Development & Layout Approval</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -231,19 +294,8 @@
                 </select>
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama File Konten yang Di-Develop</label>
-                <input type="text" id="fileNameContent" placeholder="Contoh: Layout_Label_Sambal_V2.cdr" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Path Lokasi Folder</label>
-                <input type="text" id="folderPath" placeholder="Contoh: D:\LAYOUT 2026\SAMBAL\" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-            </div>
           </div>
 
-          <!-- SEKSI 4: KENDALA -->
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Apakah Ada Kendala? Sebutkan</label>
             <input type="text" id="issueNotes" placeholder="Tuliskan kendala mesin, bahan, atau layout jika ada..." class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
@@ -255,7 +307,6 @@
         </form>
       </div>
 
-      <!-- TABEL HISTORI DAILY REPORT -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <h3 class="text-lg font-bold text-gray-900">Histori Laporan Pekerjaan Harian</h3>
         <div class="overflow-x-auto">
@@ -263,11 +314,11 @@
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
                 <th class="pb-3">Tanggal / Operator</th>
-                <th class="pb-3">Jenis / Status</th>
-                <th class="pb-3">Customer / PO</th>
-                <th class="pb-3">Parameter Cetak / Vendor</th>
-                <th class="pb-3">Reject</th>
-                <th class="pb-3">Kendala / Deskripsi</th>
+                <th class="pb-3">Mesin / Software</th>
+                <th class="pb-3">No. Print</th>
+                <th class="pb-3">Good Qty</th>
+                <th class="pb-3">Reject Qty</th>
+                <th class="pb-3">Deskripsi / Kendala</th>
               </tr>
             </thead>
             <tbody id="daily-report-body" class="divide-y divide-gray-100 text-sm">
@@ -336,8 +387,8 @@
             <option value="ASSIGNED">ASSIGNED</option>
             <option value="PREPARATION">PREPARATION</option>
             <option value="IN PROGRESS">IN PROGRESS</option>
-            <option value="REVIEW">REVIEW</option>
-            <option value="DONE">DONE</option>
+            <option value="REVIEW">REVIEW (Membutuhkan Review SPV)</option>
+            <option value="DONE">DONE (Selesai & Approved)</option>
           </select>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t">
@@ -357,15 +408,23 @@
     function initSupabase() { _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
 
     function switchTab(tab) {
-      if (tab === 'poTab') {
+      document.getElementById('dashTabSection').classList.add('hidden');
+      document.getElementById('poTabSection').classList.add('hidden');
+      document.getElementById('reportTabSection').classList.add('hidden');
+
+      document.getElementById('nav-dash').className = "w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+      document.getElementById('nav-po').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+      document.getElementById('nav-report').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+
+      if (tab === 'dashTab') {
+        document.getElementById('dashTabSection').classList.remove('hidden');
+        document.getElementById('nav-dash').className = "w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+        loadDashboardKPI();
+      } else if (tab === 'poTab') {
         document.getElementById('poTabSection').classList.remove('hidden');
-        document.getElementById('reportTabSection').classList.add('hidden');
-        document.getElementById('nav-po').className = "w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
-        document.getElementById('nav-report').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+        document.getElementById('nav-po').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
       } else {
-        document.getElementById('poTabSection').classList.add('hidden');
         document.getElementById('reportTabSection').classList.remove('hidden');
-        document.getElementById('nav-po').className = "w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
         document.getElementById('nav-report').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
         loadDailyReportsHistory();
       }
@@ -410,8 +469,6 @@
 
     async function loadData() {
       initSupabase();
-      // Set default tanggal hari ini
-      document.getElementById('reportDate').valueToDate = new Date();
       document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
 
       const { data, error } = await _supabase.from('jobs').select('*').order('created_at', { ascending: false });
@@ -427,9 +484,13 @@
       tbody.innerHTML = '';
       selectJob.innerHTML = '<option value="">-- Pilih PO (Otomatis) --</option>';
 
+      let reviewCount = 0;
+
       data.forEach(item => {
+        if (item.status === 'REVIEW') reviewCount++;
+
         let prioColor = item.priority === 'Mendesak' ? 'bg-red-100 text-red-600' : (item.priority === 'Tinggi' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600');
-        let statusColor = item.status === 'DONE' ? 'bg-emerald-100 text-emerald-700' : (item.status === 'IN PROGRESS' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700');
+        let statusColor = item.status === 'DONE' ? 'bg-emerald-100 text-emerald-700' : (item.status === 'REVIEW' ? 'bg-amber-100 text-amber-700' : (item.status === 'IN PROGRESS' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700'));
 
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition">
@@ -440,7 +501,7 @@
             <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${statusColor}">${item.status || 'NEW'}</span></td>
             <td class="py-3.5">
               <button onclick="openAssignModal('${item.id}', '${item.job_id}', '${item.po_number}', '${item.pic}', '${item.status}')" class="text-xs font-bold bg-gray-900 text-white hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
-                Assign / Status &rarr;
+                Assign / Review &rarr;
               </button>
             </td>
           </tr>
@@ -448,6 +509,60 @@
 
         selectJob.innerHTML += `<option value="${item.id}">${item.job_id} - ${item.product} (${item.customer})</option>`;
       });
+
+      document.getElementById('badge-review-count').innerText = reviewCount;
+      loadDashboardKPI();
+    }
+
+    async function loadDashboardKPI() {
+      const { data: jobs } = await _supabase.from('jobs').select('*');
+      const { data: reports } = await _supabase.from('pic_reports').select('*');
+
+      if (jobs) {
+        document.getElementById('kpi-total').innerText = jobs.length;
+        const review = jobs.filter(j => j.status === 'REVIEW').length;
+        document.getElementById('kpi-review').innerText = review;
+
+        // Render Urgent/Overdue
+        const urgentBody = document.getElementById('urgent-jobs-body');
+        const urgentJobs = jobs.filter(j => j.priority === 'Mendesak' || j.priority === 'Tinggi' || j.status === 'REVIEW');
+        
+        if (urgentJobs.length === 0) {
+          urgentBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-400">Tidak ada pekerjaan urgent.</td></tr>';
+        } else {
+          urgentBody.innerHTML = '';
+          urgentJobs.forEach(j => {
+            urgentBody.innerHTML += `
+              <tr class="hover:bg-gray-50 transition">
+                <td class="py-3 font-bold text-[#E06D53]">${j.job_id}<br><span class="text-xs text-gray-400 font-normal">${j.po_number}</span></td>
+                <td class="py-3 font-semibold text-gray-900">${j.product}<br><span class="text-xs text-gray-400 font-normal">${j.customer}</span></td>
+                <td class="py-3 font-semibold text-gray-700">${j.pic || 'Unassigned'}</td>
+                <td class="py-3 text-xs text-gray-500 font-bold">${j.deadline || '-'}</td>
+                <td class="py-3"><span class="text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-600">${j.status}</span></td>
+              </tr>
+            `;
+          });
+        }
+      }
+
+      if (reports && reports.length > 0) {
+        let totalGood = 0;
+        let totalReject = 0;
+
+        reports.forEach(r => {
+          totalGood += Number(r.good_pcs || 0);
+          totalReject += Number(r.reject_pcs || 0);
+        });
+
+        let totalProduced = totalGood + totalReject;
+        if (totalProduced > 0) {
+          let yieldRate = ((totalGood / totalProduced) * 100).toFixed(1);
+          let rejectRate = ((totalReject / totalProduced) * 100).toFixed(1);
+
+          document.getElementById('kpi-yield').innerText = yieldRate + '%';
+          document.getElementById('kpi-reject').innerText = rejectRate + '%';
+        }
+      }
     }
 
     async function savePO(e) {
@@ -506,6 +621,7 @@
         alert("Laporan Pekerjaan Harian Berhasil Tersimpan!");
         document.getElementById('dailyReportForm').reset();
         loadDailyReportsHistory();
+        loadDashboardKPI();
       } else {
         alert("Gagal menyimpan laporan: " + error.message);
       }
