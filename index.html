@@ -14,6 +14,7 @@
   <!-- SIDEBAR KIRI -->
   <aside class="w-64 bg-[#1E222D] text-gray-300 flex flex-col justify-between p-4 flex-shrink-0">
     <div>
+      <!-- Brand Logo -->
       <div class="flex items-center space-x-3 mb-6 px-2">
         <div class="w-9 h-9 bg-[#E06D53] rounded-lg flex items-center justify-center text-white font-bold text-xl">P</div>
         <div>
@@ -22,27 +23,45 @@
         </div>
       </div>
 
+      <!-- Menu Navigasi Utama -->
       <nav class="space-y-1">
         <p class="text-[10px] text-gray-400 font-bold px-3 mb-2 tracking-wider">RUANG KERJA</p>
+        
         <button onclick="switchTab('dashTab')" id="nav-dash" class="w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <span>Ringkasan Executive</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+          <span>Dashboard Utama</span>
         </button>
+
         <button onclick="switchTab('poTab')" id="nav-po" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <span>Antrian & Approval PO</span>
-          <span id="badge-review-count" class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-md font-bold">0</span>
+          <div class="flex items-center space-x-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+            <span>Antrian & Detail PO</span>
+          </div>
+          <span id="badge-po-count" class="bg-[#2A2F3D] text-gray-300 text-xs px-2 py-0.5 rounded-md font-bold">0</span>
         </button>
-        <button onclick="switchTab('reportTab')" id="nav-report" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
-          <span>Laporan Harian (Form)</span>
+
+        <button onclick="switchTab('reportTab')" id="nav-report" class="w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+          <span>Laporan Pekerjaan PIC</span>
+        </button>
+
+        <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition">
+          <div class="flex items-center space-x-3">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+            <span>Inventory Label & Ribbon</span>
+          </div>
+          <span class="text-[10px] bg-blue-900/50 text-blue-300 px-2 py-0.5 rounded font-bold uppercase">MVP 2</span>
         </button>
       </nav>
     </div>
 
+    <!-- User Profile Badge -->
     <div class="bg-[#2A2F3D] p-3 rounded-xl flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold text-white">SP</div>
         <div class="text-xs">
           <p class="font-bold text-white leading-tight">Syuja (Supervisor)</p>
-          <p class="text-[10px] text-gray-400">ADMIN / SUPERVISOR</p>
+          <p class="text-[10px] text-gray-400">SUPERVISOR / ADMIN</p>
         </div>
       </div>
     </div>
@@ -51,51 +70,69 @@
   <!-- AREA KONTEN UTAMA -->
   <main class="flex-1 overflow-y-auto p-8 max-w-7xl mx-auto space-y-8">
     
-    <!-- TAB 1: EXECUTIVE DASHBOARD KPI -->
+    <!-- TAB 1: DASHBOARD UTAMA (4 RINGKASAN & ALERT) -->
     <div id="dashTabSection" class="space-y-8">
       <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Executive Summary & KPI Divisi</h2>
-        <p class="text-sm text-gray-500 mt-1">Pemantauan performa produksi, rasio kelayakan (yield), dan kontrol kualitas.</p>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard Operasional Cetak</h2>
+        <p class="text-sm text-gray-500 mt-1">Pusat pemantauan status ritme kerja, kualifikasi pekerjaan, dan risiko delay.</p>
       </div>
 
-      <!-- 4 Kartu KPI -->
+      <!-- 4 Ringkasan Utama sesuai Permintaan -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        
+        <!-- Pekerjaan Mendesak -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-gray-400 tracking-wider">TOTAL WORKLOAD</span>
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-red-500 tracking-wider uppercase">PRIORITAS MENDESAK</span>
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+          </div>
           <div>
-            <h3 id="kpi-total" class="text-3xl font-bold text-gray-900 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Pekerjaan terdaftar</p>
+            <h3 id="card-urgent" class="text-3xl font-bold text-red-600 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Pekerjaan prioritas tinggi</p>
           </div>
         </div>
 
+        <!-- Pekerjaan Terlambat -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-amber-500 tracking-wider">BUTUH REVIEW</span>
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-amber-600 tracking-wider uppercase">PEKERJAAN TERLAMBAT</span>
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+          </div>
           <div>
-            <h3 id="kpi-review" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
-            <p class="text-xs text-gray-400 mt-1">Menunggu approval supervisor</p>
+            <h3 id="card-overdue" class="text-3xl font-bold text-amber-600 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Melewati tanggal deadline</p>
           </div>
         </div>
 
+        <!-- Pekerjaan Sedang Berjalan -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-emerald-500 tracking-wider">ESTIMASI YIELD RATE</span>
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-cyan-600 tracking-wider uppercase">SEDANG BERJALAN</span>
+            <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+          </div>
           <div>
-            <h3 id="kpi-yield" class="text-3xl font-bold text-emerald-600 leading-none">0%</h3>
-            <p class="text-xs text-gray-400 mt-1">Rasio hasil cetak bagus (Good QTY)</p>
+            <h3 id="card-running" class="text-3xl font-bold text-cyan-700 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Di lantai cetak (In Progress)</p>
           </div>
         </div>
 
+        <!-- Pekerjaan Membutuhkan Perhatian -->
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between h-32">
-          <span class="text-[10px] font-bold text-red-500 tracking-wider">REJECT RATE</span>
+          <div class="flex justify-between items-center">
+            <span class="text-[10px] font-bold text-purple-600 tracking-wider uppercase">MEMBUTUHKAN PERHATIAN</span>
+            <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+          </div>
           <div>
-            <h3 id="kpi-reject" class="text-3xl font-bold text-red-600 leading-none">0%</h3>
-            <p class="text-xs text-gray-400 mt-1">Persentase bahan terbuang/waste[cite: 1]</p>
+            <h3 id="card-attention" class="text-3xl font-bold text-purple-700 leading-none">0</h3>
+            <p class="text-xs text-gray-400 mt-1">Butuh Review SPV / Unassigned</p>
           </div>
         </div>
+
       </div>
 
-      <!-- Widget Prioritas Tinggi & Berisiko Overdue -->
+      <!-- Tabel Pekerjaan yang Membutuhkan Perhatian Khusus -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Pekerjaan Prioritas Tinggi & Berisiko Overdue</h3>
+        <h3 class="text-lg font-bold text-gray-900">Daftar Pekerjaan Membutuhkan Perhatian / Urgent</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -104,23 +141,24 @@
                 <th class="pb-3">Customer & Produk</th>
                 <th class="pb-3">PIC</th>
                 <th class="pb-3">Deadline</th>
+                <th class="pb-3">Prioritas</th>
                 <th class="pb-3">Status</th>
               </tr>
             </thead>
-            <tbody id="urgent-jobs-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="5" class="py-4 text-center text-gray-400">Memuat pekerjaan prioritas...</td></tr>
+            <tbody id="attention-jobs-body" class="divide-y divide-gray-100 text-sm">
+              <tr><td colspan="6" class="py-4 text-center text-gray-400">Memuat pekerjaan...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TAB 2: ANTRIAN & APPROVAL PO -->
+    <!-- TAB 2: ANTRIAN CETAK & DETAIL PO -->
     <div id="poTabSection" class="space-y-8 hidden">
       <div class="flex items-end justify-between">
         <div>
-          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Purchase Order & Assignment</h2>
-          <p class="text-sm text-gray-500 mt-1">Kelola pembagian pekerjaan PIC, alur status, dan approval hasil cetak[cite: 1].</p>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Antrian Cetak & Detail PO</h2>
+          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow.</p>
         </div>
         <button onclick="openPOModal()" class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
           <span class="text-lg">+</span>
@@ -129,13 +167,13 @@
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Daftar Pekerjaan & Assignment Tim</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
                 <th class="pb-3">Job ID / PO</th>
-                <th class="pb-3">Customer & Produk</th>
+                <th class="pb-3">Customer & Detail Produk</th>
+                <th class="pb-3">QTY Target</th>
                 <th class="pb-3">PIC</th>
                 <th class="pb-3">Prioritas</th>
                 <th class="pb-3">Status Flow</th>
@@ -143,27 +181,27 @@
               </tr>
             </thead>
             <tbody id="po-table-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="6" class="py-4 text-center text-gray-400">Memuat data pekerjaan...</td></tr>
+              <tr><td colspan="7" class="py-4 text-center text-gray-400">Memuat data pekerjaan...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- TAB 3: LAPORAN PEKERJAAN HARIAN -->
+    <!-- TAB 3: LAPORAN PEKERJAAN PIC -->
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan Pekerjaan Harian</h2>
-        <p class="text-sm text-gray-500 mt-1">Pencatatan terpadu produksi printing, layout development, dan kendala operasional[cite: 1].</p>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan Pekerjaan PIC</h2>
+        <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report.</p>
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
         <form id="dailyReportForm" onsubmit="saveDailyReport(event)" class="space-y-6">
           <div class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">1. Informasi Dasar Laporan</h4>
+            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">1. Informasi Laporan Operator</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal Laporan *</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal *</label>
                 <input type="date" id="reportDate" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
               </div>
               <div>
@@ -174,26 +212,26 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Operator / PIC *</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Operator / PIC *</label>
                 <select id="operatorName" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-                  <option value="SYUJA">SYUJA</option>
                   <option value="RIO">RIO</option>
-                  <option value="IPAL">IPAL</option>
                   <option value="SALMAN">SALMAN</option>
-                  <option value="ZAKI">ZAKI</option>
                   <option value="RIVAN">RIVAN</option>
+                  <option value="SYUJA">SYUJA</option>
+                  <option value="IPAL">IPAL</option>
+                  <option value="ZAKI">ZAKI</option>
                 </select>
               </div>
             </div>
           </div>
 
           <div class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Detail Pekerjaan & Customer</h4>
+            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Detail Pekerjaan & Status</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Pekerjaan (PO Terdaftar)</label>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih PO (Otomatis)</label>
                 <select id="jobSelect" onchange="autoFillJobData()" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-                  <option value="">-- Pilih PO (Otomatis) --</option>
+                  <option value="">-- Pilih PO --</option>
                 </select>
               </div>
               <div>
@@ -208,17 +246,11 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer</label>
-                <input type="text" id="custName" placeholder="Ketik jika tidak ada PO" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO</label>
-                <input type="text" id="poNumInput" placeholder="Ketik jika tidak ada PO" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Customer</label><input type="text" id="custName" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO</label><input type="text" id="poNumInput" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pekerjaan *</label>
-                <select id="jobStatusInput" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
+                <select id="jobStatusInput" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
                   <option value="SELESAI">SELESAI</option>
                   <option value="DALAM PROSES">DALAM PROSES</option>
                   <option value="DITUNDA">DITUNDA</option>
@@ -227,34 +259,18 @@
               </div>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deskripsi Pekerjaan *</label>
-              <textarea id="jobDesc" required placeholder="Jelaskan rincian pekerjaan hari ini..." rows="2" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none"></textarea>
-            </div>
+            <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deskripsi Pekerjaan *</label><textarea id="jobDesc" required placeholder="Rincian hasil..." rows="2" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
           </div>
 
           <div id="sectionPrinting" class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing & Material Usage</h4>
+            <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label><input type="text" id="printNum" placeholder="1-50" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Good Qty (Pcs)</label><input type="number" id="labelUsed" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Reject Qty (Pcs)</label><input type="number" id="printReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label>
-                <input type="text" id="printNum" placeholder="Contoh: 1-50 atau 121-200" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Label Dipakai (Pcs)</label>
-                <input type="number" id="labelUsed" min="0" value="0" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Ribbon Dipakai (Pcs)</label>
-                <input type="number" id="ribbonUsed" min="0" value="0" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Print Reject (Pcs)</label>
-                <input type="number" id="printReject" min="0" value="0" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tempat Cetak / Mesin</label>
-                <select id="printerMachine" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Mesin Printer</label>
+                <select id="printerMachine" class="w-full p-2.5 border rounded-xl text-sm outline-none">
                   <option value="PRINTER HONEYWELL PX240S">PRINTER HONEYWELL PX240S</option>
                   <option value="PRINTER ZEBRA Z411">PRINTER ZEBRA Z411</option>
                   <option value="PRINTER ZEBRA 420">PRINTER ZEBRA 420</option>
@@ -269,46 +285,37 @@
           </div>
 
           <div id="sectionDevelop" class="border-b pb-4 space-y-4 hidden">
-            <h4 class="text-xs font-bold text-purple-600 uppercase tracking-wider">3. Parameter Development & Layout Approval</h4>
+            <h4 class="text-xs font-bold text-purple-600 uppercase tracking-wider">3. Parameter Development</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Software Develop / Approval</label>
-                <select id="developSoftware" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Software</label>
+                <select id="developSoftware" class="w-full p-2.5 border rounded-xl text-sm outline-none">
                   <option value="BARTENDER">BARTENDER</option>
                   <option value="COREL DRAW 2021">COREL DRAW 2021</option>
                   <option value="ZEBRA DESIGNER">ZEBRA DESIGNER</option>
-                  <option value="NICELABEL">NICELABEL</option>
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Vendor Tempat Cetak Luar</label>
-                <select id="vendorCetak" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Vendor Luar</label>
+                <select id="vendorCetak" class="w-full p-2.5 border rounded-xl text-sm outline-none">
                   <option value="-">- (Internal)</option>
                   <option value="PAKEM PRINTING">PAKEM PRINTING</option>
                   <option value="ISA GRAFIKA">ISA GRAFIKA</option>
                   <option value="PRINTTIME PRINT">PRINTTIME PRINT</option>
-                  <option value="KEMBAR PRINT">KEMBAR PRINT</option>
-                  <option value="KARMEL FILM">KARMEL FILM</option>
-                  <option value="REPRO PLATE">REPRO PLATE</option>
-                  <option value="GAJAH PRINT">GAJAH PRINT</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Apakah Ada Kendala? Sebutkan</label>
-            <input type="text" id="issueNotes" placeholder="Tuliskan kendala mesin, bahan, atau layout jika ada..." class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
-          </div>
+          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Apakah Ada Kendala?</label><input type="text" id="issueNotes" placeholder="Kendala teknis..." class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
 
-          <button type="submit" id="btnSubmitDaily" class="px-6 py-3 rounded-xl bg-[#E06D53] hover:bg-[#d05c42] text-white font-bold text-sm shadow-sm transition">
-            Kirim Laporan Pekerjaan Harian
-          </button>
+          <button type="submit" id="btnSubmitDaily" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-sm shadow-sm">Kirim Laporan PIC</button>
         </form>
       </div>
 
+      <!-- Histori Table -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Histori Laporan Pekerjaan Harian</h3>
+        <h3 class="text-lg font-bold text-gray-900">Histori Laporan Harian</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
@@ -325,6 +332,32 @@
               <tr><td colspan="6" class="py-4 text-center text-gray-400">Memuat histori laporan...</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: INVENTORY LABEL & RIBBON (MVP 2 PREVIEW) -->
+    <div id="inventoryTabSection" class="space-y-8 hidden">
+      <div>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventory Label & Ribbon (Stok Printing)</h2>
+        <p class="text-sm text-gray-500 mt-1">Pemantauan saldo stok bahan baku label, ribbon wax/resin, dan minimum stock alert.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <span class="text-xs font-bold text-gray-400 uppercase">STOK STICKER VINYL 100x50mm</span>
+          <h3 class="text-2xl font-bold text-gray-900 mt-2">12.500 <span class="text-xs text-gray-400 font-normal">Pcs</span></h3>
+          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <span class="text-xs font-bold text-gray-400 uppercase">STOK RIBBON WAX RESIN 110mm</span>
+          <h3 class="text-2xl font-bold text-gray-900 mt-2">4 <span class="text-xs text-gray-400 font-normal">Roll</span></h3>
+          <p class="text-xs text-red-600 mt-1 font-semibold">● Low Stock Alert (Min. 5 Roll)</p>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+          <span class="text-xs font-bold text-gray-400 uppercase">LABEL THERMAL 40x30mm</span>
+          <h3 class="text-2xl font-bold text-gray-900 mt-2">8.000 <span class="text-xs text-gray-400 font-normal">Pcs</span></h3>
+          <p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman</p>
         </div>
       </div>
     </div>
@@ -387,8 +420,8 @@
             <option value="ASSIGNED">ASSIGNED</option>
             <option value="PREPARATION">PREPARATION</option>
             <option value="IN PROGRESS">IN PROGRESS</option>
-            <option value="REVIEW">REVIEW (Membutuhkan Review SPV)</option>
-            <option value="DONE">DONE (Selesai & Approved)</option>
+            <option value="REVIEW">REVIEW</option>
+            <option value="DONE">DONE</option>
           </select>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t">
@@ -411,22 +444,30 @@
       document.getElementById('dashTabSection').classList.add('hidden');
       document.getElementById('poTabSection').classList.add('hidden');
       document.getElementById('reportTabSection').classList.add('hidden');
+      document.getElementById('inventoryTabSection').classList.add('hidden');
 
-      document.getElementById('nav-dash').className = "w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+      const btnClass = "w-full flex items-center space-x-3 text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+      const btnActiveClass = "w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+
+      document.getElementById('nav-dash').className = btnClass;
       document.getElementById('nav-po').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
-      document.getElementById('nav-report').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+      document.getElementById('nav-report').className = btnClass;
+      document.getElementById('nav-inventory').className = "w-full flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
 
       if (tab === 'dashTab') {
         document.getElementById('dashTabSection').classList.remove('hidden');
-        document.getElementById('nav-dash').className = "w-full flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
-        loadDashboardKPI();
+        document.getElementById('nav-dash').className = btnActiveClass;
+        loadDashboardData();
       } else if (tab === 'poTab') {
         document.getElementById('poTabSection').classList.remove('hidden');
         document.getElementById('nav-po').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
-      } else {
+      } else if (tab === 'reportTab') {
         document.getElementById('reportTabSection').classList.remove('hidden');
-        document.getElementById('nav-report').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
+        document.getElementById('nav-report').className = btnActiveClass;
         loadDailyReportsHistory();
+      } else if (tab === 'inventoryTab') {
+        document.getElementById('inventoryTabSection').classList.remove('hidden');
+        document.getElementById('nav-inventory').className = "w-full flex items-center justify-between bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm transition";
       }
     }
 
@@ -476,32 +517,30 @@
       const selectJob = document.getElementById('jobSelect');
 
       if (error || !data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada PO terdaftar.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada PO terdaftar.</td></tr>';
         return;
       }
 
       _jobsCache = data;
+      document.getElementById('badge-po-count').innerText = data.length;
       tbody.innerHTML = '';
-      selectJob.innerHTML = '<option value="">-- Pilih PO (Otomatis) --</option>';
-
-      let reviewCount = 0;
+      selectJob.innerHTML = '<option value="">-- Pilih PO --</option>';
 
       data.forEach(item => {
-        if (item.status === 'REVIEW') reviewCount++;
-
         let prioColor = item.priority === 'Mendesak' ? 'bg-red-100 text-red-600' : (item.priority === 'Tinggi' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600');
-        let statusColor = item.status === 'DONE' ? 'bg-emerald-100 text-emerald-700' : (item.status === 'REVIEW' ? 'bg-amber-100 text-amber-700' : (item.status === 'IN PROGRESS' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700'));
+        let statusColor = item.status === 'DONE' ? 'bg-emerald-100 text-emerald-700' : (item.status === 'IN PROGRESS' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700');
 
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition">
             <td class="py-3.5 font-bold text-[#E06D53]">${item.job_id || 'JOB-NEW'}<br><span class="text-xs text-gray-400 font-normal">${item.po_number}</span></td>
             <td class="py-3.5 font-semibold text-gray-900">${item.product}<br><span class="text-xs text-gray-400 font-normal">${item.customer}</span></td>
+            <td class="py-3.5 font-semibold text-gray-700">${Number(item.quantity || 0).toLocaleString('id-ID')}</td>
             <td class="py-3.5 font-semibold text-gray-700"><span class="bg-gray-100 px-2 py-1 rounded-md text-xs font-bold text-gray-700">${item.pic || 'Belum Diassigned'}</span></td>
             <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${prioColor}">${item.priority || 'Normal'}</span></td>
             <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${statusColor}">${item.status || 'NEW'}</span></td>
             <td class="py-3.5">
               <button onclick="openAssignModal('${item.id}', '${item.job_id}', '${item.po_number}', '${item.pic}', '${item.status}')" class="text-xs font-bold bg-gray-900 text-white hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
-                Assign / Review &rarr;
+                Assign / Status &rarr;
               </button>
             </td>
           </tr>
@@ -510,59 +549,55 @@
         selectJob.innerHTML += `<option value="${item.id}">${item.job_id} - ${item.product} (${item.customer})</option>`;
       });
 
-      document.getElementById('badge-review-count').innerText = reviewCount;
-      loadDashboardKPI();
+      loadDashboardData();
     }
 
-    async function loadDashboardKPI() {
+    async function loadDashboardData() {
       const { data: jobs } = await _supabase.from('jobs').select('*');
-      const { data: reports } = await _supabase.from('pic_reports').select('*');
+      if (!jobs) return;
 
-      if (jobs) {
-        document.getElementById('kpi-total').innerText = jobs.length;
-        const review = jobs.filter(j => j.status === 'REVIEW').length;
-        document.getElementById('kpi-review').innerText = review;
+      const today = new Date().toISOString().split('T')[0];
+      let urgentCount = 0;
+      let overdueCount = 0;
+      let runningCount = 0;
+      let attentionCount = 0;
 
-        // Render Urgent/Overdue
-        const urgentBody = document.getElementById('urgent-jobs-body');
-        const urgentJobs = jobs.filter(j => j.priority === 'Mendesak' || j.priority === 'Tinggi' || j.status === 'REVIEW');
-        
-        if (urgentJobs.length === 0) {
-          urgentBody.innerHTML = '<tr><td colspan="5" class="py-4 text-center text-gray-400">Tidak ada pekerjaan urgent.</td></tr>';
-        } else {
-          urgentBody.innerHTML = '';
-          urgentJobs.forEach(j => {
-            urgentBody.innerHTML += `
-              <tr class="hover:bg-gray-50 transition">
-                <td class="py-3 font-bold text-[#E06D53]">${j.job_id}<br><span class="text-xs text-gray-400 font-normal">${j.po_number}</span></td>
-                <td class="py-3 font-semibold text-gray-900">${j.product}<br><span class="text-xs text-gray-400 font-normal">${j.customer}</span></td>
-                <td class="py-3 font-semibold text-gray-700">${j.pic || 'Unassigned'}</td>
-                <td class="py-3 text-xs text-gray-500 font-bold">${j.deadline || '-'}</td>
-                <td class="py-3"><span class="text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-600">${j.status}</span></td>
-              </tr>
-            `;
-          });
+      const attentionBody = document.getElementById('attention-jobs-body');
+      attentionBody.innerHTML = '';
+
+      jobs.forEach(j => {
+        let isUrgent = j.priority === 'Mendesak';
+        let isOverdue = j.deadline && j.deadline < today && j.status !== 'DONE';
+        let isRunning = j.status === 'IN PROGRESS';
+        let needsAttention = j.status === 'REVIEW' || j.status === 'WAITING ASSIGNMENT' || j.pic === 'Belum Diassigned';
+
+        if (isUrgent) urgentCount++;
+        if (isOverdue) overdueCount++;
+        if (isRunning) runningCount++;
+        if (needsAttention) attentionCount++;
+
+        if (isUrgent || isOverdue || needsAttention) {
+          attentionBody.innerHTML += `
+            <tr class="hover:bg-gray-50 transition">
+              <td class="py-3 font-bold text-[#E06D53]">${j.job_id}<br><span class="text-xs text-gray-400 font-normal">${j.po_number}</span></td>
+              <td class="py-3 font-semibold text-gray-900">${j.product}<br><span class="text-xs text-gray-400 font-normal">${j.customer}</span></td>
+              <td class="py-3 font-semibold text-gray-700">${j.pic || 'Belum Diassigned'}</td>
+              <td class="py-3 text-xs text-gray-500 font-bold">${j.deadline || '-'}</td>
+              <td class="py-3"><span class="text-[10px] font-bold px-2 py-1 rounded bg-red-100 text-red-600">${j.priority}</span></td>
+              <td class="py-3"><span class="text-[10px] font-bold px-2 py-1 rounded bg-amber-100 text-amber-700">${j.status}</span></td>
+            </tr>
+          `;
         }
+      });
+
+      if (attentionBody.innerHTML === '') {
+        attentionBody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Semua pekerjaan dalam kondisi aman & lancar.</td></tr>';
       }
 
-      if (reports && reports.length > 0) {
-        let totalGood = 0;
-        let totalReject = 0;
-
-        reports.forEach(r => {
-          totalGood += Number(r.good_pcs || 0);
-          totalReject += Number(r.reject_pcs || 0);
-        });
-
-        let totalProduced = totalGood + totalReject;
-        if (totalProduced > 0) {
-          let yieldRate = ((totalGood / totalProduced) * 100).toFixed(1);
-          let rejectRate = ((totalReject / totalProduced) * 100).toFixed(1);
-
-          document.getElementById('kpi-yield').innerText = yieldRate + '%';
-          document.getElementById('kpi-reject').innerText = rejectRate + '%';
-        }
-      }
+      document.getElementById('card-urgent').innerText = urgentCount;
+      document.getElementById('card-overdue').innerText = overdueCount;
+      document.getElementById('card-running').innerText = runningCount;
+      document.getElementById('card-attention').innerText = attentionCount;
     }
 
     async function savePO(e) {
@@ -621,11 +656,11 @@
         alert("Laporan Pekerjaan Harian Berhasil Tersimpan!");
         document.getElementById('dailyReportForm').reset();
         loadDailyReportsHistory();
-        loadDashboardKPI();
+        loadDashboardData();
       } else {
         alert("Gagal menyimpan laporan: " + error.message);
       }
-      btn.innerText = "Kirim Laporan Pekerjaan Harian"; btn.disabled = false;
+      btn.innerText = "Kirim Laporan PIC"; btn.disabled = false;
     }
 
     async function loadDailyReportsHistory() {
