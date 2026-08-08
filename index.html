@@ -261,7 +261,7 @@
       </div>
     </div>
 
-    <!-- TAB 5: STOK GUDANG PRINTING (DIKEMBALIKAN LENGKAP) -->
+    <!-- TAB 5: STOK GUDANG PRINTING -->
     <div id="inventoryTabSection" class="space-y-8 hidden">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
@@ -269,7 +269,7 @@
           <p class="text-sm text-gray-500 mt-1">Pengaturan stok bahan baku & audit opname gudang</p>
         </div>
         <div class="flex items-center space-x-3">
-          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Barang/Jasa Baru</button>
+          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">+ Barang Baru</button>
           <button onclick="openOpnameModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Stock Opname</button>
           <button onclick="openStockModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Barang Masuk</button>
         </div>
@@ -361,7 +361,7 @@
 
   </main>
 
-  <!-- MODAL PENDUKUNG -->
+  <!-- MODAL PENDUKUNG LENGKAP -->
   <div id="newMaterialModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Baru</h3><button onclick="closeNewMaterialModal()" class="text-xl font-bold">&times;</button></div>
@@ -372,6 +372,30 @@
           <div><label class="block text-xs font-bold uppercase mb-1">Stok Awal</label><input type="number" id="matInitStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeNewMaterialModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase">Simpan</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="opnameModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Stock Opname</h3><button onclick="closeOpnameModal()" class="text-xl font-bold">&times;</button></div>
+      <form onsubmit="saveOpname(event)" class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm"></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Jumlah Fisik (Balanced) *</label><input type="number" id="opnameBalancedQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Catatan *</label><input type="text" id="opnameReason" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div class="flex justify-end space-x-2 pt-4 border-t"><button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Opname</button></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="stockModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Masuk</h3><button onclick="closeStockModal()" class="text-xl font-bold">&times;</button></div>
+      <form onsubmit="saveStockIn(event)" class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="stockItemSelect" class="w-full p-2.5 border rounded-xl text-sm"></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Jumlah Masuk *</label><input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Nomor SPK / Catatan</label><input type="text" id="stockSpk" class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeStockModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Masuk</button></div>
       </form>
     </div>
   </div>
@@ -401,7 +425,7 @@
       <tbody id="printTableBody"></tbody>
     </table>
     <div style="margin-top: 50px; display: flex; justify-content: space-between; text-align: center; font-size: 11px;">
-      <div><p style="margin-bottom: 50px;">Petugas (Rivan)</p><p style="font-weight: bold; text-decoration: underline;">( Rivan )</p></div>
+      <div><p style="margin-bottom: 50px;">Petugas</p><p style="font-weight: bold; text-decoration: underline;" id="printSignPetugas">( Rivan / Salman )</p></div>
       <div><p style="margin-bottom: 50px;">Mengetahui (Supervisor)</p><p style="font-weight: bold; text-decoration: underline;">( Syuja Arisyi )</p></div>
     </div>
   </div>
@@ -556,6 +580,36 @@
       alert("Barang berhasil disimpan!"); closeNewMaterialModal(); renderMaterials();
     }
 
+    function openOpnameModal() {
+      const sel = document.getElementById('opnameItemSelect');
+      sel.innerHTML = '';
+      materials.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock} ${m.unit})</option>`; });
+      document.getElementById('opnameModal').classList.remove('hidden'); document.getElementById('opnameModal').classList.add('flex');
+    }
+    function closeOpnameModal() { document.getElementById('opnameModal').classList.add('hidden'); document.getElementById('opnameModal').classList.remove('flex'); }
+    function saveOpname(e) {
+      e.preventDefault();
+      const m = materials.find(item => item.id == document.getElementById('opnameItemSelect').value);
+      const bal = Number(document.getElementById('opnameBalancedQty').value);
+      if (m) { m.stock = bal; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'Gudang Utama', type: 'STOCK OPNAME', qty: `${bal}`, pic: currentUser.name, notes: document.getElementById('opnameReason').value }); }
+      alert("Stock Opname berhasil disimpan!"); closeOpnameModal(); renderMaterials();
+    }
+
+    function openStockModal() {
+      const sel = document.getElementById('stockItemSelect');
+      sel.innerHTML = '';
+      materials.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`; });
+      document.getElementById('stockModal').classList.remove('hidden'); document.getElementById('stockModal').classList.add('flex');
+    }
+    function closeStockModal() { document.getElementById('stockModal').classList.add('hidden'); document.getElementById('stockModal').classList.remove('flex'); }
+    function saveStockIn(e) {
+      e.preventDefault();
+      const m = materials.find(item => item.id == document.getElementById('stockItemSelect').value);
+      const qty = Number(document.getElementById('stockQty').value);
+      if (m) { m.stock += qty; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'Gudang Utama', type: 'BARANG MASUK', qty: `+${qty} ${m.unit}`, pic: currentUser.name, notes: document.getElementById('stockSpk').value || 'Penerimaan Gudang' }); }
+      alert("Barang masuk berhasil disimpan!"); closeStockModal(); renderMaterials();
+    }
+
     function openPrinterModal() { document.getElementById('printerModal').classList.remove('hidden'); document.getElementById('printerModal').classList.add('flex'); }
     function closePrinterModal() { document.getElementById('printerModal').classList.add('hidden'); document.getElementById('printerModal').classList.remove('flex'); }
     function savePrinterUnit(e) {
@@ -564,8 +618,6 @@
       alert("Printer disimpan!"); closePrinterModal(); renderDevicesAndSpareparts();
     }
 
-    function openOpnameModal() { alert("Modal Stock Opname"); }
-    function openStockModal() { alert("Modal Barang Masuk"); }
     function openSparepartModal() { alert("Modal Sparepart"); }
     function openMaintenanceModal() { alert("Modal Maintenance"); }
     function saveDailyReport(e) { e.preventDefault(); alert("Laporan tersimpan!"); }
