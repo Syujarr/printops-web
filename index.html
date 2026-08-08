@@ -453,7 +453,7 @@
               <th class="pb-3">Link Desain</th>
               <th class="pb-3">PIC</th>
               <th class="pb-3">Status Approval</th>
-              <th class="pb-3">Aksi Konfirmasi PO</th>
+              <th class="pb-3">Aksi Konfirmasi & Edit/Hapus</th>
             </tr>
           </thead>
           <tbody id="layout-table-active" class="divide-y text-sm"></tbody>
@@ -606,8 +606,9 @@
 
   <div id="layoutModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Input Layout & Approval</h3><button onclick="closeLayoutModal()" class="text-xl font-bold">&times;</button></div>
+      <div class="flex justify-between items-center border-b pb-3"><h3 id="layoutModalTitle" class="text-lg font-bold uppercase">Input Layout & Approval</h3><button onclick="closeLayoutModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveLayout(event)" class="space-y-4">
+        <input type="hidden" id="editLayoutIndex" value="-1">
         <div>
           <label class="block text-xs font-bold uppercase mb-1">Pilih Nomor PO *</label>
           <select id="layoutPoSelect" onchange="fillCustomerFromPo()" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
@@ -756,7 +757,6 @@
     ];
     let dailyReports = [];
 
-    // Cek otomatis pembersihan PO yang sudah Selesai > H+7 (Simulasi tanggal saat ini: 2026-08-09)
     function checkAutoDeleteFinishedPOs() {
       const today = new Date("2026-08-09");
       poList = poList.filter(p => {
@@ -765,9 +765,8 @@
           const diffTime = today - finishedDt;
           const diffDays = diffTime / (1000 * 60 * 60 * 24);
           if (diffDays > 7) {
-            // Hapus juga layout/approval yang terhubung dengan PO ini
             layoutList = layoutList.filter(l => l.poNumber !== p.number);
-            return false; // Hapus PO
+            return false;
           }
         }
         return true;
@@ -967,7 +966,6 @@
       }
 
       if (idx > -1) {
-        // Edit PO
         poList[idx].number = num;
         poList[idx].customer = cust;
         poList[idx].product = prod;
@@ -979,7 +977,6 @@
         poList[idx].status = statusVal;
         alert("PO BERHASIL DIPERBARUI!");
       } else {
-        // Input Baru
         poList.push({
           id: poList.length + 1,
           number: num,
@@ -1003,7 +1000,6 @@
       if (confirm(`Yakin ingin menghapus PO ${poList[idx].number}? Layout/Approval yang terhubung juga akan terhapus.`)) {
         const poNum = poList[idx].number;
         poList.splice(idx, 1);
-        // Hapus juga layout yang terhubung
         layoutList = layoutList.filter(l => l.poNumber !== poNum);
         renderPoTable();
         renderLayoutTable();
@@ -1157,7 +1153,8 @@
       });
     }
 
-    function openLayoutModal() {
+    function openLayoutModal(editIndex = -1) {
+      document.getElementById('editLayoutIndex').value = editIndex;
       const sel = document.getElementById('layoutPoSelect');
       sel.innerHTML = '';
       if (poList.length === 0) {
@@ -1166,8 +1163,25 @@
         poList.forEach(p => {
           sel.innerHTML += `<option value="${p.number}">${p.number} - ${p.customer} (${p.product})</option>`;
         });
+      }
+
+      if (editIndex > -1) {
+        document.getElementById('layoutModalTitle').innerText = "Edit Layout & Approval";
+        const l = layoutList[editIndex];
+        sel.value = l.poNumber;
+        document.getElementById('layoutCustomer').value = l.customer;
+        document.getElementById('layoutOutputType').value = l.outputType;
+        document.getElementById('layoutVersion').value = l.version;
+        document.getElementById('layoutLink').value = l.link;
+        document.getElementById('layoutStatus').value = l.status;
+      } else {
+        document.getElementById('layoutModalTitle').innerText = "Input Layout Baru";
+        document.getElementById('layoutVersion').value = "V1";
+        document.getElementById('layoutLink').value = "";
+        document.getElementById('layoutStatus').value = "DRAFTING LAYOUT";
         fillCustomerFromPo();
       }
+
       document.getElementById('layoutPic').value = currentUser.name;
       document.getElementById('layoutModal').classList.remove('hidden'); 
       document.getElementById('layoutModal').classList.add('flex');
@@ -1185,17 +1199,56 @@
     
     function saveLayout(e) {
       e.preventDefault();
-      layoutList.push({
-        id: layoutList.length + 1,
-        poNumber: document.getElementById('layoutPoSelect').value.toUpperCase(),
-        customer: document.getElementById('layoutCustomer').value.toUpperCase(),
-        outputType: document.getElementById('layoutOutputType').value.toUpperCase(),
-        version: document.getElementById('layoutVersion').value.toUpperCase(),
-        link: document.getElementById('layoutLink').value,
-        pic: currentUser.name,
-        status: document.getElementById('layoutStatus').value.toUpperCase()
-      });
-      alert("LAYOUT BERHASIL DISIMPAN!"); closeLayoutModal(); renderLayoutTable();
+      const idx = Number(document.getElementById('editLayoutIndex').value);
+      const poNum = document.getElementById('layoutPoSelect').value.toUpperCase();
+      const cust = document.getElementById('layoutCustomer').value.toUpperCase();
+      const outType = document.getElementById('layoutOutputType').value.toUpperCase();
+      const ver = document.getElementById('layoutVersion').value.toUpperCase();
+      const lnk = document.getElementById('layoutLink').value;
+      const stat = document.getElementById('layoutStatus').value.toUpperCase();
+
+      if (idx > -1) {
+        layoutList[idx].poNumber = poNum;
+        layoutList[idx].customer = cust;
+        layoutList[idx].outputType = outType;
+        layoutList[idx].version = ver;
+        layoutList[idx].link = lnk;
+        layoutList[idx].status = stat;
+        
+        if (stat.includes('APPROVED')) {
+          const p = poList.find(item => item.number === poNum);
+          if (p) p.status = "READY TO PRINT";
+        }
+        alert("LAYOUT & APPROVAL BERHASIL DIPERBARUI!");
+      } else {
+        layoutList.push({
+          id: layoutList.length + 1,
+          poNumber: poNum,
+          customer: cust,
+          outputType: outType,
+          version: ver,
+          link: lnk,
+          pic: currentUser.name,
+          status: stat
+        });
+        if (stat.includes('APPROVED')) {
+          const p = poList.find(item => item.number === poNum);
+          if (p) p.status = "READY TO PRINT";
+        }
+        alert("LAYOUT BERHASIL DISIMPAN!");
+      }
+
+      closeLayoutModal(); 
+      renderLayoutTable();
+      renderPoTable();
+    }
+
+    function deleteLayout(idx) {
+      if (confirm(`Yakin ingin menghapus data layout untuk PO ${layoutList[idx].poNumber}?`)) {
+        layoutList.splice(idx, 1);
+        renderLayoutTable();
+        alert("LAYOUT BERHASIL DIHAPUS.");
+      }
     }
 
     function confirmLayoutApproval(layoutId) {
@@ -1219,10 +1272,10 @@
         body.innerHTML = `<tr><td colspan="8" class="py-3 text-center text-gray-400">Belum ada data layout & approval.</td></tr>`;
         return;
       }
-      layoutList.forEach(l => {
+      layoutList.forEach((l, idx) => {
         let actionBtn = l.status.includes('APPROVED') 
           ? `<span class="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-100 px-2 py-1 rounded">Sudah Ready to Print</span>`
-          : `<button onclick="confirmLayoutApproval(${l.id})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase shadow">Konfirmasi Approve PO</button>`;
+          : `<button onclick="confirmLayoutApproval(${l.id})" class="bg-blue-600 hover:bg-blue-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg uppercase shadow">Konfirmasi Approve</button>`;
 
         body.innerHTML += `<tr>
           <td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td>
@@ -1232,7 +1285,11 @@
           <td class="py-3 text-xs"><a href="${l.link}" target="_blank" class="text-blue-600 underline font-mono">Buka Link Desain</a></td>
           <td class="py-3 text-xs">${l.pic}</td>
           <td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800 font-bold">${l.status}</span></td>
-          <td class="py-3 text-xs">${actionBtn}</td>
+          <td class="py-3 text-xs space-x-2">
+            ${actionBtn}
+            <button onclick="openLayoutModal(${idx})" class="text-blue-600 font-bold hover:underline">Edit</button>
+            <button onclick="deleteLayout(${idx})" class="text-red-600 font-bold hover:underline">Hapus</button>
+          </td>
         </tr>`;
       });
     }
