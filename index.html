@@ -37,10 +37,10 @@
       <nav class="space-y-1">
         <p class="text-[10px] text-gray-400 font-bold px-3 mb-2 tracking-wider">RUANG KERJA</p>
         <a href="#" class="flex items-center space-x-3 bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-medium text-sm">
-          <span>Ringkasan</span>
+          <span>Ringkasan & PO</span>
         </a>
         <a href="#" class="flex items-center justify-between text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-medium text-sm">
-          <span>Antrian cetak</span>
+          <span>Antrian Cetak</span>
           <span id="badge-total" class="bg-[#2A2F3D] text-gray-300 text-xs px-2 py-0.5 rounded-md font-semibold">0</span>
         </a>
       </nav>
@@ -51,7 +51,7 @@
         <div class="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-xs font-bold text-white">SP</div>
         <div class="text-xs">
           <p class="font-bold text-white leading-tight">Syuja (Supervisor)</p>
-          <p class="text-[10px] text-gray-400">ADMIN / SUPERVISOR</p>
+          <p class="text-[10px] text-gray-400">SUPERVISOR ACCESS</p>
         </div>
       </div>
     </div>
@@ -60,41 +60,40 @@
   <!-- AREA KONTEN UTAMA -->
   <main class="flex-1 overflow-y-auto">
     <header class="bg-[#F9F8F6] border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
-      <div class="text-xs text-gray-500 font-medium">PrintOps / <span class="text-gray-800 font-semibold">Input PO & Management</span></div>
+      <div class="text-xs text-gray-500 font-medium">PrintOps / <span class="text-gray-800 font-semibold">PO & Assignment Control</span></div>
     </header>
 
     <div class="p-8 space-y-8 max-w-7xl mx-auto">
-      <!-- Top Action Bar -->
       <div class="flex items-end justify-between">
         <div>
-          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Purchase Order (PO) Masuk</h2>
-          <p class="text-sm text-gray-500 mt-1">Kelola pendaftaran PO baru dan alur verifikasi awal produksi.</p>
+          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Purchase Order & Assignment</h2>
+          <p class="text-sm text-gray-500 mt-1">Kelola pembagian pekerjaan PIC dan alur status operasional.</p>
         </div>
 
-        <button onclick="openModal()" class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
+        <button onclick="openPOModal()" class="bg-[#E06D53] hover:bg-[#d05c42] text-white px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center space-x-2 shadow-sm transition">
           <span class="text-lg">+</span>
           <span>Input PO Baru</span>
         </button>
       </div>
 
-      <!-- Tabel Daftar PO -->
+      <!-- Tabel PO & Assignment -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Daftar PO & Pekerjaan Aktif</h3>
+        <h3 class="text-lg font-bold text-gray-900">Daftar Pekerjaan & Assignment Tim</h3>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
                 <th class="pb-3">Job ID / PO</th>
                 <th class="pb-3">Customer & Produk</th>
-                <th class="pb-3">QTY Target</th>
+                <th class="pb-3">PIC</th>
                 <th class="pb-3">Prioritas</th>
-                <th class="pb-3">Status</th>
-                <th class="pb-3">Deadline</th>
+                <th class="pb-3">Status Flow</th>
+                <th class="pb-3">Aksi Supervisor</th>
               </tr>
             </thead>
             <tbody id="po-table-body" class="divide-y divide-gray-100 text-sm">
               <tr>
-                <td colspan="6" class="py-4 text-center text-gray-400">Memuat data PO...</td>
+                <td colspan="6" class="py-4 text-center text-gray-400">Memuat data pekerjaan...</td>
               </tr>
             </tbody>
           </table>
@@ -103,59 +102,94 @@
     </div>
   </main>
 
-  <!-- MODAL / FORM POPUP INPUT PO BARU -->
+  <!-- MODAL INPUT PO BARU -->
   <div id="poModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-6">
       <div class="flex justify-between items-center border-b pb-4">
         <h3 class="text-lg font-bold text-gray-900">Input Purchase Order (PO) Baru</h3>
-        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+        <button onclick="closePOModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
       </div>
 
       <form id="poForm" onsubmit="savePO(event)" class="space-y-4">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO / Order</label>
-            <input type="text" id="poNumber" required placeholder="Contoh: PO-2026-008" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+            <input type="text" id="poNumber" required placeholder="Contoh: PO-2026-008" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
           </div>
-
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer</label>
-            <input type="text" id="customer" required placeholder="Contoh: PT Seri Rasa Nusantara" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+            <input type="text" id="customer" required placeholder="Contoh: PT Seri Rasa Nusantara" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
           </div>
-
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Produk / Item</label>
-            <input type="text" id="product" required placeholder="Contoh: Label Botol Sambal 250ml" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+            <input type="text" id="product" required placeholder="Contoh: Label Botol Sambal 250ml" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
           </div>
-
           <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">QTY Target (Lembar/Pcs)</label>
-            <input type="number" id="quantity" required min="1" placeholder="25000" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">QTY Target</label>
+            <input type="number" id="quantity" required min="1" placeholder="25000" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
           </div>
-
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tingkat Prioritas</label>
-            <select id="priority" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+            <select id="priority" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
               <option value="Normal">Normal</option>
               <option value="Tinggi">Tinggi</option>
               <option value="Mendesak">Mendesak</option>
             </select>
           </div>
-
           <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deadline Produksi</label>
-            <input type="date" id="deadline" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deadline</label>
+            <input type="date" id="deadline" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm outline-none">
           </div>
+        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t">
+          <button type="button" onclick="closePOModal()" class="px-5 py-2.5 rounded-xl border text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" id="btnSubmitPO" class="px-5 py-2.5 rounded-xl bg-[#E06D53] text-white text-sm font-semibold">Simpan PO Baru</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ASSIGNMENT & UPDATE STATUS SUPERVISOR -->
+  <div id="assignModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-lg font-bold text-gray-900">Assignment & Status Control</h3>
+        <button onclick="closeAssignModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <form id="assignForm" onsubmit="updateJobAssignment(event)" class="space-y-4">
+        <input type="hidden" id="assignJobDbId">
+        
+        <div>
+          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Pekerjaan</label>
+          <p id="assignJobLabel" class="text-sm font-bold text-gray-800 bg-gray-50 p-2.5 rounded-xl border border-gray-200">-</p>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Detail BOM / Spesifikasi Material</label>
-          <input type="text" id="bom" placeholder="Contoh: Sticker Vinyl + Ribbon Wax Resin 110mm" class="w-full p-2.5 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#E06D53] outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tugaskan Kepada (PIC)</label>
+          <select id="assignPicSelect" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm font-semibold outline-none">
+            <option value="Rio">Rio (Printing & Dev)</option>
+            <option value="Salman">Salman (Printing & Maintenance)</option>
+            <option value="Rivan">Rivan (Printing & Stock)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Update Status Flow</label>
+          <select id="assignStatusSelect" required class="w-full p-2.5 border border-gray-200 rounded-xl text-sm font-semibold outline-none">
+            <option value="NEW">NEW (Order Masuk)</option>
+            <option value="WAITING ASSIGNMENT">WAITING ASSIGNMENT</option>
+            <option value="ASSIGNED">ASSIGNED (Ditugaskan)</option>
+            <option value="PREPARATION">PREPARATION (Persiapan BOM/Layout)</option>
+            <option value="IN PROGRESS">IN PROGRESS (Sedang Dicetak)</option>
+            <option value="REVIEW">REVIEW (Finishing / QC Review)</option>
+            <option value="DONE">DONE (Selesai & Lunas)</option>
+          </select>
         </div>
 
         <div class="flex justify-end space-x-3 pt-4 border-t">
-          <button type="button" onclick="closeModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-600 hover:bg-gray-50">Batal</button>
-          <button type="submit" id="btnSubmit" class="px-5 py-2.5 rounded-xl bg-[#E06D53] hover:bg-[#d05c42] text-white text-sm font-semibold shadow-sm">Simpan PO Baru</button>
+          <button type="button" onclick="closeAssignModal()" class="px-4 py-2 rounded-xl border text-sm font-semibold text-gray-600">Batal</button>
+          <button type="submit" id="btnSubmitAssign" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold shadow-sm">Update Assignment</button>
         </div>
       </form>
     </div>
@@ -166,20 +200,28 @@
     const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ";
     let _supabase;
 
-    function initSupabase() {
-      _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    function initSupabase() { _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+
+    function openPOModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
+    function closePOModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
+
+    function openAssignModal(id, jobId, poNum, currentPic, currentStatus) {
+      document.getElementById('assignJobDbId').value = id;
+      document.getElementById('assignJobLabel').innerText = `${jobId} - ${poNum}`;
+      document.getElementById('assignPicSelect').value = currentPic !== 'Belum Diassigned' ? currentPic : 'Rio';
+      document.getElementById('assignStatusSelect').value = currentStatus || 'NEW';
+      document.getElementById('assignModal').classList.remove('hidden');
+      document.getElementById('assignModal').classList.add('flex');
     }
+    function closeAssignModal() { document.getElementById('assignModal').classList.add('hidden'); document.getElementById('assignModal').classList.remove('flex'); }
 
-    function openModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
-    function closeModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
-
-    async function loadPOData() {
+    async function loadData() {
       initSupabase();
       const { data, error } = await _supabase.from('jobs').select('*').order('created_at', { ascending: false });
       const tbody = document.getElementById('po-table-body');
 
       if (error || !data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada PO terdaftar. Klik "+ Input PO Baru" untuk menambah.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada PO terdaftar.</td></tr>';
         return;
       }
 
@@ -188,15 +230,20 @@
 
       data.forEach(item => {
         let prioColor = item.priority === 'Mendesak' ? 'bg-red-100 text-red-600' : (item.priority === 'Tinggi' ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-600');
-        
+        let statusColor = item.status === 'DONE' ? 'bg-emerald-100 text-emerald-700' : (item.status === 'IN PROGRESS' ? 'bg-cyan-100 text-cyan-700' : 'bg-blue-100 text-blue-700');
+
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition">
             <td class="py-3.5 font-bold text-[#E06D53]">${item.job_id || 'JOB-NEW'}<br><span class="text-xs text-gray-400 font-normal">${item.po_number}</span></td>
             <td class="py-3.5 font-semibold text-gray-900">${item.product}<br><span class="text-xs text-gray-400 font-normal">${item.customer}</span></td>
-            <td class="py-3.5 font-semibold text-gray-700">${Number(item.quantity || 0).toLocaleString('id-ID')}</td>
+            <td class="py-3.5 font-semibold text-gray-700"><span class="bg-gray-100 px-2 py-1 rounded-md text-xs font-bold text-gray-700">${item.pic || 'Belum Diassigned'}</span></td>
             <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${prioColor}">${item.priority || 'Normal'}</span></td>
-            <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md bg-blue-100 text-blue-700">${item.status || 'NEW'}</span></td>
-            <td class="py-3.5 text-gray-500 text-xs">${item.deadline || '-'}</td>
+            <td class="py-3.5"><span class="text-[10px] font-bold px-2.5 py-1 rounded-md ${statusColor}">${item.status || 'NEW'}</span></td>
+            <td class="py-3.5">
+              <button onclick="openAssignModal('${item.id}', '${item.job_id}', '${item.po_number}', '${item.pic}', '${item.status}')" class="text-xs font-bold bg-gray-900 text-white hover:bg-gray-700 px-3 py-1.5 rounded-lg transition">
+                Assign / Status &rarr;
+              </button>
+            </td>
           </tr>
         `;
       });
@@ -204,12 +251,11 @@
 
     async function savePO(e) {
       e.preventDefault();
-      const btn = document.getElementById('btnSubmit');
+      const btn = document.getElementById('btnSubmitPO');
       btn.innerText = "Menyimpan...";
       btn.disabled = true;
 
       const randomId = 'JOB-2026-' + Math.floor(1000 + Math.random() * 9000);
-
       const newPO = {
         job_id: randomId,
         po_number: document.getElementById('poNumber').value,
@@ -218,26 +264,44 @@
         quantity: document.getElementById('quantity').value,
         priority: document.getElementById('priority').value,
         deadline: document.getElementById('deadline').value,
-        status: 'NEW', // Status awal PO baru masuk
+        status: 'NEW',
         pic: 'Belum Diassigned'
       };
 
       const { error } = await _supabase.from('jobs').insert([newPO]);
-
-      if (error) {
-        alert("Gagal menyimpan PO: " + error.message);
-      } else {
-        alert("PO Baru Berhasil Ditambahkan dengan ID: " + randomId);
+      if (!error) {
         document.getElementById('poForm').reset();
-        closeModal();
-        loadPOData();
+        closePOModal();
+        loadData();
       }
-
       btn.innerText = "Simpan PO Baru";
       btn.disabled = false;
     }
 
-    loadPOData();
+    async function updateJobAssignment(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSubmitAssign');
+      btn.innerText = "Updating...";
+      btn.disabled = true;
+
+      const dbId = document.getElementById('assignJobDbId').value;
+      const pic = document.getElementById('assignPicSelect').value;
+      const status = document.getElementById('assignStatusSelect').value;
+
+      const { error } = await _supabase.from('jobs').update({ pic: pic, status: status }).eq('id', dbId);
+
+      if (!error) {
+        closeAssignModal();
+        loadData();
+      } else {
+        alert("Gagal update: " + error.message);
+      }
+
+      btn.innerText = "Update Assignment";
+      btn.disabled = false;
+    }
+
+    loadData();
   </script>
 </body>
 </html>
