@@ -213,49 +213,165 @@
       </div>
     </div>
 
-    <!-- TAB 3: LAPORAN PEKERJAAN PIC -->
+    <!-- TAB 3: LAPORAN PEKERJAAN PIC (DISESUAIKAN DENGAN GOOGLE FORM) -->
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN PEKERJAAN PIC</h2>
-        <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report.</p>
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN PEKERJAAN HARIAN</h2>
+        <p class="text-sm text-gray-500 mt-1">Silakan isi laporan pekerjaan Anda hari ini dengan lengkap dan jujur. Isi laporan menggunakan CAPSLOCK / HURUF KAPITAL SEMUA.</p>
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
         <form id="dailyReportForm" onsubmit="saveDailyReport(event)" class="space-y-6">
-          <div class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">1. Informasi Laporan Operator</h4>
+          
+          <!-- Section 1 -->
+          <div class="border-b pb-5 space-y-4">
+            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">1. Informasi Umum</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal *</label><input type="date" id="reportDate" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal Laporan *</label>
+                <input type="date" id="reportDate" required class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase font-bold">
+              </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jam Kerja *</label>
-                <select id="workHours" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="JAM NORMAL">JAM NORMAL</option><option value="LEMBUR">LEMBUR</option>
+                <select id="workHours" required class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase font-bold">
+                  <option value="JAM NORMAL">JAM NORMAL</option>
+                  <option value="LEMBUR">LEMBUR</option>
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Operator / PIC *</label>
-                <select id="operatorName" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="Rivan">Rivan</option><option value="Rio">Rio</option><option value="Salman">Salman</option><option value="Syuja">Syuja</option>
-                </select>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Operator (Otomatis) *</label>
+                <input type="text" id="operatorNameDisplay" readonly class="w-full p-2.5 border rounded-xl text-sm bg-gray-100 font-bold uppercase text-[#E06D53]">
               </div>
             </div>
-          </div>
-          <div class="space-y-4">
-            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Rincian Pekerjaan & Hasil Cetak</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO / Job *</label><input type="text" id="reportPoNumber" placeholder="Contoh: PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Produk *</label><input type="text" id="reportProduct" placeholder="Contoh: Label Jamu Botol" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Hasil Cetak (QTY Selesai) *</label><input type="number" id="reportQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3">
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pengerjaan *</label>
-                <select id="reportStatusResult" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="Selesai 100%">Selesai 100%</option><option value="Sebagian (Progress)">Sebagian (Progress)</option><option value="Kendala / Pending">Kendala / Pending</option>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jenis Pekerjaan *</label>
+                <select id="jenisPekerjaan" onchange="toggleReportSection()" required class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase font-bold">
+                  <option value="PRINTING & CUTTING">PRINTING & CUTTING</option>
+                  <option value="DEVELOP & APPROVAL">DEVELOP & APPROVAL</option>
+                  <option value="VISIT CUSTOMER / LUAR KOTA">VISIT CUSTOMER / LUAR KOTA</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer *</label>
+                <input type="text" id="reportCustomer" placeholder="NAMA CUSTOMER..." required class="w-full p-2.5 border rounded-xl text-sm uppercase">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO *</label>
+                <input type="text" id="reportPoNumber" placeholder="PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Total Qty *</label>
+                <input type="number" id="reportTotalQty" min="0" placeholder="0" required class="w-full p-2.5 border rounded-xl text-sm uppercase">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pekerjaan *</label>
+                <select id="reportStatusResult" required class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase">
+                  <option value="SELESAI">SELESAI</option>
+                  <option value="DALAM PROSES">DALAM PROSES</option>
+                  <option value="DITUNDA">DITUNDA</option>
+                  <option value="PARSIAL">PARSIAL</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Qty Parsial (Jika Parsial)</label>
+                <input type="number" id="reportQtyParsial" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deskripsi Pekerjaan *</label>
+              <textarea id="reportDesc" rows="2" placeholder="DESKRIPSI PEKERJAAN..." required class="w-full p-2.5 border rounded-xl text-sm uppercase outline-none"></textarea>
+            </div>
+          </div>
+
+          <!-- Section 2: KHUSUS PRINTING & CUTTING (TERHUBUNG OTOMATIS KE STOK UTAMA) -->
+          <div id="sectionPrintingCutting" class="border-b pb-5 space-y-4 bg-gray-50 p-4 rounded-xl">
+            <h4 class="text-xs font-bold text-emerald-700 uppercase tracking-wider">2. Rincian Pekerjaan Printing & Cutting (Potong Stok Otomatis)</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label>
+                <input type="text" id="nomorPrint" placeholder="NOMOR PRINT..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material Label (Potong Stok) *</label>
+                <select id="reportMaterialSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+                  <!-- Dinamis dari database materials -->
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Label Dipakai (PCS) *</label>
+                <input type="number" id="jumlahLabelDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold text-red-600">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Ribbon Dipakai (PCS)</label>
+                <input type="number" id="jumlahRibbonDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Print Reject (PCS)</label>
+                <input type="number" id="jumlahReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tempat Cetak *</label>
+                <select id="tempatCetak" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold">
+                  <option value="PRINTER HONEYWELL PX240S">PRINTER HONEYWELL PX240S</option>
+                  <option value="PRINTER ZEBRA Z411">PRINTER ZEBRA Z411</option>
+                  <option value="PRINTER ZEBRA 420">PRINTER ZEBRA 420</option>
+                  <option value="PRINTER TSC">PRINTER TSC</option>
+                  <option value="PRINTER SNAP500">PRINTER SNAP500</option>
+                  <option value="GRAPHCUT">GRAPHCUT</option>
+                  <option value="MESIN CUTTING TAVETA">MESIN CUTTING TAVETA</option>
                 </select>
               </div>
             </div>
-            <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan Kendala / Keterangan Tambahan</label><textarea id="reportNotes" rows="2" placeholder="Tuliskan kendala mesin, bahan, dll jika ada..." class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Sudah Pastikan Kondisi Printhead Bersih? *</label>
+                <select id="printheadClean" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+                  <option value="YA">YA</option>
+                  <option value="TIDAK">TIDAK</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Kendala / Keterangan Tambahan</label>
+                <input type="text" id="kendalaPrinting" placeholder="TULIS KENDALA JIKA ADA..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+              </div>
+            </div>
           </div>
-          <button type="submit" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-xs uppercase shadow-sm">Kirim & Simpan Laporan PIC</button>
+
+          <!-- Section 3: KHUSUS DEVELOP & APPROVAL -->
+          <div id="sectionDevelopApproval" class="border-b pb-5 space-y-4 bg-gray-50 p-4 rounded-xl hidden">
+            <h4 class="text-xs font-bold text-pink-700 uppercase tracking-wider">3. Rincian Develop & Approval</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Software Develop / Approval *</label>
+                <select id="devSoftware" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold">
+                  <option value="BARTENDER">BARTENDER</option>
+                  <option value="COREL DRAW 2021">COREL DRAW 2021</option>
+                  <option value="ZEBRA DESIGNER">ZEBRA DESIGNER</option>
+                  <option value="NICELABEL">NICELABEL</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama File Konten *</label>
+                <input type="text" id="devFilename" placeholder="NAMA FILE KONTEN..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Path Lokasi Folder *</label>
+                <input type="text" id="devFolderPath" placeholder="PATH LOKASI FOLDER..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-mono">
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-xs uppercase shadow-sm hover:bg-orange-600 transition">Kirim & Potong Stok Otomatis</button>
         </form>
       </div>
 
@@ -265,7 +381,13 @@
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Tanggal</th><th class="pb-3">Operator</th><th class="pb-3">Jam Kerja</th><th class="pb-3">Nomor PO & Produk</th><th class="pb-3">QTY Selesai</th><th class="pb-3">Status</th><th class="pb-3">Catatan</th>
+                <th class="pb-3">Tanggal</th>
+                <th class="pb-3">Operator</th>
+                <th class="pb-3">Jenis Pekerjaan</th>
+                <th class="pb-3">Customer & PO</th>
+                <th class="pb-3">Total Qty</th>
+                <th class="pb-3">Status</th>
+                <th class="pb-3">Pengurangan Stok</th>
               </tr>
             </thead>
             <tbody id="daily-report-history-body" class="divide-y divide-gray-100 text-sm">
@@ -417,18 +539,18 @@
 
   </main>
 
-  <!-- MODAL MODUL LENGKAP -->
+  <!-- MODAL MODUL -->
   <div id="poModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-6">
       <div class="flex justify-between items-center border-b pb-4"><h3 class="text-lg font-bold uppercase">Input PO Baru</h3><button onclick="closePOModal()" class="text-xl font-bold">&times;</button></div>
       <form id="poForm" onsubmit="savePO(event)" class="space-y-4">
         <div class="grid grid-cols-2 gap-4">
           <div><label class="block text-xs font-bold uppercase mb-1">Nomor PO *</label><input type="text" id="poNumber" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="customer" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="customer" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm"><option value="Rio">Rio</option><option value="Rivan">Rivan</option><option value="Salman">Salman</option></select></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm"><option value="Antrian Pembagian">Antrian Pembagian</option><option value="Sedang Dikerjakan">Sedang Dikerjakan</option><option value="Selesai">Selesai</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"><option value="Rio">Rio</option><option value="Rivan">Rivan</option><option value="Salman">Salman</option><option value="Syuja">Syuja</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="ANTRIAN PEMBAGIAN">ANTRIAN PEMBAGIAN</option><option value="SEDANG DIKERJAKAN">SEDANG DIKERJAKAN</option><option value="SELESAI">SELESAI</option></select></div>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePOModal()" class="px-5 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-[#E06D53] text-white rounded-xl text-xs font-bold uppercase">Simpan PO</button></div>
       </form>
@@ -440,11 +562,11 @@
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Input Layout & Approval</h3><button onclick="closeLayoutModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveLayout(event)" class="space-y-4">
         <div><label class="block text-xs font-bold uppercase mb-1">Kode PO *</label><input type="text" id="layoutPoNumber" placeholder="PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="layoutCustomer" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Jenis Output *</label><select id="layoutOutputType" class="w-full p-2.5 border rounded-xl text-sm"><option value="Desain">Desain</option><option value="Film Cetak">Film Cetak</option><option value="Sampel Customer">Sampel Customer</option></select></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Versi *</label><input type="text" id="layoutVersion" value="V1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><input type="text" id="layoutPic" value="Rio" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Status Approval *</label><select id="layoutStatus" class="w-full p-2.5 border rounded-xl text-sm"><option value="Drafting Layout">Drafting Layout</option><option value="Menunggu Approval">Menunggu Approval</option><option value="Approved (Disetujui)">Approved (Disetujui)</option></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="layoutCustomer" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Jenis Output *</label><select id="layoutOutputType" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="DESAIN">DESAIN</option><option value="FILM CETAK">FILM CETAK</option><option value="SAMPEL CUSTOMER">SAMPEL CUSTOMER</option></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Versi *</label><input type="text" id="layoutVersion" value="V1" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-mono"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><input type="text" id="layoutPic" value="RIO" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Status Approval *</label><select id="layoutStatus" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="DRAFTING LAYOUT">DRAFTING LAYOUT</option><option value="MENUNGGU APPROVAL">MENUNGGU APPROVAL</option><option value="APPROVED (DISETUJUI)">APPROVED (DISETUJUI)</option></select></div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeLayoutModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-pink-700 text-white rounded-xl text-xs font-bold uppercase">Simpan Layout</button></div>
       </form>
     </div>
@@ -454,9 +576,9 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Baru</h3><button onclick="closeNewMaterialModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveNewMaterial(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Nama Barang *</label><input type="text" id="matName" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Nama Barang *</label><input type="text" id="matName" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold uppercase mb-1">Satuan *</label><select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm"><option value="pcs">pcs</option><option value="roll">roll</option><option value="sheet">sheet</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Satuan *</label><select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="pcs">pcs</option><option value="roll">roll</option><option value="sheet">sheet</option></select></div>
           <div><label class="block text-xs font-bold uppercase mb-1">Stok Awal</label><input type="number" id="matInitStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeNewMaterialModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase">Simpan</button></div>
@@ -468,9 +590,9 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Stock Opname</h3><button onclick="closeOpnameModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveOpname(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm"></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase"></select></div>
         <div><label class="block text-xs font-bold uppercase mb-1">Jumlah Fisik (Balanced) *</label><input type="number" id="opnameBalancedQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Catatan *</label><input type="text" id="opnameReason" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Catatan *</label><input type="text" id="opnameReason" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="flex justify-end space-x-2 pt-4 border-t"><button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Opname</button></div>
       </form>
     </div>
@@ -480,9 +602,9 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Barang Masuk</h3><button onclick="closeStockModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveStockIn(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="stockItemSelect" class="w-full p-2.5 border rounded-xl text-sm"></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Pilih Material *</label><select id="stockItemSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase"></select></div>
         <div><label class="block text-xs font-bold uppercase mb-1">Jumlah Masuk *</label><input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Nomor SPK / Catatan</label><input type="text" id="stockSpk" class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Nomor SPK / Catatan</label><input type="text" id="stockSpk" class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeStockModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Masuk</button></div>
       </form>
     </div>
@@ -492,10 +614,10 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Tambah Printer</h3><button onclick="closePrinterModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="savePrinterUnit(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Nama Printer *</label><input type="text" id="printerName" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Serial Number (SN) *</label><input type="text" id="printerSn" required class="w-full p-2.5 border rounded-xl text-sm font-mono"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Kondisi *</label><select id="printerCondition" class="w-full p-2.5 border rounded-xl text-sm"><option value="Normal / Good">Normal / Good</option><option value="Butuh Maintenance">Butuh Maintenance</option></select></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Dipakai Oleh *</label><input type="text" id="printerUsedBy" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Nama Printer *</label><input type="text" id="printerName" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Serial Number (SN) *</label><input type="text" id="printerSn" required class="w-full p-2.5 border rounded-xl text-sm font-mono uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Kondisi *</label><select id="printerCondition" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="NORMAL / GOOD">NORMAL / GOOD</option><option value="BUTUH MAINTENANCE">BUTUH MAINTENANCE</option></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Dipakai Oleh *</label><input type="text" id="printerUsedBy" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePrinterModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-purple-700 text-white rounded-xl text-xs font-bold uppercase">Simpan</button></div>
       </form>
     </div>
@@ -505,13 +627,13 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Tambah Sparepart</h3><button onclick="closeSparepartModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveSparepart(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Kode Part *</label><input type="text" id="spCode" placeholder="SP-002" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Nama Sparepart *</label><input type="text" id="spName" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Kode Part *</label><input type="text" id="spCode" placeholder="SP-002" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-mono"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Nama Sparepart *</label><input type="text" id="spName" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold uppercase mb-1">Satuan *</label><input type="text" id="spUnit" value="pcs" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Satuan *</label><input type="text" id="spUnit" value="PCS" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">Stok *</label><input type="number" id="spStock" min="0" value="1" required class="w-full p-2.5 border rounded-xl text-sm"></div>
         </div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Catatan / Vendor</label><input type="text" id="spNotes" class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Catatan / Vendor</label><input type="text" id="spNotes" class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeSparepartModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-amber-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Sparepart</button></div>
       </form>
     </div>
@@ -521,11 +643,11 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Catat Maintenance</h3><button onclick="closeMaintenanceModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveMaintenance(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Tanggal *</label><input type="date" id="maintDate" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Unit Printer *</label><select id="maintPrinterSelect" class="w-full p-2.5 border rounded-xl text-sm"></select></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Jenis Perawatan / Part *</label><input type="text" id="maintType" placeholder="Contoh: Pembersihan Printhead / Ganti Roller" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Teknisi / PIC *</label><input type="text" id="maintTech" value="Salman" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Catatan</label><input type="text" id="maintNotes" class="w-full p-2.5 border rounded-xl text-sm"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Tanggal *</label><input type="date" id="maintDate" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Unit Printer *</label><select id="maintPrinterSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"></select></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Jenis Perawatan / Part *</label><input type="text" id="maintType" placeholder="PEMBERSIHAN PRINTHEAD..." required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Teknisi / PIC *</label><input type="text" id="maintTech" value="SALMAN" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"></div>
+        <div><label class="block text-xs font-bold uppercase mb-1">Catatan</label><input type="text" id="maintNotes" class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeMaintenanceModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold uppercase">Simpan Maintenance</button></div>
       </form>
     </div>
@@ -550,22 +672,22 @@
 
   <script>
     const USERS_DB = {
-      "Syuja": { pass: "1234", name: "Syuja", role: "Syuja", avatar: "SY", title: "SUPERVISOR (ALL ACCESS)", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab', 'inventoryTab', 'deviceTab', 'kpiTab'] },
-      "Bos": { pass: "1234", name: "BOS / Manager", role: "Manager", avatar: "BS", title: "MANAGER (ALL ACCESS)", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab', 'inventoryTab', 'deviceTab', 'kpiTab'] },
-      "Rio": { pass: "1234", name: "Rio", role: "Rio", avatar: "RO", title: "PRINTING & DEVELOPMENT", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab'] },
-      "Rivan": { pass: "1234", name: "Rivan", role: "Rivan", avatar: "RV", title: "PRINTING & STOK GUDANG LABEL", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'inventoryTab'] },
-      "Salman": { pass: "1234", name: "Salman", role: "Salman", avatar: "SM", title: "PRINTING & INVENTORY PRINTER", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'deviceTab'] }
+      "Syuja": { pass: "1234", name: "SYUJA", role: "Syuja", avatar: "SY", title: "SUPERVISOR (ALL ACCESS)", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab', 'inventoryTab', 'deviceTab', 'kpiTab'] },
+      "Bos": { pass: "1234", name: "BOS / MANAGER", role: "Manager", avatar: "BS", title: "MANAGER (ALL ACCESS)", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab', 'inventoryTab', 'deviceTab', 'kpiTab'] },
+      "Rio": { pass: "1234", name: "RIO", role: "Rio", avatar: "RO", title: "PRINTING & DEVELOPMENT", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab'] },
+      "Rivan": { pass: "1234", name: "RIVAN", role: "Rivan", avatar: "RV", title: "PRINTING & STOK GUDANG LABEL", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'inventoryTab'] },
+      "Salman": { pass: "1234", name: "SALMAN", role: "Salman", avatar: "SM", title: "PRINTING & INVENTORY PRINTER", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'deviceTab'] }
     };
 
     let currentUser = null;
 
-    let poList = [{ id: 1, number: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", qty: 25000, priority: "Normal", deadline: "2026-08-15", pic: "Rio", status: "Sedang Dikerjakan" }];
+    let poList = [{ id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "SEDANG DIKERJAKAN" }];
     let materials = [{ id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 }];
     let stockHistory = [];
-    let printers = [{ id: 1, name: "Honeywell PC42t", sn: "SN-HW2026-001", condition: "Normal / Good", usedBy: "Meja Packing 1", borrowStatus: "Tersedia" }];
-    let spareparts = [{ id: 1, code: "SP-001", name: "Printhead Honeywell PC42t", unit: "pcs", stock: 3, notes: "Supplier Resmi" }];
+    let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
+    let spareparts = [{ id: 1, code: "SP-001", name: "PRINTHEAD HONEYWELL PC42t", unit: "PCS", stock: 3, notes: "SUPPLIER RESMI" }];
     let maintenanceHistory = [];
-    let layoutList = [{ id: 1, poNumber: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", outputType: "Desain", version: "V1", pic: "Rio", status: "Drafting Layout" }];
+    let layoutList = [{ id: 1, poNumber: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", outputType: "DESAIN", version: "V1", pic: "RIO", status: "DRAFTING LAYOUT" }];
     let dailyReports = [];
 
     function handleLogin() {
@@ -573,13 +695,21 @@
       const pInput = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
 
-      if (USERS_DB[uInput] && USERS_DB[uInput].pass === pInput) {
-        currentUser = USERS_DB[uInput];
+      // Pencarian case-insensitive untuk username
+      const matchedKey = Object.keys(USERS_DB).find(k => k.toLowerCase() === uInput.toLowerCase());
+
+      if (matchedKey && USERS_DB[matchedKey].pass === pInput) {
+        currentUser = USERS_DB[matchedKey];
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('userNameDisplay').innerText = currentUser.name;
         document.getElementById('userRoleDisplay').innerText = currentUser.title;
         document.getElementById('userAvatar').innerText = currentUser.avatar;
         
+        // Otomatis isi nama operator di form laporan PIC sesuai user yang login
+        document.getElementById('operatorNameDisplay').value = currentUser.name;
+        document.getElementById('maintTech').value = currentUser.name;
+        document.getElementById('layoutPic').value = currentUser.name;
+
         applyRoleRestrictions();
         switchTab('dashTab');
       } else {
@@ -626,11 +756,37 @@
 
       if (tab === 'dashTab') { document.getElementById('dashTabSection').classList.remove('hidden'); renderDashboardCatalogPreviews(); }
       else if (tab === 'poTab') { document.getElementById('poTabSection').classList.remove('hidden'); renderPoTable(); }
-      else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); renderDailyReports(); }
+      else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); setupReportFormMaterials(); renderDailyReports(); }
       else if (tab === 'layoutTab') { document.getElementById('layoutTabSection').classList.remove('hidden'); renderLayoutTable(); }
       else if (tab === 'inventoryTab') { document.getElementById('inventoryTabSection').classList.remove('hidden'); renderMaterials(); }
       else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.remove('hidden'); renderDevicesAndSpareparts(); }
       else if (tab === 'kpiTab') { document.getElementById('kpiTabSection').classList.remove('hidden'); renderKpiData(); }
+    }
+
+    function toggleReportSection() {
+      const jenis = document.getElementById('jenisPekerjaan').value;
+      const secPrint = document.getElementById('sectionPrintingCutting');
+      const secDev = document.getElementById('sectionDevelopApproval');
+
+      if (jenis === 'PRINTING & CUTTING') {
+        secPrint.classList.remove('hidden');
+        secDev.classList.add('hidden');
+      } else if (jenis === 'DEVELOP & APPROVAL') {
+        secPrint.classList.add('hidden');
+        secDev.classList.remove('hidden');
+      } else {
+        secPrint.classList.add('hidden');
+        secDev.classList.add('hidden');
+      }
+    }
+
+    function setupReportFormMaterials() {
+      const sel = document.getElementById('reportMaterialSelect');
+      sel.innerHTML = '';
+      materials.forEach(m => {
+        sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock.toLocaleString('id-ID')} ${m.unit})</option>`;
+      });
+      toggleReportSection();
     }
 
     function renderDashboardCatalogPreviews() {
@@ -648,47 +804,86 @@
       poList.push({
         id: poList.length + 1,
         number: document.getElementById('poNumber').value.toUpperCase(),
-        customer: document.getElementById('customer').value,
-        product: document.getElementById('product').value,
+        customer: document.getElementById('customer').value.toUpperCase(),
+        product: document.getElementById('product').value.toUpperCase(),
         qty: Number(document.getElementById('quantity').value),
-        priority: "Normal",
+        priority: "NORMAL",
         deadline: "2026-08-30",
-        pic: document.getElementById('poPic').value,
-        status: document.getElementById('poStatusFlow').value
+        pic: document.getElementById('poPic').value.toUpperCase(),
+        status: document.getElementById('poStatusFlow').value.toUpperCase()
       });
-      alert("PO berhasil disimpan!"); closePOModal(); renderPoTable();
+      alert("PO BERHASIL DISIMPAN!"); closePOModal(); renderPoTable();
     }
     
     function renderPoTable() {
       const tbody = document.getElementById('po-table-body');
       tbody.innerHTML = '';
       poList.forEach(p => {
-        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td><td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td><td class="py-3 text-xs">${p.qty.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${p.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100">${p.priority}</span></td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-blue-100">${p.status}</span></td><td class="py-3 text-xs"><button onclick="alert('Edit PO')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td><td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td><td class="py-3 text-xs">${p.qty.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${p.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100">${p.priority}</span></td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-blue-100">${p.status}</span></td><td class="py-3 text-xs"><button onclick="alert('EDIT PO')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
       });
     }
 
     function saveDailyReport(e) {
       e.preventDefault();
+      const jenis = document.getElementById('jenisPekerjaan').value;
+      const dateVal = document.getElementById('reportDate').value || new Date().toISOString().split('T')[0];
+      const cust = document.getElementById('reportCustomer').value.toUpperCase();
+      const poNum = document.getElementById('reportPoNumber').value.toUpperCase();
+      const totQty = Number(document.getElementById('reportTotalQty').value);
+      const statRes = document.getElementById('reportStatusResult').value;
+      const desc = document.getElementById('reportDesc').value.toUpperCase();
+
+      let stockUpdateInfo = "-";
+
+      // Jika jenis pekerjaan Printing & Cutting, otomatis kurangi stok gudang utama
+      if (jenis === 'PRINTING & CUTTING') {
+        const matId = document.getElementById('reportMaterialSelect').value;
+        const usedQty = Number(document.getElementById('jumlahLabelDipakai').value);
+        const m = materials.find(item => item.id == matId);
+
+        if (m && usedQty > 0) {
+          if (m.stock < usedQty) {
+            alert(`PERINGATAN: Stok ${m.name} tidak mencukupi! Stok saat ini: ${m.stock}`);
+            return;
+          }
+          m.stock -= usedQty;
+          stockUpdateInfo = `POTONG ${usedQty} ${m.unit} (${m.name}) | SISA: ${m.stock}`;
+
+          // Catat ke histori mutasi stok gudang
+          stockHistory.unshift({
+            date: dateVal,
+            matName: m.name,
+            warehouse: 'GUDANG UTAMA',
+            type: 'PEMAKAIAN PIC',
+            qty: `-${usedQty} ${m.unit}`,
+            pic: currentUser.name,
+            notes: `PO: ${poNum} | CUST: ${cust}`
+          });
+        }
+      }
+
       dailyReports.unshift({
-        date: document.getElementById('reportDate').value || new Date().toISOString().split('T')[0],
-        operator: document.getElementById('operatorName').value,
-        workHours: document.getElementById('workHours').value,
-        poNumber: document.getElementById('reportPoNumber').value,
-        product: document.getElementById('reportProduct').value,
-        qty: document.getElementById('reportQty').value,
-        statusResult: document.getElementById('reportStatusResult').value,
-        notes: document.getElementById('reportNotes').value || '-'
+        date: dateVal,
+        operator: currentUser.name,
+        jenisPekerjaan: jenis,
+        customerAndPo: `${cust} (${poNum})`,
+        totalQty: totQty,
+        status: statRes,
+        stockInfo: stockUpdateInfo
       });
-      alert("Laporan harian PIC berhasil dikirim!");
+
+      alert("LAPORAN PEKERJAAN HARIAN BERHASIL DIKIRIM & STOK GUDANG TERUPDATE!");
       document.getElementById('dailyReportForm').reset();
+      document.getElementById('operatorNameDisplay').value = currentUser.name;
       renderDailyReports();
+      renderMaterials();
     }
 
     function renderDailyReports() {
       const body = document.getElementById('daily-report-history-body');
       body.innerHTML = dailyReports.length === 0 ? '<tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada laporan harian dikirim.</td></tr>' : '';
       dailyReports.forEach(r => {
-        body.innerHTML += `<tr><td class="py-3 text-xs">${r.date}</td><td class="py-3 text-xs font-bold">${r.operator}</td><td class="py-3 text-xs">${r.workHours}</td><td class="py-3 text-xs">${r.poNumber} - ${r.product}</td><td class="py-3 text-xs font-bold">${Number(r.qty).toLocaleString('id-ID')}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${r.statusResult}</span></td><td class="py-3 text-xs">${r.notes}</td></tr>`;
+        body.innerHTML += `<tr><td class="py-3 text-xs">${r.date}</td><td class="py-3 text-xs font-bold">${r.operator}</td><td class="py-3 text-xs font-bold text-[#E06D53]">${r.jenisPekerjaan}</td><td class="py-3 text-xs">${r.customerAndPo}</td><td class="py-3 text-xs font-bold">${r.totalQty.toLocaleString('id-ID')}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${r.status}</span></td><td class="py-3 text-xs text-blue-700 font-bold">${r.stockInfo}</td></tr>`;
       });
     }
 
@@ -699,20 +894,20 @@
       layoutList.push({
         id: layoutList.length + 1,
         poNumber: document.getElementById('layoutPoNumber').value.toUpperCase(),
-        customer: document.getElementById('layoutCustomer').value,
-        outputType: document.getElementById('layoutOutputType').value,
-        version: document.getElementById('layoutVersion').value,
-        pic: document.getElementById('layoutPic').value,
-        status: document.getElementById('layoutStatus').value
+        customer: document.getElementById('layoutCustomer').value.toUpperCase(),
+        outputType: document.getElementById('layoutOutputType').value.toUpperCase(),
+        version: document.getElementById('layoutVersion').value.toUpperCase(),
+        pic: document.getElementById('layoutPic').value.toUpperCase(),
+        status: document.getElementById('layoutStatus').value.toUpperCase()
       });
-      alert("Layout berhasil disimpan!"); closeLayoutModal(); renderLayoutTable();
+      alert("LAYOUT BERHASIL DISIMPAN!"); closeLayoutModal(); renderLayoutTable();
     }
 
     function renderLayoutTable() {
       const body = document.getElementById('layout-table-active');
       body.innerHTML = '';
       layoutList.forEach(l => {
-        body.innerHTML += `<tr><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs">${l.customer}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs font-mono">${l.version}</td><td class="py-3 text-xs">${l.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800">${l.status}</span></td><td class="py-3 text-xs"><button onclick="alert('Edit Layout')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        body.innerHTML += `<tr><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs">${l.customer}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs font-mono">${l.version}</td><td class="py-3 text-xs">${l.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800">${l.status}</span></td><td class="py-3 text-xs"><button onclick="alert('EDIT LAYOUT')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
       });
     }
 
@@ -722,14 +917,14 @@
       grid.innerHTML = ''; masterBody.innerHTML = '';
 
       materials.forEach(m => {
-        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
-        masterBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td><td class="py-3 text-xs font-bold">${m.name}</td><td class="py-3 text-xs uppercase">${m.unit}</td><td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${m.minStock}</td><td class="py-3 text-xs"><button onclick="alert('Edit')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold uppercase">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
+        masterBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td><td class="py-3 text-xs font-bold uppercase">${m.name}</td><td class="py-3 text-xs uppercase">${m.unit}</td><td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${m.minStock}</td><td class="py-3 text-xs"><button onclick="alert('EDIT')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
       });
 
       const historyBody = document.getElementById('stock-history-body');
       historyBody.innerHTML = stockHistory.length === 0 ? '<tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada mutasi stok.</td></tr>' : '';
       stockHistory.forEach(h => {
-        historyBody.innerHTML += `<tr><td class="py-3 text-xs">${h.date}</td><td class="py-3 text-xs font-bold">${h.matName}</td><td class="py-3 text-xs">${h.warehouse}</td><td class="py-3 text-xs font-bold">${h.type}</td><td class="py-3 text-xs font-bold">${h.qty}</td><td class="py-3 text-xs">${h.pic}</td><td class="py-3 text-xs">${h.notes}</td></tr>`;
+        historyBody.innerHTML += `<tr><td class="py-3 text-xs">${h.date}</td><td class="py-3 text-xs font-bold uppercase">${h.matName}</td><td class="py-3 text-xs uppercase">${h.warehouse}</td><td class="py-3 text-xs font-bold uppercase">${h.type}</td><td class="py-3 text-xs font-bold">${h.qty}</td><td class="py-3 text-xs uppercase">${h.pic}</td><td class="py-3 text-xs uppercase">${h.notes}</td></tr>`;
       });
     }
 
@@ -737,19 +932,19 @@
       const printerBody = document.getElementById('printer-list-body');
       printerBody.innerHTML = '';
       printers.forEach(p => {
-        printerBody.innerHTML += `<tr><td class="py-3 text-xs font-bold">${p.name}</td><td class="py-3 text-xs font-mono">${p.sn}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100">${p.condition}</span></td><td class="py-3 text-xs">${p.usedBy}</td><td class="py-3 text-xs">${p.borrowStatus}</td><td class="py-3 text-xs"><button onclick="alert('Edit')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        printerBody.innerHTML += `<tr><td class="py-3 text-xs font-bold uppercase">${p.name}</td><td class="py-3 text-xs font-mono uppercase">${p.sn}</td><td class="py-3 text-xs uppercase"><span class="px-2 py-0.5 rounded bg-emerald-100">${p.condition}</span></td><td class="py-3 text-xs uppercase">${p.usedBy}</td><td class="py-3 text-xs uppercase">${p.borrowStatus}</td><td class="py-3 text-xs"><button onclick="alert('EDIT')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
       });
 
       const spBody = document.getElementById('sparepart-list-body');
       spBody.innerHTML = '';
       spareparts.forEach(sp => {
-        spBody.innerHTML += `<tr><td class="py-3 text-xs font-bold font-mono text-purple-700">${sp.code}</td><td class="py-3 text-xs font-bold">${sp.name}</td><td class="py-3 text-xs uppercase">${sp.unit}</td><td class="py-3 text-xs font-bold">${sp.stock}</td><td class="py-3 text-xs">${sp.notes}</td></tr>`;
+        spBody.innerHTML += `<tr><td class="py-3 text-xs font-bold font-mono text-purple-700">${sp.code}</td><td class="py-3 text-xs font-bold uppercase">${sp.name}</td><td class="py-3 text-xs uppercase">${sp.unit}</td><td class="py-3 text-xs font-bold">${sp.stock}</td><td class="py-3 text-xs uppercase">${sp.notes}</td></tr>`;
       });
 
       const maintBody = document.getElementById('maintenance-history-body');
       maintBody.innerHTML = maintenanceHistory.length === 0 ? '<tr><td colspan="5" class="py-3 text-center text-gray-400">Belum ada catatan maintenance.</td></tr>' : '';
       maintenanceHistory.forEach(mh => {
-        maintBody.innerHTML += `<tr><td class="py-3 text-xs">${mh.date}</td><td class="py-3 text-xs font-bold">${mh.printerName}</td><td class="py-3 text-xs">${mh.type}</td><td class="py-3 text-xs">${mh.tech}</td><td class="py-3 text-xs">${mh.notes}</td></tr>`;
+        maintBody.innerHTML += `<tr><td class="py-3 text-xs">${mh.date}</td><td class="py-3 text-xs font-bold uppercase">${mh.printerName}</td><td class="py-3 text-xs uppercase">${mh.type}</td><td class="py-3 text-xs uppercase">${mh.tech}</td><td class="py-3 text-xs uppercase">${mh.notes}</td></tr>`;
       });
     }
 
@@ -764,14 +959,14 @@
     function closeNewMaterialModal() { document.getElementById('newMaterialModal').classList.add('hidden'); document.getElementById('newMaterialModal').classList.remove('flex'); }
     function saveNewMaterial(e) {
       e.preventDefault();
-      materials.push({ id: materials.length + 1, code: `EHG000${materials.length + 1}`, name: document.getElementById('matName').value, unit: document.getElementById('matUnit').value, stock: Number(document.getElementById('matInitStock').value), minStock: 1000 });
-      alert("Barang berhasil disimpan!"); closeNewMaterialModal(); renderMaterials();
+      materials.push({ id: materials.length + 1, code: `EHG000${materials.length + 1}`, name: document.getElementById('matName').value.toUpperCase(), unit: document.getElementById('matUnit').value.toUpperCase(), stock: Number(document.getElementById('matInitStock').value), minStock: 1000 });
+      alert("BARANG BERHASIL DISIMPAN!"); closeNewMaterialModal(); renderMaterials();
     }
 
     function openOpnameModal() {
       const sel = document.getElementById('opnameItemSelect');
       sel.innerHTML = '';
-      materials.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock} ${m.unit})</option>`; });
+      materials.forEach(m => { sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (STOK: ${m.stock} ${m.unit})</option>`; });
       document.getElementById('opnameModal').classList.remove('hidden'); document.getElementById('opnameModal').classList.add('flex');
     }
     function closeOpnameModal() { document.getElementById('opnameModal').classList.add('hidden'); document.getElementById('opnameModal').classList.remove('flex'); }
@@ -779,8 +974,8 @@
       e.preventDefault();
       const m = materials.find(item => item.id == document.getElementById('opnameItemSelect').value);
       const bal = Number(document.getElementById('opnameBalancedQty').value);
-      if (m) { m.stock = bal; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'Gudang Utama', type: 'STOCK OPNAME', qty: `${bal}`, pic: currentUser.name, notes: document.getElementById('opnameReason').value }); }
-      alert("Stock Opname berhasil disimpan!"); closeOpnameModal(); renderMaterials();
+      if (m) { m.stock = bal; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'GUDANG UTAMA', type: 'STOCK OPNAME', qty: `${bal}`, pic: currentUser.name, notes: document.getElementById('opnameReason').value.toUpperCase() }); }
+      alert("STOCK OPNAME BERHASIL DISIMPAN!"); closeOpnameModal(); renderMaterials();
     }
 
     function openStockModal() {
@@ -794,16 +989,16 @@
       e.preventDefault();
       const m = materials.find(item => item.id == document.getElementById('stockItemSelect').value);
       const qty = Number(document.getElementById('stockQty').value);
-      if (m) { m.stock += qty; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'Gudang Utama', type: 'BARANG MASUK', qty: `+${qty} ${m.unit}`, pic: currentUser.name, notes: document.getElementById('stockSpk').value || 'Penerimaan Gudang' }); }
-      alert("Barang masuk berhasil disimpan!"); closeStockModal(); renderMaterials();
+      if (m) { m.stock += qty; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: 'GUDANG UTAMA', type: 'BARANG MASUK', qty: `+${qty} ${m.unit}`, pic: currentUser.name, notes: document.getElementById('stockSpk').value.toUpperCase() || 'PENERIMAAN GUDANG' }); }
+      alert("BARANG MASUK BERHASIL DISIMPAN!"); closeStockModal(); renderMaterials();
     }
 
     function openPrinterModal() { document.getElementById('printerModal').classList.remove('hidden'); document.getElementById('printerModal').classList.add('flex'); }
     function closePrinterModal() { document.getElementById('printerModal').classList.add('hidden'); document.getElementById('printerModal').classList.remove('flex'); }
     function savePrinterUnit(e) {
       e.preventDefault();
-      printers.push({ id: printers.length + 1, name: document.getElementById('printerName').value, sn: document.getElementById('printerSn').value, condition: document.getElementById('printerCondition').value, usedBy: document.getElementById('printerUsedBy').value, borrowStatus: "Tersedia" });
-      alert("Printer disimpan!"); closePrinterModal(); renderDevicesAndSpareparts();
+      printers.push({ id: printers.length + 1, name: document.getElementById('printerName').value.toUpperCase(), sn: document.getElementById('printerSn').value.toUpperCase(), condition: document.getElementById('printerCondition').value.toUpperCase(), usedBy: document.getElementById('printerUsedBy').value.toUpperCase(), borrowStatus: "TERSEDIA" });
+      alert("PRINTER DISIMPAN!"); closePrinterModal(); renderDevicesAndSpareparts();
     }
 
     function openSparepartModal() { document.getElementById('sparepartModal').classList.remove('hidden'); document.getElementById('sparepartModal').classList.add('flex'); }
@@ -813,12 +1008,12 @@
       spareparts.push({
         id: spareparts.length + 1,
         code: document.getElementById('spCode').value.toUpperCase(),
-        name: document.getElementById('spName').value,
-        unit: document.getElementById('spUnit').value,
+        name: document.getElementById('spName').value.toUpperCase(),
+        unit: document.getElementById('spUnit').value.toUpperCase(),
         stock: Number(document.getElementById('spStock').value),
-        notes: document.getElementById('spNotes').value || '-'
+        notes: document.getElementById('spNotes').value.toUpperCase() || '-'
       });
-      alert("Sparepart berhasil disimpan!"); closeSparepartModal(); renderDevicesAndSpareparts();
+      alert("SPAREPART BERHASIL DISIMPAN!"); closeSparepartModal(); renderDevicesAndSpareparts();
     }
 
     function openMaintenanceModal() {
@@ -833,11 +1028,11 @@
       maintenanceHistory.unshift({
         date: document.getElementById('maintDate').value || new Date().toISOString().split('T')[0],
         printerName: document.getElementById('maintPrinterSelect').value,
-        type: document.getElementById('maintType').value,
-        tech: document.getElementById('maintTech').value,
-        notes: document.getElementById('maintNotes').value || '-'
+        type: document.getElementById('maintType').value.toUpperCase(),
+        tech: document.getElementById('maintTech').value.toUpperCase(),
+        notes: document.getElementById('maintNotes').value.toUpperCase() || '-'
       });
-      alert("Catatan maintenance berhasil disimpan!"); closeMaintenanceModal(); renderDevicesAndSpareparts();
+      alert("CATATAN MAINTENANCE BERHASIL DISIMPAN!"); closeMaintenanceModal(); renderDevicesAndSpareparts();
     }
 
     function printStockReport(t) { window.print(); }
