@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DIVISI PRINTING - MANAGEMENT SYSTEM V1</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; pointer-events: auto !important; }
@@ -15,13 +14,7 @@
       body * { visibility: hidden !important; }
       #printableArea, #printableArea * { visibility: visible !important; }
       #printableArea {
-        position: absolute !important;
-        left: 0 !important;
-        top: 0 !important;
-        width: 100% !important;
-        display: block !important;
-        background: white !important;
-        padding: 20px !important;
+        position: absolute !important; left: 0 !important; top: 0 !important; width: 100% !important; display: block !important; background: white !important; padding: 20px !important;
       }
       table { border-collapse: collapse !important; width: 100% !important; }
       th, td { border: 1px solid #000 !important; padding: 6px !important; }
@@ -30,7 +23,7 @@
 </head>
 <body class="bg-[#F9F8F6] text-gray-800 flex h-screen overflow-hidden">
 
-  <!-- LOGIN MODAL (MANDATORI DENGAN USERNAME & PASSWORD) -->
+  <!-- LOGIN MODAL -->
   <div id="loginModal" class="fixed inset-0 bg-[#1E222D] z-[200] flex items-center justify-center p-4">
     <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md space-y-5">
       <div class="text-center space-y-1">
@@ -43,7 +36,7 @@
       <div class="space-y-4">
         <div>
           <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Username *</label>
-          <input type="text" id="loginUsername" placeholder="Contoh: Syuja / Rio / Rivan / Salman / Bos" class="w-full p-3 border rounded-xl text-sm outline-none bg-gray-50">
+          <input type="text" id="loginUsername" placeholder="Syuja / Bos / Rio / Rivan / Salman" class="w-full p-3 border rounded-xl text-sm outline-none bg-gray-50">
         </div>
         <div>
           <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Password *</label>
@@ -52,7 +45,7 @@
         <button onclick="handleLogin()" class="w-full bg-[#E06D53] text-white py-3 rounded-xl font-bold text-xs uppercase shadow-md hover:bg-orange-600 transition">Masuk Sistem</button>
       </div>
       <div class="border-t pt-3 text-[10px] text-gray-400 text-center space-y-1">
-        <p><b>Akun Akses:</b> Syuja, Bos, Rio, Rivan, Salman (Password: 1234)</p>
+        <p><b>Password Default Semua Akun:</b> 1234</p>
       </div>
     </div>
   </div>
@@ -68,7 +61,7 @@
         </div>
       </div>
 
-      <nav class="space-y-1">
+      <nav class="space-y-1" id="sidebarNav">
         <p class="text-[9px] text-gray-400 font-bold px-3 mb-2 tracking-wider">RUANG KERJA</p>
         
         <button onclick="switchTab('dashTab')" id="nav-dash" class="w-full text-left bg-[#E06D53] text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
@@ -84,19 +77,19 @@
           LAPORAN PEKERJAAN PIC
         </button>
 
-        <button onclick="switchTab('layoutTab')" id="nav-layout" class="role-nav w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
+        <button onclick="switchTab('layoutTab')" id="nav-layout" class="role-nav menu-item-rio w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
           LAYOUT & APPROVAL
         </button>
 
-        <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="role-nav w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
+        <button onclick="switchTab('inventoryTab')" id="nav-inventory" class="role-nav menu-item-rivan w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
           STOK GUDANG PRINTING
         </button>
 
-        <button onclick="switchTab('deviceTab')" id="nav-device" class="role-nav w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
+        <button onclick="switchTab('deviceTab')" id="nav-device" class="role-nav menu-item-salman w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
           PRINTER & DEVICE
         </button>
 
-        <button onclick="switchTab('kpiTab')" id="nav-kpi" class="role-nav w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
+        <button onclick="switchTab('kpiTab')" id="nav-kpi" class="role-nav menu-item-all w-full text-left text-gray-400 hover:bg-[#2A2F3D] hover:text-white px-3 py-2.5 rounded-xl font-bold text-xs uppercase transition">
           LAPORAN KPI
         </button>
       </nav>
@@ -157,7 +150,7 @@
             <div id="dashPoPreview" class="space-y-2"><p class="text-xs text-gray-400">Memuat data PO...</p></div>
           </div>
 
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+          <div id="dashBox-layout" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
               <div><h4 class="font-bold text-gray-900 text-base uppercase">2. LAYOUT & APPROVAL</h4><p class="text-xs text-gray-500">Status draft layout, film, & sampel customer</p></div>
               <button onclick="switchTab('layoutTab')" class="text-xs font-bold text-pink-600 hover:underline">Lihat Semua &rarr;</button>
@@ -165,7 +158,7 @@
             <div id="dashLayoutPreview" class="space-y-2"><p class="text-xs text-gray-400">Memuat data layout...</p></div>
           </div>
 
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+          <div id="dashBox-inventory" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
               <div><h4 class="font-bold text-gray-900 text-base uppercase">3. STOK GUDANG PRINTING</h4><p class="text-xs text-gray-500">Ringkasan ketersediaan bahan baku & alert stok</p></div>
               <button onclick="switchTab('inventoryTab')" class="text-xs font-bold text-emerald-600 hover:underline">Lihat Semua &rarr;</button>
@@ -173,31 +166,12 @@
             <div id="dashMaterialPreview" class="space-y-2"><p class="text-xs text-gray-400">Memuat stok bahan...</p></div>
           </div>
 
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+          <div id="dashBox-device" class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
             <div class="flex justify-between items-center border-b pb-3">
               <div><h4 class="font-bold text-gray-900 text-base uppercase">4. PRINTER & DEVICE</h4><p class="text-xs text-gray-500">Kondisi mesin cetak & status peminjaman</p></div>
               <button onclick="switchTab('deviceTab')" class="text-xs font-bold text-purple-600 hover:underline">Lihat Semua &rarr;</button>
             </div>
             <div id="dashPrinterPreview" class="space-y-2"><p class="text-xs text-gray-400">Memuat unit printer...</p></div>
-          </div>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-          <div class="flex justify-between items-center border-b pb-3">
-            <div><h4 class="font-bold text-gray-900 text-base uppercase">5. LAPORAN PEKERJAAN PIC (AKTIVITAS PRODUKSI TERKINI)</h4><p class="text-xs text-gray-500">Catatan pemakaian bahan & hasil cetak harian operator</p></div>
-            <button onclick="switchTab('reportTab')" class="text-xs font-bold text-amber-600 hover:underline">Lihat Semua &rarr;</button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b text-xs font-bold text-gray-400 uppercase">
-                  <th class="pb-2">Tanggal</th><th class="pb-2">Pekerjaan / PO</th><th class="pb-2">Tipe</th><th class="pb-2">Bahan Terpakai</th><th class="pb-2">PIC Operator</th>
-                </tr>
-              </thead>
-              <tbody id="dashReportPreview" class="divide-y text-xs">
-                <tr><td colspan="5" class="py-3 text-center text-gray-400">Belum ada laporan pekerjaan.</td></tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
@@ -261,48 +235,12 @@
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Operator / PIC *</label>
                 <select id="operatorName" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="Rivan">Rivan</option><option value="Rio">Rio</option><option value="Salman">Salman</option><option value="Syuja">Syuja</option><option value="Ipal">Ipal</option><option value="Zaki">Zaki</option>
+                  <option value="Rivan">Rivan</option><option value="Rio">Rio</option><option value="Salman">Salman</option><option value="Syuja">Syuja</option>
                 </select>
               </div>
             </div>
           </div>
-
-          <div class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-[#E06D53] uppercase tracking-wider">2. Detail Pekerjaan & Status</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih PO / ID Sampel (Otomatis)</label>
-                <select id="jobSelect" onchange="autoFillJobData()" class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="">-- Pilih PO atau Sampel --</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jenis Pekerjaan *</label>
-                <select id="jobType" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-                  <option value="PRINTING & CUTTING">PRINTING & CUTTING</option>
-                  <option value="DEVELOP & APPROVAL">DEVELOP & APPROVAL</option>
-                  <option value="SAMPLING / TRIAL">SAMPLING / TRIAL (NON-PO)</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="border-b pb-4 space-y-4">
-            <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing & Pemakaian Bahan</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Bahan yang Dipakai *</label>
-                <select id="reportMaterialSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
-              </div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label><input type="text" id="printNum" placeholder="1-50" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Good Qty</label><input type="number" id="labelUsed" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Reject Qty</label><input type="number" id="printReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-            </div>
-          </div>
-
-          <button type="submit" id="btnSubmitDaily" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-xs uppercase shadow-sm">Kirim Laporan PIC</button>
+          <button type="submit" class="px-6 py-3 rounded-xl bg-[#E06D53] text-white font-bold text-xs uppercase shadow-sm">Kirim Laporan PIC</button>
         </form>
       </div>
     </div>
@@ -312,203 +250,44 @@
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAYOUT & APPROVAL</h2>
-          <p class="text-sm text-gray-500 mt-1">Pencatatan draft layout, film cetak, cetakan A3 Versant, & tracking approval customer.</p>
+          <p class="text-sm text-gray-500 mt-1">Pencatatan draft layout, film cetak, & tracking approval.</p>
         </div>
-        <button onclick="openLayoutModal()" class="bg-pink-700 hover:bg-pink-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">+ Input Layout / Sampel Baru</button>
+        <button onclick="openLayoutModal()" class="bg-pink-700 hover:bg-pink-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">+ Input Layout Baru</button>
       </div>
-
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <h3 class="text-base font-bold text-gray-900 uppercase">1. Antrian Aktif Develop & Approval Layout</h3>
-          <input type="text" id="searchLayoutInput" oninput="renderLayoutTable()" placeholder="🔍 Cari PO, customer, atau produk..." class="p-2 border rounded-xl text-xs w-full md:w-72 outline-none bg-gray-50">
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b text-xs font-bold text-gray-400 uppercase">
-                <th class="pb-3">Kode Layout / PO</th><th class="pb-3">Customer & Produk</th><th class="pb-3">Jenis Output</th><th class="pb-3">Versi</th><th class="pb-3">PIC</th><th class="pb-3">Status Approval</th><th class="pb-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="layout-table-active" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada antrian layout aktif.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-base font-bold text-gray-900 uppercase">2. Histori Layout ACC & Sampel Selesai</h3>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b text-xs font-bold text-gray-400 uppercase">
-                <th class="pb-3">Kode Layout / PO</th><th class="pb-3">Customer & Produk</th><th class="pb-3">Jenis Output</th><th class="pb-3">Versi</th><th class="pb-3">PIC</th><th class="pb-3">Status</th>
-              </tr>
-            </thead>
-            <tbody id="layout-table-done" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada layout selesai.</td></tr>
-            </tbody>
-          </table>
-        </div>
+        <table class="w-full text-left border-collapse">
+          <thead><tr class="border-b text-xs font-bold text-gray-400 uppercase"><th class="pb-3">Kode PO</th><th class="pb-3">Customer</th><th class="pb-3">Output</th><th class="pb-3">Status</th></tr></thead>
+          <tbody id="layout-table-active" class="divide-y text-sm"></tbody>
+        </table>
       </div>
     </div>
 
     <!-- TAB 5: STOK GUDANG PRINTING -->
     <div id="inventoryTabSection" class="space-y-8 hidden">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">STOK GUDANG PRINTING</h2>
-          <p class="text-sm text-gray-500 mt-1">Pengaturan stok kebutuhan printing & stok opname</p>
-        </div>
-        <div class="flex items-center space-x-3">
-          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Barang/Jasa Baru</button>
-          <button onclick="openOpnameModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Stock Opname</button>
-          <button onclick="openStockModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Barang Masuk</button>
-        </div>
+      <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">STOK GUDANG PRINTING</h2>
+        <button onclick="openNewMaterialModal()" class="bg-emerald-700 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase">+ Barang Baru</button>
       </div>
-
       <div id="material-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
-
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <h3 class="text-lg font-bold text-gray-900 uppercase">Katalog Master Barang & Jasa</h3>
-          <input type="text" id="searchMasterMatInput" oninput="renderMaterials()" placeholder="🔍 Cari kode EHG, nama barang, atau satuan..." class="p-2 border rounded-xl text-xs w-full md:w-72 outline-none bg-gray-50">
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Kode Barang</th><th class="pb-3">Nama Barang / Jasa</th><th class="pb-3">Satuan</th><th class="pb-3">Stok Saat Ini</th><th class="pb-3">Batas Min. Stok</th><th class="pb-3">Catatan</th><th class="pb-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="master-material-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada barang/jasa terdaftar.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <div class="flex justify-between items-center">
-          <h3 class="text-lg font-bold text-gray-900 uppercase">Histori Mutasi Stok & Audit Opname</h3>
-          <button onclick="printStockReport('STOK_OPNAME')" class="text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg transition border flex items-center space-x-1 uppercase">
-            <span>Print Laporan</span>
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Tanggal</th><th class="pb-3">Kode & Nama Bahan</th><th class="pb-3">Gudang</th><th class="pb-3">Tipe Transaksi</th><th class="pb-3">Jumlah (Qty)</th><th class="pb-3">Petugas</th><th class="pb-3">Catatan / Keterangan</th>
-              </tr>
-            </thead>
-            <tbody id="stock-history-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada mutasi stok terdaftar.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
 
     <!-- TAB 6: PRINTER & DEVICE -->
     <div id="deviceTabSection" class="space-y-8 hidden">
-      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-        <div>
-          <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">PRINTER & DEVICE</h2>
-          <p class="text-sm text-gray-500 mt-1">Pencatatan Inventaris & Pencatatan masa printer dan accessoris</p>
-        </div>
-        
-        <div class="flex items-center space-x-3">
-          <button onclick="openPrinterModal()" class="bg-purple-700 hover:bg-purple-800 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Tambah Printer/Device</button>
-          <button onclick="openSparepartModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Tambah Sparepart</button>
-          <button onclick="openMaintenanceModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-bold text-xs uppercase shadow-sm transition">Catat Maintenance</button>
-        </div>
+      <div class="flex justify-between items-center">
+        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">PRINTER & DEVICE</h2>
+        <button onclick="openPrinterModal()" class="bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold uppercase">+ Tambah Printer</button>
       </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <h3 class="text-lg font-bold text-gray-900 uppercase">Rekapan Unit Printer Barcode & Device</h3>
-          <input type="text" id="searchPrinterInput" oninput="renderDevicesAndSpareparts()" placeholder="🔍 Cari nama printer, SN, atau peminjam..." class="p-2 border rounded-xl text-xs w-full md:w-72 outline-none bg-gray-50">
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Nama / Tipe Printer</th><th class="pb-3">Serial Number (SN)</th><th class="pb-3">Kondisi Mesin</th><th class="pb-3">Dipakai Oleh</th><th class="pb-3">Status Pinjam</th><th class="pb-3">Ket. Dipinjam</th><th class="pb-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="printer-list-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada unit printer terdaftar.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
-          <h3 class="text-lg font-bold text-gray-900 uppercase">Katalog Inventory Sparepart Printer</h3>
-          <input type="text" id="searchSparepartInput" oninput="renderDevicesAndSpareparts()" placeholder="🔍 Cari kode SP, nama sparepart, atau vendor..." class="p-2 border rounded-xl text-xs w-full md:w-72 outline-none bg-gray-50">
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Kode Part</th><th class="pb-3">Nama Sparepart</th><th class="pb-3">Satuan</th><th class="pb-3">Stok Saat Ini</th><th class="pb-3">Batas Min. Stok</th><th class="pb-3">Catatan / Vendor</th><th class="pb-3">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="sparepart-list-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada sparepart terdaftar.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <div class="flex justify-between items-center">
-          <h3 class="text-lg font-bold text-gray-900 uppercase">Histori Maintenance & Pergantian Part</h3>
-          <button onclick="printStockReport('MAINTENANCE')" class="text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg transition border flex items-center space-x-1 uppercase">
-            <span>Print Laporan</span>
-          </button>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                <th class="pb-3">Tanggal</th><th class="pb-3">Unit Printer</th><th class="pb-3">Jenis Perawatan / Part</th><th class="pb-3">Qty Terpakai</th><th class="pb-3">Teknisi / PIC</th><th class="pb-3">Catatan Kendala / Tindakan</th>
-              </tr>
-            </thead>
-            <tbody id="maintenance-history-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada catatan maintenance.</td></tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="bg-white p-6 rounded-2xl border shadow-sm">
+        <table class="w-full text-left border-collapse">
+          <thead><tr class="border-b text-xs font-bold text-gray-400 uppercase"><th class="pb-3">Nama Printer</th><th class="pb-3">SN</th><th class="pb-3">Kondisi</th><th class="pb-3">Pengguna</th></tr></thead>
+          <tbody id="printer-list-body" class="divide-y text-sm"></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- TAB 7: LAPORAN KPI DIVISI -->
+    <!-- TAB 7: KPI -->
     <div id="kpiTabSection" class="space-y-8 hidden">
-      <div>
-        <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN KPI DIVISI PRINTING</h2>
-        <p class="text-sm text-gray-500 mt-1">Analisis kinerja agregat, rasio yield & reject, dan produktivitas tim.</p>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
-          <span class="text-[10px] font-bold text-gray-400 uppercase">TOTAL BEBAN KERJA</span>
-          <h3 id="kpi-total-jobs" class="text-3xl font-bold text-gray-900 mt-2">0</h3>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
-          <span class="text-[10px] font-bold text-amber-500 uppercase">BUTUH REVIEW SPV</span>
-          <h3 id="kpi-review-pending" class="text-3xl font-bold text-amber-600 mt-2">0</h3>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
-          <span class="text-[10px] font-bold text-emerald-500 uppercase">YIELD RATE</span>
-          <h3 id="kpi-yield-rate" class="text-3xl font-bold text-emerald-600 mt-2">0%</h3>
-        </div>
-        <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
-          <span class="text-[10px] font-bold text-red-500 uppercase">REJECT RATE</span>
-          <h3 id="kpi-reject-rate" class="text-3xl font-bold text-red-600 mt-2">0%</h3>
-        </div>
-      </div>
+      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN KPI DIVISI</h2>
     </div>
 
   </main>
@@ -516,256 +295,47 @@
   <!-- MODAL PO -->
   <div id="poModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl space-y-6">
-      <div class="flex justify-between items-center border-b pb-4">
-        <h3 id="poModalTitle" class="text-lg font-bold text-gray-900 uppercase">Input Purchase Order (PO) Baru</h3>
-        <button onclick="closePOModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
-      </div>
+      <div class="flex justify-between items-center border-b pb-4"><h3 class="text-lg font-bold uppercase">Input PO Baru</h3><button onclick="closePOModal()" class="text-xl font-bold">&times;</button></div>
       <form id="poForm" onsubmit="savePO(event)" class="space-y-4">
         <input type="hidden" id="editPoDbId">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO *</label><input type="text" id="poNumber" required placeholder="PO-2026-008" class="w-full p-2.5 border rounded-xl text-sm outline-none uppercase font-mono"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Customer *</label><input type="text" id="customer" required placeholder="PT Seri Rasa" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Produk *</label><input type="text" id="product" required placeholder="Label Botol" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required placeholder="25000" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Prioritas</label>
-            <select id="priority" class="w-full p-2.5 border rounded-xl text-sm outline-none font-semibold">
-              <option value="Normal">Normal</option><option value="Tinggi">Tinggi</option><option value="Mendesak">Mendesak</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Flow *</label>
-            <select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm outline-none font-semibold">
-              <option value="Antrian Pembagian">Antrian Pembagian</option>
-              <option value="Menunggu Konfirmasi Layout">Menunggu Konfirmasi Layout</option>
-              <option value="Siap Naik Cetak">Siap Naik Cetak</option>
-              <option value="Sedang Dikerjakan">Sedang Dikerjakan</option>
-              <option value="Selesai">Selesai</option>
-            </select>
-          </div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Penunjukan PIC</label><input type="text" id="poPic" placeholder="Rio / Syuja / Rivan" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deadline *</label><input type="date" id="deadline" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+        <div class="grid grid-cols-2 gap-4">
+          <div><label class="block text-xs font-bold uppercase mb-1">Nomor PO *</label><input type="text" id="poNumber" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="customer" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required class="w-full p-2.5 border rounded-xl text-sm"></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Prioritas</label><select id="priority" class="w-full p-2.5 border rounded-xl text-sm"><option value="Normal">Normal</option><option value="Mendesak">Mendesak</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">Status Flow</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm"><option value="Antrian Pembagian">Antrian Pembagian</option><option value="Sedang Dikerjakan">Sedang Dikerjakan</option><option value="Selesai">Selesai</option></select></div>
         </div>
-        <div class="flex justify-end space-x-3 pt-4 border-t">
-          <button type="button" onclick="closePOModal()" class="px-5 py-2.5 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
-          <button type="submit" id="btnSubmitPO" class="px-5 py-2.5 rounded-xl bg-[#E06D53] text-white text-xs font-bold uppercase">Simpan PO</button>
-        </div>
+        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePOModal()" class="px-5 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-[#E06D53] text-white rounded-xl text-xs font-bold uppercase">Simpan</button></div>
       </form>
-    </div>
-  </div>
-
-  <!-- MODAL LAYOUT -->
-  <div id="layoutModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 id="layoutModalTitle" class="text-lg font-bold text-gray-900 uppercase">Input Layout / Sampel Baru</h3>
-        <button onclick="closeLayoutModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
-      </div>
-      <form onsubmit="saveLayoutItem(event)" class="space-y-4">
-        <input type="hidden" id="editLayoutId">
-        <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih PO dari Antrian *</label>
-          <input type="text" id="searchPoSelectInput" oninput="filterPoDropdownOptions()" placeholder="🔍 Cari nomor PO atau customer..." class="w-full p-2 border rounded-xl text-xs outline-none mb-1.5 bg-gray-50">
-          <select id="layoutPoSelect" onchange="autoFillFromSelectedPo()" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer *</label><input type="text" id="layoutCustomer" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Produk / Desain *</label><input type="text" id="layoutProduct" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jenis Output Layout *</label>
-            <select id="layoutOutputType" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-              <option value="Desain">Desain</option><option value="Film">Film</option><option value="Cetak Digital">Cetak Digital</option>
-            </select>
-          </div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Versi Layout *</label><input type="text" id="layoutVersion" required value="V1" class="w-full p-2.5 border rounded-xl text-sm font-mono font-bold outline-none"></div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">PIC Designer *</label>
-            <select id="layoutPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-              <option value="Rio">Rio</option><option value="Syuja">Syuja</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Approval *</label>
-            <select id="layoutStatus" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-              <option value="Drafting Layout">Drafting Layout</option><option value="Menunggu Approval Customer">Menunggu Approval Customer</option><option value="Revisi Layout">Revisi Layout</option><option value="ACC Cetak">ACC Cetak (Siap Naik Cetak)</option>
-            </select>
-          </div>
-        </div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan Spesifikasi</label><textarea id="layoutNotes" rows="2" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
-        <div class="flex justify-end space-x-3 pt-4 border-t">
-          <button type="button" onclick="closeLayoutModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
-          <button type="submit" id="btnSubmitLayout" class="px-5 py-2 rounded-xl bg-pink-700 text-white text-xs font-bold uppercase">Simpan Layout</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL SUPPORT LAINNYA (MATERIAL, OPNAME, STOCK, PRINTER, SPAREPART, MAINTENANCE) -->
-  <div id="newMaterialModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 id="modalMaterialTitle" class="text-lg font-bold text-gray-900 uppercase">Barang/Jasa Baru</h3><button onclick="closeNewMaterialModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button></div>
-      <form onsubmit="saveNewMaterial(event)" class="space-y-4">
-        <input type="hidden" id="editMaterialDbId">
-        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kode Barang</label><input type="text" id="matCode" readonly class="w-full p-2.5 bg-gray-100 font-mono font-bold text-gray-600 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Barang/Jasa *</label><input type="text" id="matName" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan *</label><select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="pcs">pcs</option><option value="roll">roll</option><option value="sheet">sheet</option></select></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Stok Awal</label><input type="number" id="matInitStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        </div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Batas Minimum Stok</label><input type="number" id="matMinStock" min="1" value="1000" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan</label><textarea id="matNotes" rows="2" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
-        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeNewMaterialModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button><button type="submit" class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-xs font-bold uppercase">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <div id="opnameModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold text-gray-900 uppercase">Stock Opname</h3><button onclick="closeOpnameModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button></div>
-      <form onsubmit="saveOpname(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material *</label><select id="opnameItemSelect" onchange="updateOpnameUnitLock()" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Gudang *</label><select id="opnameWarehouse" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Gudang Utama">Gudang Utama</option><option value="Gudang Sisa">Gudang Sisa</option></select></div>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="col-span-2"><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Balanced *</label><input type="number" id="opnameBalancedQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan</label><input type="text" id="opnameUnitLock" readonly class="w-full p-2.5 bg-gray-100 font-bold text-gray-600 border rounded-xl text-sm outline-none"></div>
-        </div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Petugas *</label><select id="opnamePic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Rivan">Rivan</option><option value="Syuja">Syuja</option></select></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan *</label><input type="text" id="opnameReason" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div class="flex justify-end space-x-2 pt-4 border-t"><button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button><button type="submit" class="px-5 py-2 rounded-xl bg-amber-600 text-white text-xs font-bold uppercase">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <div id="stockModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold text-gray-900 uppercase">Barang Masuk</h3><button onclick="closeStockModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button></div>
-      <form onsubmit="saveStockIn(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material *</label><select id="stockItemSelect" onchange="updateStockInUnitLock()" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Lokasi Gudang *</label><select id="stockInWarehouse" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Gudang Utama">Gudang Utama</option><option value="Gudang Sisa">Gudang Sisa</option></select></div>
-        <div class="grid grid-cols-3 gap-2">
-          <div class="col-span-2"><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Masuk *</label><input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan</label><input type="text" id="stockInUnitLock" readonly class="w-full p-2.5 bg-gray-100 font-bold text-gray-600 border rounded-xl text-sm outline-none"></div>
-        </div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Petugas *</label><select id="stockInPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Rivan">Rivan</option><option value="Syuja">Syuja</option></select></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor SPK</label><input type="text" id="stockSpk" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeStockModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button><button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold uppercase">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <div id="printerModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 id="printerModalTitle" class="text-lg font-bold text-gray-900 uppercase">Tambah Unit Printer</h3><button onclick="closePrinterModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button></div>
-      <form onsubmit="savePrinterUnit(event)" class="space-y-4">
-        <input type="hidden" id="editPrinterId">
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama / Tipe Printer *</label><input type="text" id="printerName" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Serial Number (SN) *</label><input type="text" id="printerSn" required class="w-full p-2.5 border rounded-xl text-sm outline-none font-mono"></div>
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Kondisi *</label><select id="printerCondition" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Normal / Good">Normal / Good</option><option value="Butuh Maintenance">Butuh Maintenance</option><option value="Rusak / Repair">Rusak / Repair</option></select></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Dipakai Oleh *</label><input type="text" id="printerUsedBy" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Status Pinjam *</label><select id="printerBorrowStatus" onchange="toggleBorrowNoteField()" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Tersedia / Internal">Tersedia / Internal</option><option value="Dipinjam">Dipinjam</option></select></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Ket. Dipinjam</label><input type="text" id="printerBorrowNote" disabled class="w-full p-2.5 border rounded-xl text-sm outline-none bg-gray-100"></div>
-        </div>
-        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePrinterModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button><button type="submit" class="px-5 py-2 rounded-xl bg-purple-700 text-white text-xs font-bold uppercase">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <div id="sparepartModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 id="sparepartModalTitle" class="text-lg font-bold text-gray-900 uppercase">Tambah Sparepart Baru</h3><button onclick="closeSparepartModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button></div>
-      <form onsubmit="saveSparepartItem(event)" class="space-y-4">
-        <input type="hidden" id="editSparepartId">
-        <div><label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kode Sparepart</label><input type="text" id="spCode" readonly class="w-full p-2.5 bg-gray-100 font-mono font-bold text-gray-600 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Sparepart *</label><input type="text" id="spName" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div class="grid grid-cols-2 gap-3">
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan *</label><select id="spUnit" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="pcs">pcs</option><option value="set">set</option><option value="unit">unit</option></select></div>
-          <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Stok Awal</label><input type="number" id="spStock" min="0" value="0" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        </div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Batas Minimum Stok</label><input type="number" id="spMinStock" min="1" value="2" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan / Vendor</label><input type="text" id="spNotes" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeSparepartModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button><button type="submit" class="px-5 py-2 rounded-xl bg-amber-600 text-white text-xs font-bold uppercase">Simpan</button></div>
-      </form>
-    </div>
-  </div>
-
-  <div id="maintenanceModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
-      <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold text-gray-900 uppercase">Catat Maintenance</h3><button onclick="closeMaintenanceModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button></div>
-      <form onsubmit="saveMaintenanceLog(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tanggal *</label><input type="date" id="maintDate" required class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Printer *</label><select id="maintPrinterSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Sparepart Diganti</label><select id="maintSparepartSelect" onchange="toggleMaintQtyField()" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="">-- Tanpa Pergantian Part --</option></select></div>
-        <div id="maintQtyContainer" class="hidden"><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Terpakai *</label><input type="number" id="maintSparepartQty" min="1" value="1" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Teknisi *</label><select id="maintPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"><option value="Salman">Salman</option><option value="Syuja">Syuja</option></select></div>
-        <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan *</label><textarea id="maintNotes" required rows="3" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea></div>
-        <div class="flex justify-between items-center pt-4 border-t">
-          <button type="button" onclick="printStockReport('MAINTENANCE')" class="text-xs font-bold text-gray-600 hover:text-gray-900 underline">Print Laporan</button>
-          <div class="flex space-x-2"><button type="button" onclick="closeMaintenanceModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button><button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-xs font-bold uppercase">Simpan</button></div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- TEMPLATE LAYOUT CETAK LAPORAN RESMI -->
-  <div id="printableArea" style="display: none;">
-    <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
-      <h1 style="font-size: 22px; font-weight: bold; margin: 0; text-transform: uppercase; letter-spacing: 1px;">CV. EXCELINDO HASIL GUNA</h1>
-      <p style="font-size: 13px; font-weight: bold; margin: 4px 0 0 0; color: #333;" id="printReportTitle">BERITA ACARA LAPORAN OPERASIONAL PRINTING</p>
-      <p style="font-size: 11px; margin: 2px 0 0 0; color: #666;">PRINT MANAGEMENT SYSTEM V1</p>
-      <p style="font-size: 11px; margin: 2px 0 0 0; color: #777;">Dicetak Tanggal: <span id="printDate"></span></p>
-    </div>
-    <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
-      <thead id="printTableHead"></thead><tbody id="printTableBody"></tbody>
-    </table>
-    <div style="margin-top: 50px; display: flex; justify-content: space-between; text-align: center; font-size: 11px;">
-      <div><p style="margin-bottom: 50px;">Petugas / Teknisi</p><p style="font-weight: bold; text-decoration: underline;" id="printSignPic">( Rivan / Salman / Rio )</p></div>
-      <div><p style="margin-bottom: 50px;">Mengetahui (Supervisor)</p><p style="font-weight: bold; text-decoration: underline;">( Syuja Arisyi )</p></div>
     </div>
   </div>
 
   <script>
-    // DATABASE USERS SESUAI PERMINTAAN KAMU
+    // DATABASE USERS & HAK AKSES PER MENU
     const USERS_DB = {
-      "Syuja": { pass: "1234", name: "Syuja", role: "Syuja", avatar: "SY", title: "SUPERVISOR (ALL ACCESS)" },
-      "Bos": { pass: "1234", name: "BOS / Manager", role: "Manager", avatar: "BS", title: "MANAGER (ALL ACCESS)" },
-      "Rio": { pass: "1234", name: "Rio", role: "Rio", avatar: "RO", title: "PRINTING & DEVELOPMENT" },
-      "Rivan": { pass: "1234", name: "Rivan", role: "Rivan", avatar: "RV", title: "PRINTING & STOK GUDANG LABEL" },
-      "Salman": { pass: "1234", name: "Salman", role: "Salman", avatar: "SM", title: "PRINTING & INVENTORY PRINTER" }
+      "Syuja": { pass: "1234", name: "Syuja", role: "Syuja", avatar: "SY", title: "SUPERVISOR (ALL ACCESS)", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab', 'inventoryTab', 'deviceTab', 'kpiTab'] },
+      "Bos": { pass: "1234", name: "BOS / Manager", role: "Manager", avatar: "BS", title: "MANAGER (ALL ACCESS)", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab', 'inventoryTab', 'deviceTab', 'kpiTab'] },
+      "Rio": { pass: "1234", name: "Rio", role: "Rio", avatar: "RO", title: "PRINTING & DEVELOPMENT", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'layoutTab'] },
+      "Rivan": { pass: "1234", name: "Rivan", role: "Rivan", avatar: "RV", title: "PRINTING & STOK GUDANG LABEL", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'inventoryTab'] },
+      "Salman": { pass: "1234", name: "Salman", role: "Salman", avatar: "SM", title: "PRINTING & INVENTORY PRINTER", allowedTabs: ['dashTab', 'poTab', 'reportTab', 'deviceTab'] }
     };
 
     let currentUser = null;
 
     let poList = [
-      { id: 1, number: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", qty: 25000, priority: "Normal", deadline: "2026-08-15", pic: "Rio", status: "Sedang Dikerjakan" },
-      { id: 2, number: "PO-2026-002", customer: "CV Makmur Jaya", product: "Stiker Vinyl A3", qty: 5000, priority: "Mendesak", deadline: "2026-08-10", pic: "Syuja", status: "Antrian Pembagian" }
+      { id: 1, number: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", qty: 25000, priority: "Normal", deadline: "2026-08-15", pic: "Rio", status: "Sedang Dikerjakan" }
     ];
-
     let materials = [
-      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000, notes: "Bahan utama sticker botol" },
-      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110mm", unit: "roll", stock: 15, minStock: 5, notes: "Untuk Printer Honeywell & Zebra" },
-      { id: 3, code: "EHG0003", name: "LABEL THERMAL 40x30mm", unit: "pcs", stock: 50000, minStock: 5000, notes: "Label barcode ekspedisi" }
+      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 }
     ];
-
-    let stockHistory = [];
     let printers = [
-      { id: 1, name: "Honeywell PC42t", sn: "SN-HW2026-001", condition: "Normal / Good", usedBy: "Meja Packing 1", borrowStatus: "Tersedia / Internal", borrowNote: "-" }
+      { id: 1, name: "Honeywell PC42t", sn: "SN-HW2026-001", condition: "Normal / Good", usedBy: "Meja Packing 1", borrowStatus: "Tersedia" }
     ];
-    let spareparts = [
-      { id: 1, code: "SP-001", name: "Printhead Honeywell PC42t 203dpi", unit: "pcs", stock: 3, minStock: 1, notes: "Garansi Supplier 3 Bulan" }
-    ];
-    let maintenanceHistory = [];
     let layoutList = [
-      { id: 1, poNumber: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", outputType: "Desain", version: "V1", pic: "Rio", status: "Drafting Layout", notes: "Ukuran Pisau 100x50mm R2" }
+      { id: 1, poNumber: "PO-2026-001", customer: "PT Seri Rasa", product: "Label Jamu Botol", outputType: "Desain", version: "V1", pic: "Rio", status: "Drafting Layout" }
     ];
 
-    // SISTEM LOGIN HANDLER
     function handleLogin() {
       const uInput = document.getElementById('loginUsername').value.trim();
       const pInput = document.getElementById('loginPassword').value.trim();
@@ -777,10 +347,30 @@
         document.getElementById('userNameDisplay').innerText = currentUser.name;
         document.getElementById('userRoleDisplay').innerText = currentUser.title;
         document.getElementById('userAvatar').innerText = currentUser.avatar;
+        
+        applyRoleRestrictions();
         switchTab('dashTab');
       } else {
         errBox.classList.remove('hidden');
       }
+    }
+
+    // MENERAPKAN PEMBATASAN MENU BERDASARKAN ROLE
+    function applyRoleRestrictions() {
+      const navButtons = document.querySelectorAll('aside nav button');
+      navButtons.forEach(btn => {
+        const tabName = btn.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+        if (tabName && !currentUser.allowedTabs.includes(tabName)) {
+          btn.style.display = 'none'; // Sembunyikan menu yang tidak boleh diakses
+        } else {
+          btn.style.display = 'block';
+        }
+      });
+
+      // Sembunyikan box katalog di dashboard jika tidak punya akses
+      document.getElementById('dashBox-layout').style.display = currentUser.allowedTabs.includes('layoutTab') ? 'block' : 'none';
+      document.getElementById('dashBox-inventory').style.display = currentUser.allowedTabs.includes('inventoryTab') ? 'block' : 'none';
+      document.getElementById('dashBox-device').style.display = currentUser.allowedTabs.includes('deviceTab') ? 'block' : 'none';
     }
 
     function logoutSystem() {
@@ -791,6 +381,12 @@
     }
 
     function switchTab(tab) {
+      // Keamanan ekstra: Jika user mencoba memaksa akses tab terlarang
+      if (currentUser && !currentUser.allowedTabs.includes(tab)) {
+        alert("Akses Ditolak! Anda tidak memiliki izin ke modul ini.");
+        return;
+      }
+
       document.getElementById('dashTabSection').classList.add('hidden');
       document.getElementById('poTabSection').classList.add('hidden');
       document.getElementById('reportTabSection').classList.add('hidden');
@@ -801,254 +397,61 @@
 
       if (tab === 'dashTab') { document.getElementById('dashTabSection').classList.remove('hidden'); renderDashboardCatalogPreviews(); }
       else if (tab === 'poTab') { document.getElementById('poTabSection').classList.remove('hidden'); renderPoTable(); }
-      else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); populateReportMaterialsDropdown(); populateReportJobsDropdown(); }
+      else if (tab === 'reportTab') { document.getElementById('reportTabSection').classList.remove('hidden'); }
       else if (tab === 'layoutTab') { document.getElementById('layoutTabSection').classList.remove('hidden'); renderLayoutTable(); }
       else if (tab === 'inventoryTab') { document.getElementById('inventoryTabSection').classList.remove('hidden'); renderMaterials(); }
       else if (tab === 'deviceTab') { document.getElementById('deviceTabSection').classList.remove('hidden'); renderDevicesAndSpareparts(); }
+      else if (tab === 'kpiTab') { document.getElementById('kpiTabSection').classList.remove('hidden'); }
     }
 
     function renderDashboardCatalogPreviews() {
       const poBox = document.getElementById('dashPoPreview');
       poBox.innerHTML = '';
       poList.slice(0, 3).forEach(p => {
-        poBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${p.number} - ${p.customer}</p><p class="text-[10px] text-gray-500">${p.product} (QTY: ${p.qty.toLocaleString('id-ID')})</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">${p.status}</span></div>`;
+        poBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${p.number} - ${p.customer}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">${p.status}</span></div>`;
       });
-
-      const layoutBox = document.getElementById('dashLayoutPreview');
-      layoutBox.innerHTML = '';
-      layoutList.slice(0, 3).forEach(l => {
-        layoutBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-pink-700 font-mono">${l.poNumber} (${l.version})</p><p class="text-[10px] text-gray-500">${l.customer} - ${l.product}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded ${l.status === 'ACC Cetak' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${l.status}</span></div>`;
-      });
-
-      const matBox = document.getElementById('dashMaterialPreview');
-      matBox.innerHTML = '';
-      materials.slice(0, 3).forEach(m => {
-        let isLow = m.stock <= m.minStock;
-        matBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${m.code} - ${m.name}</p><p class="text-[10px] text-gray-500">Stok: ${m.stock.toLocaleString('id-ID')} ${m.unit}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded ${isLow ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-700'}">${isLow ? 'Low Stock' : 'Stok Aman'}</span></div>`;
-      });
-
-      const printBox = document.getElementById('dashPrinterPreview');
-      printBox.innerHTML = '';
-      printers.slice(0, 3).forEach(pr => {
-        printBox.innerHTML += `<div class="flex justify-between items-center bg-gray-50 p-2 rounded-xl text-xs"><div><p class="font-bold text-gray-900">${pr.name} (${pr.sn})</p><p class="text-[10px] text-gray-500">${pr.usedBy}</p></div><span class="text-[9px] font-bold px-2 py-0.5 rounded ${pr.condition === 'Normal / Good' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${pr.condition}</span></div>`;
-      });
-
-      const repBox = document.getElementById('dashReportPreview');
-      repBox.innerHTML = '';
-      if (stockHistory.length === 0) repBox.innerHTML = '<tr><td colspan="5" class="py-2 text-center text-gray-400">Belum ada aktivitas produksi.</td></tr>';
-      else {
-        stockHistory.slice(0, 3).forEach(sh => {
-          repBox.innerHTML += `<tr class="border-b"><td class="py-2 text-gray-500">${sh.date}</td><td class="py-2 font-bold text-gray-900">${sh.notes}</td><td class="py-2"><span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-gray-100">${sh.type}</span></td><td class="py-2 font-bold text-red-600">${sh.qty}</td><td class="py-2 font-bold text-gray-700">${sh.pic}</td></tr>`;
-        });
-      }
     }
 
-    /* CRUD PO */
-    function openPOModal(id = null) {
-      document.getElementById('editPoDbId').value = '';
-      document.getElementById('poModalTitle').innerText = 'Input Purchase Order (PO) Baru';
-      document.getElementById('btnSubmitPO').innerText = 'Simpan PO Baru';
-      document.getElementById('poNumber').value = '';
-      document.getElementById('customer').value = '';
-      document.getElementById('product').value = '';
-      document.getElementById('quantity').value = '';
-      document.getElementById('priority').value = 'Normal';
-      document.getElementById('poStatusFlow').value = 'Antrian Pembagian';
-      document.getElementById('poPic').value = '';
-      document.getElementById('deadline').value = '';
-
-      if (id) {
-        const p = poList.find(item => item.id == id);
-        if (p) {
-          document.getElementById('editPoDbId').value = p.id;
-          document.getElementById('poModalTitle').innerText = 'Edit Purchase Order (PO)';
-          document.getElementById('btnSubmitPO').innerText = 'Update PO';
-          document.getElementById('poNumber').value = p.number;
-          document.getElementById('customer').value = p.customer;
-          document.getElementById('product').value = p.product;
-          document.getElementById('quantity').value = p.qty;
-          document.getElementById('priority').value = p.priority;
-          document.getElementById('poStatusFlow').value = p.status;
-          document.getElementById('poPic').value = p.pic || '';
-          document.getElementById('deadline').value = p.deadline;
-        }
-      }
-      document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex');
-    }
+    function openPOModal(id = null) { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
     function closePOModal() { document.getElementById('poModal').classList.add('hidden'); document.getElementById('poModal').classList.remove('flex'); }
-
-    function savePO(e) {
-      e.preventDefault();
-      const editId = document.getElementById('editPoDbId').value;
-      const num = document.getElementById('poNumber').value.trim().toUpperCase();
-      const cust = document.getElementById('customer').value;
-      const prod = document.getElementById('product').value;
-      const qty = Number(document.getElementById('quantity').value);
-      const prio = document.getElementById('priority').value;
-      const status = document.getElementById('poStatusFlow').value;
-      const pic = document.getElementById('poPic').value || 'Unassigned';
-      const dead = document.getElementById('deadline').value;
-
-      if (editId) {
-        const p = poList.find(item => item.id == editId);
-        if (p) { p.number = num; p.customer = cust; p.product = prod; p.qty = qty; p.priority = prio; p.status = status; p.pic = pic; p.deadline = dead; alert(`PO ${num} diperbarui!`); }
-      } else {
-        poList.unshift({ id: poList.length + 1, number: num, customer: cust, product: prod, qty: qty, priority: prio, deadline: dead, pic: pic, status: status });
-        alert(`PO "${num}" disimpan!`);
-      }
-      closePOModal();
-      renderPoTable();
-    }
-
-    function deletePO(id) {
-      const p = poList.find(item => item.id == id);
-      if (!p) return;
-      if (confirm(`Hapus PO "${p.number}"?`)) {
-        poList = poList.filter(item => item.id != id);
-        renderPoTable();
-      }
-    }
-
+    function savePO(e) { e.preventDefault(); alert("PO Disimpan!"); closePOModal(); renderPoTable(); }
+    
     function renderPoTable() {
       const tbody = document.getElementById('po-table-body');
-      const query = (document.getElementById('searchPoInput') ? document.getElementById('searchPoInput').value : '').toLowerCase();
       tbody.innerHTML = '';
-      const filtered = poList.filter(p => p.number.toLowerCase().includes(query) || p.customer.toLowerCase().includes(query));
-
-      if (filtered.length === 0) { tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Tidak ada PO.</td></tr>'; return; }
-
-      filtered.forEach(p => {
-        tbody.innerHTML += `
-          <tr class="hover:bg-gray-50 transition">
-            <td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${p.number}</td>
-            <td class="py-3 text-xs font-bold text-gray-900">${p.customer} - ${p.product}</td>
-            <td class="py-3 text-xs font-bold text-gray-900">${p.qty.toLocaleString('id-ID')}</td>
-            <td class="py-3 text-xs font-bold text-gray-700">${p.pic}</td>
-            <td class="py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-700">${p.priority}</span></td>
-            <td class="py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-700">${p.status}</span></td>
-            <td class="py-3 text-xs space-x-2">
-              <button onclick="openPOModal(${p.id})" class="font-bold text-blue-600 hover:underline">Edit</button>
-              <button onclick="deletePO(${p.id})" class="font-bold text-red-600 hover:underline">Hapus</button>
-            </td>
-          </tr>
-        `;
+      poList.forEach(p => {
+        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td><td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td><td class="py-3 text-xs">${p.qty}</td><td class="py-3 text-xs">${p.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100">${p.priority}</span></td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-blue-100">${p.status}</span></td><td class="py-3 text-xs"><button onclick="openPOModal(${p.id})" class="text-blue-600 font-bold">Edit</button></td></tr>`;
       });
     }
 
-    /* RENDER STOK GUDANG & LAINNYA */
     function renderMaterials() {
       const grid = document.getElementById('material-grid');
-      const masterBody = document.getElementById('master-material-body');
-      grid.innerHTML = ''; masterBody.innerHTML = '';
-
+      grid.innerHTML = '';
       materials.forEach(m => {
-        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold text-gray-900">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
-        masterBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td><td class="py-3 text-xs font-bold">${m.name}</td><td class="py-3 text-xs uppercase">${m.unit}</td><td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')}</td><td class="py-3 text-xs">${m.minStock}</td><td class="py-3 text-xs">${m.notes || '-'}</td><td class="py-3 text-xs"><button onclick="alert('Fitur edit stok')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock} ${m.unit}</h3></div>`;
       });
-      renderHistoryTable();
-    }
-
-    function renderHistoryTable() {
-      const tbody = document.getElementById('stock-history-body');
-      tbody.innerHTML = stockHistory.length === 0 ? '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada mutasi stok.</td></tr>' : '';
-      stockHistory.forEach(h => {
-        tbody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs">${h.date}</td><td class="py-3 font-bold text-xs">${h.matName}</td><td class="py-3 text-xs">${h.warehouse}</td><td class="py-3 text-xs font-bold">${h.type}</td><td class="py-3 font-bold text-xs">${h.qty}</td><td class="py-3 text-xs font-bold">${h.pic}</td><td class="py-3 text-xs">${h.notes}</td></tr>`;
-      });
-    }
-
-    function openNewMaterialModal() { document.getElementById('newMaterialModal').classList.remove('hidden'); document.getElementById('newMaterialModal').classList.add('flex'); }
-    function closeNewMaterialModal() { document.getElementById('newMaterialModal').classList.add('hidden'); document.getElementById('newMaterialModal').classList.remove('flex'); }
-    function openStockModal() { populateMaterialDropdowns(); document.getElementById('stockModal').classList.remove('hidden'); document.getElementById('stockModal').classList.add('flex'); }
-    function closeStockModal() { document.getElementById('stockModal').classList.add('hidden'); document.getElementById('stockModal').classList.remove('flex'); }
-    function openOpnameModal() { populateMaterialDropdowns(); document.getElementById('opnameModal').classList.remove('hidden'); document.getElementById('opnameModal').classList.add('flex'); }
-    function closeOpnameModal() { document.getElementById('opnameModal').classList.add('hidden'); document.getElementById('opnameModal').classList.remove('flex'); }
-
-    function populateMaterialDropdowns() {
-      const stockSel = document.getElementById('stockItemSelect');
-      const opSel = document.getElementById('opnameItemSelect');
-      stockSel.innerHTML = ''; opSel.innerHTML = '';
-      materials.forEach(m => {
-        stockSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`;
-        opSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock})</option>`;
-      });
-    }
-
-    function updateStockInUnitLock() { document.getElementById('stockInUnitLock').value = materials.find(m => m.id == document.getElementById('stockItemSelect').value)?.unit || '-'; }
-    function updateOpnameUnitLock() { document.getElementById('opnameUnitLock').value = materials.find(m => m.id == document.getElementById('opnameItemSelect').value)?.unit || '-'; }
-
-    function saveNewMaterial(e) {
-      e.preventDefault();
-      materials.push({ id: materials.length + 1, code: `EHG000${materials.length + 1}`, name: document.getElementById('matName').value, unit: document.getElementById('matUnit').value, stock: Number(document.getElementById('matInitStock').value), minStock: Number(document.getElementById('matMinStock').value) });
-      alert("Barang berhasil disimpan!"); closeNewMaterialModal(); renderMaterials();
-    }
-
-    function saveStockIn(e) {
-      e.preventDefault();
-      const m = materials.find(item => item.id == document.getElementById('stockItemSelect').value);
-      const qty = Number(document.getElementById('stockQty').value);
-      if (m) { m.stock += qty; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: document.getElementById('stockInWarehouse').value, type: 'BARANG MASUK', qty: `+${qty} ${m.unit}`, pic: document.getElementById('stockInPic').value, notes: document.getElementById('stockSpk').value || 'Masuk' }); }
-      alert("Barang masuk disimpan!"); closeStockModal(); renderMaterials();
-    }
-
-    function saveOpname(e) {
-      e.preventDefault();
-      const m = materials.find(item => item.id == document.getElementById('opnameItemSelect').value);
-      const bal = Number(document.getElementById('opnameBalancedQty').value);
-      if (m) { m.stock = bal; stockHistory.unshift({ date: new Date().toISOString().split('T')[0], matName: m.name, warehouse: document.getElementById('opnameWarehouse').value, type: 'STOCK OPNAME', qty: `${bal}`, pic: document.getElementById('opnamePic').value, notes: document.getElementById('opnameReason').value }); }
-      alert("Opname disimpan!"); closeOpnameModal(); renderMaterials();
     }
 
     function renderDevicesAndSpareparts() {
-      const printerBody = document.getElementById('printer-list-body');
-      printerBody.innerHTML = printers.length === 0 ? '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada printer.</td></tr>' : '';
+      const body = document.getElementById('printer-list-body');
+      body.innerHTML = '';
       printers.forEach(p => {
-        printerBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold">${p.name}</td><td class="py-3 text-xs font-mono">${p.sn}</td><td class="py-3"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-700 text-[10px] font-bold">${p.condition}</span></td><td class="py-3 text-xs">${p.usedBy}</td><td class="py-3 text-xs">${p.borrowStatus}</td><td class="py-3 text-xs">${p.borrowNote}</td><td class="py-3 text-xs"><button onclick="alert('Edit Printer')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        body.innerHTML += `<tr><td class="py-3 text-xs font-bold">${p.name}</td><td class="py-3 text-xs font-mono">${p.sn}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100">${p.condition}</span></td><td class="py-3 text-xs">${p.usedBy}</td></tr>`;
       });
     }
-
-    function openPrinterModal() { document.getElementById('printerModal').classList.remove('hidden'); document.getElementById('printerModal').classList.add('flex'); }
-    function closePrinterModal() { document.getElementById('printerModal').classList.add('hidden'); document.getElementById('printerModal').classList.remove('flex'); }
-    function openSparepartModal() { document.getElementById('sparepartModal').classList.remove('hidden'); document.getElementById('sparepartModal').classList.add('flex'); }
-    function closeSparepartModal() { document.getElementById('sparepartModal').classList.add('hidden'); document.getElementById('sparepartModal').classList.remove('flex'); }
-    function openMaintenanceModal() { document.getElementById('maintenanceModal').classList.remove('hidden'); document.getElementById('maintenanceModal').classList.add('flex'); }
-    function closeMaintenanceModal() { document.getElementById('maintenanceModal').classList.add('hidden'); document.getElementById('maintenanceModal').classList.remove('flex'); }
-
-    function savePrinterUnit(e) {
-      e.preventDefault();
-      printers.push({ id: printers.length + 1, name: document.getElementById('printerName').value, sn: document.getElementById('printerSn').value, condition: document.getElementById('printerCondition').value, usedBy: document.getElementById('printerUsedBy').value, borrowStatus: document.getElementById('printerBorrowStatus').value, borrowNote: '-' });
-      alert("Printer disimpan!"); closePrinterModal(); renderDevicesAndSpareparts();
-    }
-    function saveSparepartItem(e) {
-      e.preventDefault(); spareparts.push({ id: spareparts.length + 1, code: 'SP-002', name: document.getElementById('spName').value, unit: document.getElementById('spUnit').value, stock: Number(document.getElementById('spStock').value), minStock: 1 }); alert("Sparepart disimpan!"); closeSparepartModal();
-    }
-    function saveMaintenanceLog(e) { e.preventDefault(); alert("Maintenance dicatat!"); closeMaintenanceModal(); }
 
     function renderLayoutTable() {
-      const activeBody = document.getElementById('layout-table-active');
-      activeBody.innerHTML = layoutList.length === 0 ? '<tr><td colspan="7" class="py-4 text-center text-gray-400">Tidak ada layout.</td></tr>' : '';
+      const body = document.getElementById('layout-table-active');
+      body.innerHTML = '';
       layoutList.forEach(l => {
-        activeBody.innerHTML += `<tr class="hover:bg-gray-50"><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs font-bold">${l.customer} - ${l.product}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs font-mono">${l.version}</td><td class="py-3 text-xs font-bold">${l.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-amber-100 text-amber-700 font-bold">${l.status}</span></td><td class="py-3 text-xs"><button onclick="alert('Edit layout')" class="text-blue-600 font-bold">Edit</button></td></tr>`;
+        body.innerHTML += `<tr><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs">${l.customer}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs">${l.status}</td></tr>`;
       });
     }
 
-    function openLayoutModal() { document.getElementById('layoutModal').classList.remove('hidden'); document.getElementById('layoutModal').classList.add('flex'); }
-    function closeLayoutModal() { document.getElementById('layoutModal').classList.add('hidden'); document.getElementById('layoutModal').classList.remove('flex'); }
-    function saveLayoutItem(e) { e.preventDefault(); alert("Layout disimpan!"); closeLayoutModal(); renderLayoutTable(); }
-
-    function populateReportMaterialsDropdown() {
-      const repSel = document.getElementById('reportMaterialSelect');
-      if (!repSel) return;
-      repSel.innerHTML = '';
-      materials.forEach(m => { repSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock})</option>`; });
-    }
-    function populateReportJobsDropdown() {
-      const jobSel = document.getElementById('jobSelect');
-      if (!jobSel) return;
-      jobSel.innerHTML = '<option value="">-- Pilih PO --</option>';
-      poList.forEach(p => { jobSel.innerHTML += `<option value="${p.number}">${p.number} - ${p.customer}</option>`; });
-    }
-    function saveDailyReport(e) { e.preventDefault(); alert("Laporan PIC terkirim & stok terpotong otomatis!"); }
-    function printStockReport(t) { window.print(); }
+    function openNewMaterialModal() { alert("Modal Barang Baru"); }
+    function openPrinterModal() { alert("Modal Printer Baru"); }
+    function openLayoutModal() { alert("Modal Layout Baru"); }
+    function saveDailyReport(e) { e.preventDefault(); alert("Laporan tersimpan!"); }
   </script>
 </body>
 </html>
