@@ -7,7 +7,14 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    @media print {
+      body * { visibility: hidden; }
+      #printableArea, #printableArea * { visibility: visible; }
+      #printableArea { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+  </style>
 </head>
 <body class="bg-[#F9F8F6] text-gray-800 flex h-screen overflow-hidden">
 
@@ -74,7 +81,7 @@
     <div id="dashTabSection" class="space-y-8">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard Operasional Cetak</h2>
-        <p class="text-sm text-gray-500 mt-1">Pusat pemantauan status ritme kerja, kualifikasi pekerjaan, dan risiko delay[cite: 1].</p>
+        <p class="text-sm text-gray-500 mt-1">Pusat pemantauan status ritme kerja, kualifikasi pekerjaan, dan risiko delay.</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
@@ -122,7 +129,7 @@
     <div id="kpiTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan KPI Divisi Printing</h2>
-        <p class="text-sm text-gray-500 mt-1">Analisis kinerja agregat, rasio yield & reject, dan produktivitas tim[cite: 1].</p>
+        <p class="text-sm text-gray-500 mt-1">Analisis kinerja agregat, rasio yield & reject, dan produktivitas tim.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
         <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm h-32">
@@ -149,7 +156,7 @@
       <div class="flex items-end justify-between">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Antrian Cetak & Detail PO</h2>
-          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow[cite: 1].</p>
+          <p class="text-sm text-gray-500 mt-1">Daftar seluruh Purchase Order, penunjukan PIC, dan kontrol status flow.</p>
         </div>
         <button onclick="openPOModal()" class="bg-[#E06D53] text-white px-5 py-2.5 rounded-xl font-semibold text-sm shadow-sm">+ Input PO Baru</button>
       </div>
@@ -179,7 +186,7 @@
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Laporan Pekerjaan PIC</h2>
-        <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report[cite: 1].</p>
+        <p class="text-sm text-gray-500 mt-1">Form pendaftaran hasil cetak harian operator dan histori daily report.</p>
       </div>
 
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-6">
@@ -197,7 +204,7 @@
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Operator / PIC *</label>
                 <select id="operatorName" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-                  <option value="RIVAN">RIVAN (PIC STOK)</option><option value="RIO">RIO</option><option value="SALMAN">SALMAN</option><option value="SYUJA">SYUJA</option><option value="IPAL">IPAL</option><option value="ZAKI">ZAKI</option>
+                  <option value="Rivan">Rivan</option><option value="Rio">Rio</option><option value="Salman">Salman</option><option value="Syuja">Syuja</option><option value="Ipal">Ipal</option><option value="Zaki">Zaki</option>
                 </select>
               </div>
             </div>
@@ -224,10 +231,16 @@
 
           <div class="border-b pb-4 space-y-4">
             <h4 class="text-xs font-bold text-blue-600 uppercase tracking-wider">3. Parameter Printing & Pemakaian Bahan</h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Bahan yang Dipakai *</label>
+                <select id="reportMaterialSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
+              </div>
               <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label><input type="text" id="printNum" placeholder="1-50" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Good Qty (Pcs)</label><input type="number" id="labelUsed" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
-              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Reject Qty (Pcs)</label><input type="number" id="printReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Good Qty</label><input type="number" id="labelUsed" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
+              <div><label class="block text-xs font-bold text-gray-700 uppercase mb-1">Reject Qty</label><input type="number" id="printReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm outline-none"></div>
             </div>
           </div>
 
@@ -236,42 +249,48 @@
       </div>
     </div>
 
-    <!-- TAB 5: INVENTORY & STOK OPNAME (RIVAN ROLE INTEGRATION) -->
+    <!-- TAB 5: INVENTORY & STOK OPNAME -->
     <div id="inventoryTabSection" class="space-y-8 hidden">
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Inventory & Management Stok Bahan</h2>
-          <p class="text-sm text-gray-500 mt-1">Modul Rivan (PIC Stok): Input barang baru, transaksi masuk/keluar, dan penyesuaian Stok Opname[cite: 1].</p>
+          <p class="text-sm text-gray-500 mt-1">Modul Rivan (PIC Stok): Input barang baru, transaksi masuk/keluar, dan penyesuaian Stok Opname.</p>
         </div>
+        
+        <!-- URUTAN TOMBOL SESUAI REQUEST: 1. Hijau (Kiri), 2. Oranye (Tengah), 3. Biru (Kanan) -->
         <div class="flex items-center space-x-3">
-          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">+ Tambah Barang/Bahan Baru</button>
-          <button onclick="openOpnameModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">⚖️ Stok Opname (Adjust)</button>
-          <button onclick="openStockModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">+ Penerimaan (Stock In)</button>
+          <button onclick="openNewMaterialModal()" class="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">+ Barang/Jasa Baru</button>
+          <button onclick="openOpnameModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">⚖️ Stock Opname</button>
+          <button onclick="openStockModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs shadow-sm transition">+ Stock In</button>
         </div>
       </div>
 
       <!-- Grid Daftar Master Material -->
-      <div id="material-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <!-- Render Otomatis dari Array materials -->
-      </div>
+      <div id="material-grid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
 
-      <!-- Tabel Histori Transaksi Mutasi Stok & Opname -->
+      <!-- Tabel Histori Transaksi Mutasi Stok -->
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
-        <h3 class="text-lg font-bold text-gray-900">Histori Mutasi Stok & Audit Opname</h3>
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold text-gray-900">Histori Mutasi Stok & Audit Opname</h3>
+          <button onclick="printStockReport()" class="text-xs font-bold bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg transition border flex items-center space-x-1">
+            <span>🖨️ Print Laporan</span>
+          </button>
+        </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="border-b border-gray-100 text-xs font-bold text-gray-400 uppercase tracking-wider">
                 <th class="pb-3">Tanggal</th>
-                <th class="pb-3">Bahan / Material</th>
+                <th class="pb-3">Kode & Nama Bahan</th>
+                <th class="pb-3">Gudang</th>
                 <th class="pb-3">Tipe Transaksi</th>
                 <th class="pb-3">Jumlah (Qty)</th>
-                <th class="pb-3">Petugas (PIC)</th>
+                <th class="pb-3">Petugas</th>
                 <th class="pb-3">Catatan / Keterangan</th>
               </tr>
             </thead>
             <tbody id="stock-history-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada mutasi stok terdaftar.</td></tr>
+              <tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada mutasi stok terdaftar.</td></tr>
             </tbody>
           </table>
         </div>
@@ -280,23 +299,29 @@
 
   </main>
 
-  <!-- MODAL 1: TAMBAH BARANG / BAHAN BARU -->
+  <!-- MODAL 1: BARANG/JASA BARU -->
   <div id="newMaterialModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-gray-900">Tambah Master Barang / Bahan Baru</h3>
+        <h3 class="text-lg font-bold text-gray-900">Barang/Jasa Baru</h3>
         <button onclick="closeNewMaterialModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
       </div>
       <form onsubmit="saveNewMaterial(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Barang / Spesifikasi Bahan *</label>
-          <input type="text" id="matName" required placeholder="Contoh: RIBBON WAX 110x300M atau LABEL ART PAPER 80x50" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          <label class="block text-xs font-bold text-gray-400 uppercase mb-1">Kode Barang (Otomatis)</label>
+          <input type="text" id="matCode" readonly class="w-full p-2.5 bg-gray-100 font-mono font-bold text-gray-600 border rounded-xl text-sm outline-none">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Barang/Jasa *</label>
+          <input type="text" id="matName" required placeholder="Contoh: Sticker Vinyl 100x50mm" class="w-full p-2.5 border rounded-xl text-sm outline-none">
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan *</label>
-            <select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm outline-none">
-              <option value="Pcs">Pcs</option><option value="Roll">Roll</option><option value="Box">Box</option><option value="Meter">Meter</option>
+            <select id="matUnit" class="w-full p-2.5 border rounded-xl text-sm outline-none font-semibold">
+              <option value="pcs">pcs</option>
+              <option value="roll">roll</option>
+              <option value="sheet">sheet</option>
             </select>
           </div>
           <div>
@@ -308,79 +333,146 @@
           <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Batas Minimum Stok (Alert)</label>
           <input type="number" id="matMinStock" min="1" value="1000" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
         </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan</label>
+          <textarea id="matNotes" placeholder="Catatan tambahan spesifikasi atau vendor..." rows="2" class="w-full p-2.5 border rounded-xl text-sm outline-none"></textarea>
+        </div>
         <div class="flex justify-end space-x-3 pt-4 border-t">
           <button type="button" onclick="closeNewMaterialModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-sm font-semibold">Simpan Barang Baru</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-700 text-white text-sm font-semibold">Simpan Barang/Jasa</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 2: STOK OPNAME (PENYESUAIAN FISIK) -->
+  <!-- MODAL 2: STOCK OPNAME -->
   <div id="opnameModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-gray-900">Form Stok Opname (Audit Fisik)</h3>
+        <h3 class="text-lg font-bold text-gray-900">Stock Opname</h3>
         <button onclick="closeOpnameModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
       </div>
       <form onsubmit="saveOpname(event)" class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material</label>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material *</label>
           <select id="opnameItemSelect" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Hasil Perhitungan Fisik (Pcs/Roll)</label>
-          <input type="number" id="opnamePhysicalQty" min="0" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Petugas Audit (PIC)</label>
-          <select id="opnamePic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-            <option value="RIVAN">RIVAN (PIC STOK)</option><option value="SYUJA">SYUJA (SUPERVISOR)</option><option value="RIO">RIO</option>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Gudang *</label>
+          <select id="opnameWarehouse" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="Gudang Utama">Gudang Utama (Label Full)</option>
+            <option value="Gudang Sisa">Gudang Sisa (Label Sisa Produksi)</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Alasan Penyesuaian / Selisih</label>
-          <input type="text" id="opnameReason" required placeholder="Contoh: Rusak lembab, barang hilang, atau hitungan rutin bulanan" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Balanced *</label>
+          <input type="number" id="opnameBalancedQty" min="0" required placeholder="Jumlah hasil perhitungan fisik..." class="w-full p-2.5 border rounded-xl text-sm outline-none">
         </div>
-        <div class="flex justify-end space-x-3 pt-4 border-t">
-          <button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-amber-600 text-white text-sm font-semibold">Simpan Stok Opname</button>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Petugas Audit *</label>
+          <select id="opnamePic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="Rivan">Rivan</option>
+            <option value="Syuja">Syuja</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Catatan / Alasan Penyesuaian *</label>
+          <input type="text" id="opnameReason" required placeholder="Contoh: Audit fisik rutin, selisih cetak" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+        <div class="flex justify-between items-center pt-4 border-t">
+          <button type="button" onclick="printStockReport()" class="text-xs font-bold text-gray-600 hover:text-gray-900 underline">🖨️ Print Laporan</button>
+          <div class="flex space-x-2">
+            <button type="button" onclick="closeOpnameModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-amber-600 text-white text-sm font-semibold">Simpan Stock Opname</button>
+          </div>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 3: PENERIMAAN BARANG (STOCK IN) -->
+  <!-- MODAL 3: STOCK IN (PENERIMAAN) -->
   <div id="stockModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50 p-4">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-gray-900">Input Penerimaan Stok Material (Stock In)</h3>
+        <h3 class="text-lg font-bold text-gray-900">Stock In (Penerimaan)</h3>
         <button onclick="closeStockModal()" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
       </div>
       <form onsubmit="saveStockIn(event)" class="space-y-4">
+        <!-- Fitur Search Material -->
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material</label>
-          <select id="stockItemSelect" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Cari / Pilih Material *</label>
+          <input type="text" id="stockSearchInput" oninput="filterStockMaterialList()" placeholder="Ketik Kode EHG, nama, atau ukuran..." class="w-full p-2 border rounded-xl text-xs outline-none mb-1.5 bg-gray-50">
+          <select id="stockItemSelect" required class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none"></select>
         </div>
+
         <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Masuk (Stock In Qty)</label>
-          <input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Petugas Penerima (PIC)</label>
-          <select id="stockInPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
-            <option value="RIVAN">RIVAN (PIC STOK)</option><option value="SYUJA">SYUJA (SUPERVISOR)</option>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Lokasi Gudang *</label>
+          <select id="stockInWarehouse" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="Gudang Utama">Gudang Utama</option>
+            <option value="Gudang Sisa">Gudang Sisa</option>
           </select>
         </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Surat Jalan / Supplier</label>
-          <input type="text" id="stockNotes" placeholder="No. Surat Jalan..." class="w-full p-2.5 border rounded-xl text-sm outline-none">
+
+        <div class="grid grid-cols-3 gap-2">
+          <div class="col-span-2">
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Stock In *</label>
+            <input type="number" id="stockQty" min="1" required class="w-full p-2.5 border rounded-xl text-sm outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Satuan</label>
+            <select id="stockInUnit" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+              <option value="pcs">pcs</option>
+              <option value="roll">roll</option>
+              <option value="sheet">sheet</option>
+            </select>
+          </div>
         </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Petugas Penerima *</label>
+          <select id="stockInPic" class="w-full p-2.5 border rounded-xl text-sm font-semibold outline-none">
+            <option value="Rivan">Rivan</option>
+            <option value="Syuja">Syuja</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor SPK (Jika Ada)</label>
+          <input type="text" id="stockSpk" placeholder="Contoh: SPK-2026-081" class="w-full p-2.5 border rounded-xl text-sm outline-none">
+        </div>
+
         <div class="flex justify-end space-x-3 pt-4 border-t">
           <button type="button" onclick="closeStockModal()" class="px-4 py-2 border rounded-xl text-sm font-semibold text-gray-600">Batal</button>
-          <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold">Simpan Stok Masuk</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-blue-600 text-white text-sm font-semibold">Simpan Stock In</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- TEMPLATE LAYOUT CETAK LAPORAN (PRINTABLE AREA) -->
+  <div id="printableArea" class="hidden p-8 bg-white">
+    <div class="text-center border-b pb-4 mb-6">
+      <h1 class="text-2xl font-bold text-gray-900 uppercase">Laporan & Berita Acara Stok Printing</h1>
+      <p class="text-sm text-gray-500">PRINT MANAGEMENT SYSTEM V1 - CV. EXCELINDO HASIL GUNA</p>
+      <p class="text-xs text-gray-400 mt-1">Dicetak Tanggal: <span id="printDate"></span></p>
+    </div>
+    <table class="w-full text-left border-collapse border border-gray-300 text-xs">
+      <thead>
+        <tr class="bg-gray-100 border-b border-gray-300">
+          <th class="p-2 border">Tanggal</th>
+          <th class="p-2 border">Kode & Nama Material</th>
+          <th class="p-2 border">Gudang</th>
+          <th class="p-2 border">Tipe</th>
+          <th class="p-2 border">Jumlah</th>
+          <th class="p-2 border">Petugas</th>
+          <th class="p-2 border">Catatan</th>
+        </tr>
+      </thead>
+      <tbody id="printTableBody"></tbody>
+    </table>
+    <div class="flex justify-between mt-12 text-center text-xs">
+      <div><p class="mb-12">Petugas Audit / Penerima</p><p class="font-bold underline">( Rivan / Syuja )</p></div>
+      <div><p class="mb-12">Mengetahui (Supervisor)</p><p class="font-bold underline">( Syuja Arisyi )</p></div>
     </div>
   </div>
 
@@ -418,11 +510,11 @@
     const SUPABASE_KEY = "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ";
     let _supabase;
 
-    // Master Inventory Array
+    // Master Materials Array (Sesuai Format Kode EHG0001)
     let materials = [
-      { id: 1, name: "STICKER VINYL 100x50mm", unit: "Pcs", stock: 100000, minStock: 10000 },
-      { id: 2, name: "RIBBON WAX RESIN 110mm", unit: "Roll", stock: 15, minStock: 5 },
-      { id: 3, name: "LABEL THERMAL 40x30mm", unit: "Pcs", stock: 50000, minStock: 5000 }
+      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000, notes: "Bahan utama sticker botol" },
+      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110mm", unit: "roll", stock: 15, minStock: 5, notes: "Untuk Printer Honeywell & Zebra" },
+      { id: 3, code: "EHG0003", name: "LABEL THERMAL 40x30mm", unit: "pcs", stock: 50000, minStock: 5000, notes: "Label barcode ekspedisi" }
     ];
 
     let stockHistory = [];
@@ -439,15 +531,23 @@
       if (tab === 'dashTab') document.getElementById('dashTabSection').classList.remove('hidden');
       else if (tab === 'kpiTab') document.getElementById('kpiTabSection').classList.remove('hidden');
       else if (tab === 'poTab') document.getElementById('poTabSection').classList.remove('hidden');
-      else if (tab === 'reportTab') document.getElementById('reportTabSection').classList.remove('hidden');
+      else if (tab === 'reportTab') {
+        document.getElementById('reportTabSection').classList.remove('hidden');
+        populateReportMaterialsDropdown();
+      }
       else if (tab === 'inventoryTab') {
         document.getElementById('inventoryTabSection').classList.remove('hidden');
         renderMaterials();
       }
     }
 
-    // Modal Control Functions
-    function openNewMaterialModal() { document.getElementById('newMaterialModal').classList.remove('hidden'); document.getElementById('newMaterialModal').classList.add('flex'); }
+    // Generator Kode Barang Otomatis EHG0001
+    function openNewMaterialModal() {
+      const nextNum = String(materials.length + 1).padStart(4, '0');
+      document.getElementById('matCode').value = `EHG${nextNum}`;
+      document.getElementById('newMaterialModal').classList.remove('hidden');
+      document.getElementById('newMaterialModal').classList.add('flex');
+    }
     function closeNewMaterialModal() { document.getElementById('newMaterialModal').classList.add('hidden'); document.getElementById('newMaterialModal').classList.remove('flex'); }
 
     function openStockModal() {
@@ -468,12 +568,41 @@
       stockSel.innerHTML = ''; opSel.innerHTML = '';
 
       materials.forEach(m => {
-        stockSel.innerHTML += `<option value="${m.id}">${m.name} (${m.unit})</option>`;
-        opSel.innerHTML += `<option value="${m.id}">${m.name} (Stok Sistem: ${m.stock} ${m.unit})</option>`;
+        stockSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`;
+        opSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock} ${m.unit})</option>`;
       });
     }
 
-    // Render Master Material Cards
+    // Fitur Search / Filter Material untuk Stock In
+    function filterStockMaterialList() {
+      const query = document.getElementById('stockSearchInput').value.toLowerCase();
+      const stockSel = document.getElementById('stockItemSelect');
+      stockSel.innerHTML = '';
+
+      const filtered = materials.filter(m => 
+        m.code.toLowerCase().includes(query) || 
+        m.name.toLowerCase().includes(query)
+      );
+
+      if (filtered.length === 0) {
+        stockSel.innerHTML = `<option value="">-- Material Tidak Ditemukan --</option>`;
+        return;
+      }
+
+      filtered.forEach(m => {
+        stockSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (${m.unit})</option>`;
+      });
+    }
+
+    function populateReportMaterialsDropdown() {
+      const repSel = document.getElementById('reportMaterialSelect');
+      if (!repSel) return;
+      repSel.innerHTML = '';
+      materials.forEach(m => {
+        repSel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Sisa Stok: ${m.stock} ${m.unit})</option>`;
+      });
+    }
+
     function renderMaterials() {
       const grid = document.getElementById('material-grid');
       grid.innerHTML = '';
@@ -485,10 +614,15 @@
           : `<p class="text-xs text-emerald-600 mt-1 font-semibold">● Stok Aman (Min. ${m.minStock.toLocaleString('id-ID')} ${m.unit})</p>`;
 
         grid.innerHTML += `
-          <div class="bg-white p-5 rounded-2xl border ${isLow ? 'border-red-200 bg-red-50/20' : 'border-gray-100'} shadow-sm">
-            <span class="text-xs font-bold text-gray-400 uppercase">${m.name}</span>
-            <h3 class="text-3xl font-bold text-gray-900 mt-2">${m.stock.toLocaleString('id-ID')} <span class="text-xs text-gray-400 font-normal">${m.unit}</span></h3>
+          <div class="bg-white p-5 rounded-2xl border ${isLow ? 'border-red-200 bg-red-50/20' : 'border-gray-100'} shadow-sm space-y-1">
+            <div class="flex justify-between items-center">
+              <span class="text-[10px] font-bold text-[#E06D53] font-mono tracking-wider">${m.code}</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600 uppercase">${m.unit}</span>
+            </div>
+            <h4 class="text-sm font-bold text-gray-900 leading-snug">${m.name}</h4>
+            <h3 class="text-2xl font-bold text-gray-900 pt-1">${m.stock.toLocaleString('id-ID')} <span class="text-xs text-gray-400 font-normal">${m.unit}</span></h3>
             ${statusTag}
+            <p class="text-[11px] text-gray-400 pt-2 border-t border-gray-50">${m.notes || '-'}</p>
           </div>
         `;
       });
@@ -499,17 +633,18 @@
     function renderHistoryTable() {
       const tbody = document.getElementById('stock-history-body');
       if (stockHistory.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-gray-400">Belum ada transaksi mutasi atau opname.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" class="py-4 text-center text-gray-400">Belum ada mutasi stok terdaftar.</td></tr>';
         return;
       }
 
       tbody.innerHTML = '';
       stockHistory.forEach(h => {
-        let badgeColor = h.type === 'STOCK IN' ? 'bg-emerald-100 text-emerald-700' : (h.type === 'STOK OPNAME' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-600');
+        let badgeColor = h.type === 'STOCK IN' ? 'bg-emerald-100 text-emerald-700' : (h.type === 'STOCK OPNAME' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-600');
         tbody.innerHTML += `
           <tr class="hover:bg-gray-50 transition">
             <td class="py-3 text-xs text-gray-500">${h.date}</td>
             <td class="py-3 font-bold text-gray-900 text-xs">${h.matName}</td>
+            <td class="py-3 text-xs text-gray-600 font-medium">${h.warehouse || 'Gudang Utama'}</td>
             <td class="py-3"><span class="text-[10px] font-bold px-2 py-0.5 rounded ${badgeColor}">${h.type}</span></td>
             <td class="py-3 font-bold text-xs">${h.qty}</td>
             <td class="py-3 text-xs font-bold text-gray-700">${h.pic}</td>
@@ -519,49 +654,55 @@
       });
     }
 
-    // Handler Tambah Barang Baru
+    // Save Barang Baru
     function saveNewMaterial(e) {
       e.preventDefault();
+      const code = document.getElementById('matCode').value;
       const name = document.getElementById('matName').value;
       const unit = document.getElementById('matUnit').value;
       const initStock = Number(document.getElementById('matInitStock').value);
       const minStock = Number(document.getElementById('matMinStock').value);
+      const notes = document.getElementById('matNotes').value;
 
       const newId = materials.length + 1;
-      materials.push({ id: newId, name: name, unit: unit, stock: initStock, minStock: minStock });
+      materials.push({ id: newId, code: code, name: name, unit: unit, stock: initStock, minStock: minStock, notes: notes });
 
       stockHistory.unshift({
         date: new Date().toISOString().split('T')[0],
-        matName: name,
+        matName: `[${code}] ${name}`,
+        warehouse: 'Gudang Utama',
         type: 'MASTER BARU',
         qty: `+${initStock} ${unit}`,
-        pic: 'RIVAN',
-        notes: 'Pendaftaran Master Barang Baru'
+        pic: 'Rivan',
+        notes: notes || 'Pendaftaran Barang/Jasa Baru'
       });
 
-      alert(`Barang/Bahan Baru "${name}" Berhasil Ditambahkan!`);
+      alert(`Barang/Jasa Baru "${name}" [${code}] Berhasil Ditambahkan!`);
       closeNewMaterialModal();
       renderMaterials();
     }
 
-    // Handler Stock In
+    // Save Stock In
     function saveStockIn(e) {
       e.preventDefault();
       const matId = document.getElementById('stockItemSelect').value;
+      const warehouse = document.getElementById('stockInWarehouse').value;
       const qty = Number(document.getElementById('stockQty').value);
+      const unit = document.getElementById('stockInUnit').value;
       const pic = document.getElementById('stockInPic').value;
-      const notes = document.getElementById('stockNotes').value || 'Penerimaan Stok';
+      const spk = document.getElementById('stockSpk').value;
 
       const mat = materials.find(m => m.id == matId);
       if (mat) {
         mat.stock += qty;
         stockHistory.unshift({
           date: new Date().toISOString().split('T')[0],
-          matName: mat.name,
+          matName: `[${mat.code}] ${mat.name}`,
+          warehouse: warehouse,
           type: 'STOCK IN',
-          qty: `+${qty} ${mat.unit}`,
+          qty: `+${qty} ${unit}`,
           pic: pic,
-          notes: notes
+          notes: spk ? `No. SPK: ${spk}` : 'Penerimaan Stok'
         });
       }
 
@@ -570,32 +711,87 @@
       renderMaterials();
     }
 
-    // Handler Stok Opname
+    // Save Stock Opname
     function saveOpname(e) {
       e.preventDefault();
       const matId = document.getElementById('opnameItemSelect').value;
-      const physicalQty = Number(document.getElementById('opnamePhysicalQty').value);
+      const warehouse = document.getElementById('opnameWarehouse').value;
+      const balancedQty = Number(document.getElementById('opnameBalancedQty').value);
       const pic = document.getElementById('opnamePic').value;
       const reason = document.getElementById('opnameReason').value;
 
       const mat = materials.find(m => m.id == matId);
       if (mat) {
-        let diff = physicalQty - mat.stock;
-        mat.stock = physicalQty;
+        let diff = balancedQty - mat.stock;
+        mat.stock = balancedQty;
 
         stockHistory.unshift({
           date: new Date().toISOString().split('T')[0],
-          matName: mat.name,
-          type: 'STOK OPNAME',
-          qty: `${diff >= 0 ? '+' : ''}${diff} ${mat.unit} (Hasil: ${physicalQty})`,
+          matName: `[${mat.code}] ${mat.name}`,
+          warehouse: warehouse,
+          type: 'STOCK OPNAME',
+          qty: `${diff >= 0 ? '+' : ''}${diff} ${mat.unit} (Balanced: ${balancedQty})`,
           pic: pic,
           notes: reason
         });
       }
 
-      alert("Audit Stok Opname Berhasil Disimpan!");
+      alert("Audit Stock Opname Berhasil Disimpan!");
       closeOpnameModal();
       renderMaterials();
+    }
+
+    // Print Laporan Function
+    function printStockReport() {
+      document.getElementById('printDate').innerText = new Date().toLocaleDateString('id-ID');
+      const pBody = document.getElementById('printTableBody');
+      pBody.innerHTML = '';
+
+      if (stockHistory.length === 0) {
+        pBody.innerHTML = '<tr><td colspan="7" class="p-2 border text-center">Belum ada data mutasi stok.</td></tr>';
+      } else {
+        stockHistory.forEach(h => {
+          pBody.innerHTML += `
+            <tr class="border-b">
+              <td class="p-2 border">${h.date}</td>
+              <td class="p-2 border font-bold">${h.matName}</td>
+              <td class="p-2 border">${h.warehouse}</td>
+              <td class="p-2 border font-semibold">${h.type}</td>
+              <td class="p-2 border font-bold">${h.qty}</td>
+              <td class="p-2 border">${h.pic}</td>
+              <td class="p-2 border">${h.notes}</td>
+            </tr>
+          `;
+        });
+      }
+
+      window.print();
+    }
+
+    // Auto Deduct Pemakaian Laporan PIC
+    function saveDailyReport(e) {
+      e.preventDefault();
+      const matId = document.getElementById('reportMaterialSelect').value;
+      const good = Number(document.getElementById('labelUsed').value || 0);
+      const reject = Number(document.getElementById('printReject').value || 0);
+      const totalUsed = good + reject;
+
+      const mat = materials.find(m => m.id == matId);
+      if (mat) {
+        mat.stock = Math.max(0, mat.stock - totalUsed);
+        stockHistory.unshift({
+          date: new Date().toISOString().split('T')[0],
+          matName: `[${mat.code}] ${mat.name}`,
+          warehouse: 'Gudang Utama',
+          type: 'PEMAKAIAN CETAK',
+          qty: `-${totalUsed} ${mat.unit}`,
+          pic: document.getElementById('operatorName').value,
+          notes: `Produksi Cetak (Good: ${good}, Reject: ${reject})`
+        });
+        alert(`Laporan PIC tersimpan! Stok ${mat.name} terpotong otomatis -${totalUsed} ${mat.unit}.`);
+      }
+
+      document.getElementById('dailyReportForm').reset();
     }
 
     function openPOModal() { document.getElementById('poModal').classList.remove('hidden'); document.getElementById('poModal').classList.add('flex'); }
