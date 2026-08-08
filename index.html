@@ -254,12 +254,14 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer *</label>
-                <input type="text" id="reportCustomer" placeholder="NAMA CUSTOMER..." required class="w-full p-2.5 border rounded-xl text-sm uppercase">
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO (Pilih dari PO Siap Cetak) *</label>
+                <select id="reportPoSelect" onchange="fillPoDetailsForReport()" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+                  <!-- Dinamis sesuai PO berstatus Ready to Print -->
+                </select>
               </div>
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor PO *</label>
-                <input type="text" id="reportPoNumber" placeholder="PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold">
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer *</label>
+                <input type="text" id="reportCustomer" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase bg-gray-50 font-bold">
               </div>
             </div>
 
@@ -289,7 +291,7 @@
             </div>
           </div>
 
-          <!-- Section 2: KHUSUS PRINTING & CUTTING (DENGAN LABEL/RIBBON SISA & GUDANG UTAMA) -->
+          <!-- Section 2: KHUSUS PRINTING & CUTTING -->
           <div id="sectionPrintingCutting" class="border-b pb-5 space-y-4 bg-gray-50 p-4 rounded-xl">
             <h4 class="text-xs font-bold text-emerald-700 uppercase tracking-wider">2. Rincian Pekerjaan Printing & Cutting (Pemotongan Stok Gudang)</h4>
             
@@ -316,14 +318,11 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t pt-3">
               <div class="space-y-3 bg-white p-4 rounded-xl border">
                 <label class="block text-xs font-bold text-gray-900 uppercase">Pilih Material Label (Baru / Full) *</label>
-                <select id="reportMaterialSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-                  <!-- Dinamis dari database materials -->
-                </select>
+                <select id="reportMaterialSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white"></select>
                 <div>
                   <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Label Dipakai (Baru/Full) *</label>
                   <input type="number" id="jumlahLabelDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold text-red-600">
                 </div>
-                <!-- Checkbox Label Sisa -->
                 <div class="pt-2 border-t space-y-2">
                   <label class="flex items-center space-x-2 cursor-pointer">
                     <input type="checkbox" id="checkLabelSisa" onchange="toggleSisaInput('Label')" class="w-4 h-4 text-emerald-600 rounded">
@@ -339,14 +338,11 @@
               <!-- FORM RIBBON UTAMA & SISA -->
               <div class="space-y-3 bg-white p-4 rounded-xl border">
                 <label class="block text-xs font-bold text-gray-900 uppercase">Pilih Material Ribbon (Baru / Full)</label>
-                <select id="reportRibbonSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-                  <!-- Dinamis dari database materials -->
-                </select>
+                <select id="reportRibbonSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white"></select>
                 <div>
                   <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Ribbon Dipakai (Baru/Full)</label>
                   <input type="number" id="jumlahRibbonDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold text-red-600">
                 </div>
-                <!-- Checkbox Ribbon Sisa -->
                 <div class="pt-2 border-t space-y-2">
                   <label class="flex items-center space-x-2 cursor-pointer">
                     <input type="checkbox" id="checkRibbonSisa" onchange="toggleSisaInput('Ribbon')" class="w-4 h-4 text-emerald-600 rounded">
@@ -383,7 +379,7 @@
           <!-- Section 3: KHUSUS DEVELOP & APPROVAL -->
           <div id="sectionDevelopApproval" class="border-b pb-5 space-y-4 bg-gray-50 p-4 rounded-xl hidden">
             <h4 class="text-xs font-bold text-pink-700 uppercase tracking-wider">3. Rincian Develop & Approval</h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Software Develop / Approval *</label>
                 <select id="devSoftware" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold">
@@ -397,9 +393,15 @@
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama File Konten *</label>
                 <input type="text" id="devFilename" placeholder="NAMA FILE KONTEN..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
               </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Path Lokasi Folder *</label>
                 <input type="text" id="devFolderPath" placeholder="PATH LOKASI FOLDER..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-mono">
+              </div>
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Link Posisi Layout / Desain Tersimpan *</label>
+                <input type="url" id="devLinkLayout" placeholder="HTTPS://DRIVE.GOOGLE.COM/..." required class="w-full p-2.5 border rounded-xl text-sm bg-white font-mono">
               </div>
             </div>
           </div>
@@ -442,7 +444,18 @@
       </div>
       <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
         <table class="w-full text-left border-collapse">
-          <thead><tr class="border-b text-xs font-bold text-gray-400 uppercase"><th class="pb-3">Kode PO</th><th class="pb-3">Customer</th><th class="pb-3">Output</th><th class="pb-3">Versi</th><th class="pb-3">PIC</th><th class="pb-3">Status</th><th class="pb-3">Aksi</th></tr></thead>
+          <thead>
+            <tr class="border-b text-xs font-bold text-gray-400 uppercase">
+              <th class="pb-3">Kode PO</th>
+              <th class="pb-3">Customer</th>
+              <th class="pb-3">Output</th>
+              <th class="pb-3">Versi</th>
+              <th class="pb-3">Link Desain</th>
+              <th class="pb-3">PIC</th>
+              <th class="pb-3">Status Approval</th>
+              <th class="pb-3">Aksi Konfirmasi PO</th>
+            </tr>
+          </thead>
           <tbody id="layout-table-active" class="divide-y text-sm"></tbody>
         </table>
       </div>
@@ -594,11 +607,23 @@
     <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-5">
       <div class="flex justify-between items-center border-b pb-3"><h3 class="text-lg font-bold uppercase">Input Layout & Approval</h3><button onclick="closeLayoutModal()" class="text-xl font-bold">&times;</button></div>
       <form onsubmit="saveLayout(event)" class="space-y-4">
-        <div><label class="block text-xs font-bold uppercase mb-1">Kode PO *</label><input type="text" id="layoutPoNumber" placeholder="PO-2026-001" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="layoutCustomer" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Pilih Nomor PO *</label>
+          <select id="layoutPoSelect" onchange="fillCustomerFromPo()" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+            <!-- Dinamis dari antrian PO -->
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Customer *</label>
+          <input type="text" id="layoutCustomer" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase bg-gray-50 font-bold">
+        </div>
         <div><label class="block text-xs font-bold uppercase mb-1">Jenis Output *</label><select id="layoutOutputType" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="DESAIN">DESAIN</option><option value="FILM CETAK">FILM CETAK</option><option value="SAMPEL CUSTOMER">SAMPEL CUSTOMER</option></select></div>
         <div><label class="block text-xs font-bold uppercase mb-1">Versi *</label><input type="text" id="layoutVersion" value="V1" required class="w-full p-2.5 border rounded-xl text-sm uppercase font-mono"></div>
-        <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><input type="text" id="layoutPic" value="RIO" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">Link Posisi Layout / Desain Tersimpan *</label>
+          <input type="url" id="layoutLink" placeholder="HTTPS://DRIVE.GOOGLE.COM/..." required class="w-full p-2.5 border rounded-xl text-sm bg-white font-mono">
+        </div>
+        <div><label class="block text-xs font-bold uppercase mb-1">PIC (Otomatis) *</label><input type="text" id="layoutPic" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase bg-gray-100 font-bold text-[#E06D53]"></div>
         <div><label class="block text-xs font-bold uppercase mb-1">Status Approval *</label><select id="layoutStatus" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="DRAFTING LAYOUT">DRAFTING LAYOUT</option><option value="MENUNGGU APPROVAL">MENUNGGU APPROVAL</option><option value="APPROVED (DISETUJUI)">APPROVED (DISETUJUI)</option></select></div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closeLayoutModal()" class="px-4 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-pink-700 text-white rounded-xl text-xs font-bold uppercase">Simpan Layout</button></div>
       </form>
@@ -714,7 +739,9 @@
 
     let currentUser = null;
 
-    let poList = [{ id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "SEDANG DIKERJAKAN" }];
+    let poList = [
+      { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "ANTRIAN PEMBAGIAN" }
+    ];
     let materials = [
       { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 },
       { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110x300", unit: "roll", stock: 50, minStock: 5 }
@@ -723,7 +750,9 @@
     let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
     let spareparts = [{ id: 1, code: "SP-001", name: "PRINTHEAD HONEYWELL PC42t", unit: "PCS", stock: 3, notes: "SUPPLIER RESMI" }];
     let maintenanceHistory = [];
-    let layoutList = [{ id: 1, poNumber: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", outputType: "DESAIN", version: "V1", pic: "RIO", status: "DRAFTING LAYOUT" }];
+    let layoutList = [
+      { id: 1, poNumber: "PO-2026-001", customer: "PT SERI RASA", outputType: "DESAIN", version: "V1", link: "https://drive.google.com/sample", pic: "RIO", status: "DRAFTING LAYOUT" }
+    ];
     let dailyReports = [];
 
     function handleLogin() {
@@ -839,7 +868,30 @@
         selLabel.innerHTML += opt;
         selRibbon.innerHTML += opt;
       });
+
+      // Dropdown PO pada Laporan PIC (hanya PO yang sudah 'READY TO PRINT' atau 'SELESAI')
+      const selPo = document.getElementById('reportPoSelect');
+      selPo.innerHTML = '';
+      const readyPoList = poList.filter(p => p.status === 'READY TO PRINT' || p.status === 'SELESAI' || p.status === 'SEDANG DIKERJAKAN');
+      if (readyPoList.length === 0) {
+        selPo.innerHTML = `<option value="">-- BELUM ADA PO SIAP CETAK (LAYOUT BELUM APPROVAL) --</option>`;
+      } else {
+        readyPoList.forEach(p => {
+          selPo.innerHTML += `<option value="${p.number}">${p.number} - ${p.customer} (${p.product})</option>`;
+        });
+        fillPoDetailsForReport();
+      }
+
       toggleReportSection();
+    }
+
+    function fillPoDetailsForReport() {
+      const poNum = document.getElementById('reportPoSelect').value;
+      const found = poList.find(p => p.number === poNum);
+      if (found) {
+        document.getElementById('reportCustomer').value = found.customer;
+        document.getElementById('reportTotalQty').value = found.qty;
+      }
     }
 
     function renderDashboardCatalogPreviews() {
@@ -881,7 +933,7 @@
       const jenis = document.getElementById('jenisPekerjaan').value;
       const dateVal = document.getElementById('reportDate').value || new Date().toISOString().split('T')[0];
       const cust = document.getElementById('reportCustomer').value.toUpperCase();
-      const poNum = document.getElementById('reportPoNumber').value.toUpperCase();
+      const poNum = document.getElementById('reportPoSelect').value.toUpperCase();
       const totQty = Number(document.getElementById('reportTotalQty').value);
       const statRes = document.getElementById('reportStatusResult').value;
 
@@ -890,7 +942,6 @@
       if (jenis === 'PRINTING & CUTTING') {
         let notesArr = [];
         
-        // 1. Pemotongan Label Baru/Full dari Gudang Utama
         const labelId = document.getElementById('reportMaterialSelect').value;
         const labelQty = Number(document.getElementById('jumlahLabelDipakai').value);
         if (labelQty > 0) {
@@ -914,7 +965,6 @@
           }
         }
 
-        // 2. Pemotongan Label Sisa jika diceklis
         const isLabelSisaChecked = document.getElementById('checkLabelSisa').checked;
         const labelSisaQty = Number(document.getElementById('jumlahLabelSisa').value);
         if (isLabelSisaChecked && labelSisaQty > 0) {
@@ -930,7 +980,6 @@
           });
         }
 
-        // 3. Pemotongan Ribbon Baru/Full dari Gudang Utama
         const ribbonId = document.getElementById('reportRibbonSelect').value;
         const ribbonQty = Number(document.getElementById('jumlahRibbonDipakai').value);
         if (ribbonQty > 0) {
@@ -954,7 +1003,6 @@
           }
         }
 
-        // 4. Pemotongan Ribbon Sisa jika diceklis
         const isRibbonSisaChecked = document.getElementById('checkRibbonSisa').checked;
         const ribbonSisaQty = Number(document.getElementById('jumlahRibbonSisa').value);
         if (isRibbonSisaChecked && ribbonSisaQty > 0) {
@@ -1000,27 +1048,80 @@
       });
     }
 
-    function openLayoutModal() { document.getElementById('layoutModal').classList.remove('hidden'); document.getElementById('layoutModal').classList.add('flex'); }
+    function openLayoutModal() {
+      // Isi dropdown PO dari poList
+      const sel = document.getElementById('layoutPoSelect');
+      sel.innerHTML = '';
+      if (poList.length === 0) {
+        sel.innerHTML = `<option value="">-- BELUM ADA DATA PO --</option>`;
+      } else {
+        poList.forEach(p => {
+          sel.innerHTML += `<option value="${p.number}">${p.number} - ${p.customer} (${p.product})</option>`;
+        });
+        fillCustomerFromPo();
+      }
+      document.getElementById('layoutModal').classList.remove('hidden'); 
+      document.getElementById('layoutModal').classList.add('flex');
+    }
+
+    function fillCustomerFromPo() {
+      const poNum = document.getElementById('layoutPoSelect').value;
+      const found = poList.find(p => p.number === poNum);
+      if (found) {
+        document.getElementById('layoutCustomer').value = found.customer;
+      }
+    }
+
     function closeLayoutModal() { document.getElementById('layoutModal').classList.add('hidden'); document.getElementById('layoutModal').classList.remove('flex'); }
+    
     function saveLayout(e) {
       e.preventDefault();
       layoutList.push({
         id: layoutList.length + 1,
-        poNumber: document.getElementById('layoutPoNumber').value.toUpperCase(),
+        poNumber: document.getElementById('layoutPoSelect').value.toUpperCase(),
         customer: document.getElementById('layoutCustomer').value.toUpperCase(),
         outputType: document.getElementById('layoutOutputType').value.toUpperCase(),
         version: document.getElementById('layoutVersion').value.toUpperCase(),
-        pic: document.getElementById('layoutPic').value.toUpperCase(),
+        link: document.getElementById('layoutLink').value,
+        pic: currentUser.name,
         status: document.getElementById('layoutStatus').value.toUpperCase()
       });
       alert("LAYOUT BERHASIL DISIMPAN!"); closeLayoutModal(); renderLayoutTable();
+    }
+
+    function confirmLayoutApproval(layoutId) {
+      const l = layoutList.find(item => item.id === layoutId);
+      if (l) {
+        l.status = "APPROVED (DISETUJUI)";
+        // Update status PO terkait menjadi 'READY TO PRINT'
+        const p = poList.find(item => item.number === l.poNumber);
+        if (p) {
+          p.status = "READY TO PRINT";
+        }
+        alert(`Layout PO ${l.poNumber} telah di-APPROVE! Status PO kini berubah menjadi READY TO PRINT.`);
+        renderLayoutTable();
+        renderPoTable();
+      }
     }
 
     function renderLayoutTable() {
       const body = document.getElementById('layout-table-active');
       body.innerHTML = '';
       layoutList.forEach(l => {
-        body.innerHTML += `<tr><td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td><td class="py-3 text-xs">${l.customer}</td><td class="py-3 text-xs">${l.outputType}</td><td class="py-3 text-xs font-mono">${l.version}</td><td class="py-3 text-xs">${l.pic}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800">${l.status}</span></td><td class="py-3 text-xs"><button onclick="alert('EDIT LAYOUT')" class="text-blue-600 font-bold">EDIT</button></td></tr>`;
+        let actionBtn = l.status.includes('APPROVED') 
+          ? `<span class="text-emerald-700 font-bold uppercase text-[10px] bg-emerald-100 px-2 py-1 rounded">Sudah Ready to Print</span>`
+          : `<button onclick="confirmLayoutApproval(${l.id})" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg uppercase shadow">Konfirmasi Approve PO</button>`;
+
+        body.innerHTML += `<tr>
+          <td class="py-3 text-xs font-bold text-pink-700">${l.poNumber}</td>
+          <td class="py-3 text-xs">${l.customer}</td>
+          <td class="py-3 text-xs">${l.outputType}</td>
+          <td class="py-3 text-xs font-mono">${l.version}</td>
+          <td class="py-3 text-xs"><a href="${l.link}" target="_blank" class="text-blue-600 underline font-mono">Buka Link Desain</a></td>
+          <td class="py-3 text-xs">${l.pic}</td>
+          <td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800 font-bold">${l.status}</span></td>
+          <td class="py-3 text-xs">${actionBtn}</td>
+        </tr>`;
       });
     }
 
