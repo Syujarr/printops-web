@@ -51,24 +51,25 @@
   </div>
 
   <script>
-    // URL dan Anon Key Supabase
     const SUPABASE_URL = "https://psmgrogunmyusexxfjvn.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbWdyb2d1bm15dXNleHhmdnZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NjI4NzcsImV4cCI6MjA4NzMzODg3N30.0"; // Placeholder token
+    // Kunci anon Supabase asli milikmu
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbWdyb2d1bm15dXNleHhmdnZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NjI4NzcsImV4cCI6MjA4NzMzODg3N30.0"; 
 
     async function loadJobs() {
       try {
-        // Inisialisasi Klien Supabase
-        const _supabase = supabase.createClient(
-          SUPABASE_URL, 
-          window.SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzbWdyb2d1bm15dXNleHhmdnZuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3NjI4NzcsImV4cCI6MjA4NzMzODg3N30"
-        );
-
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const { data, error } = await _supabase.from('jobs').select('*');
         
         const tableBody = document.getElementById('job-list-table');
 
-        if (error || !data || data.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Belum ada antrian pekerjaan atau koneksi sedang terhubung.</td></tr>';
+        if (error) {
+          console.error("Error Supabase:", error);
+          tableBody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-red-500">Gagal menarik data: ${error.message}</td></tr>`;
+          return;
+        }
+
+        if (!data || data.length === 0) {
+          tableBody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-gray-500">Belum ada antrian pekerjaan di database.</td></tr>';
           return;
         }
 
@@ -83,11 +84,11 @@
 
           tableBody.innerHTML += `
             <tr class="border-b text-sm hover:bg-gray-50">
-              <td class="p-3 font-medium">${job.job_id}<br><span class="text-xs text-gray-500">${job.po_number}</span></td>
+              <td class="p-3 font-medium text-gray-900">${job.job_id}<br><span class="text-xs text-gray-500">${job.po_number}</span></td>
               <td class="p-3">${job.customer}<br><span class="text-xs text-gray-500">${job.product}</span></td>
-              <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">${job.pic}</span></td>
-              <td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs">${job.status}</span></td>
-              <td class="p-3">${job.deadline || '-'}</td>
+              <td class="p-3"><span class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs font-semibold">${job.pic}</span></td>
+              <td class="p-3"><span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-semibold">${job.status}</span></td>
+              <td class="p-3 text-gray-600">${job.deadline || '-'}</td>
             </tr>
           `;
         });
@@ -96,7 +97,7 @@
         document.getElementById('running-jobs').innerText = running;
         document.getElementById('done-jobs').innerText = done;
       } catch (err) {
-        console.error(err);
+        console.error("Error System:", err);
       }
     }
 
