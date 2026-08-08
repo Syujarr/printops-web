@@ -213,7 +213,7 @@
       </div>
     </div>
 
-    <!-- TAB 3: LAPORAN PEKERJAAN PIC (DISESUAIKAN DENGAN GOOGLE FORM) -->
+    <!-- TAB 3: LAPORAN PEKERJAAN PIC -->
     <div id="reportTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN PEKERJAAN HARIAN</h2>
@@ -289,34 +289,14 @@
             </div>
           </div>
 
-          <!-- Section 2: KHUSUS PRINTING & CUTTING (TERHUBUNG OTOMATIS KE STOK UTAMA) -->
+          <!-- Section 2: KHUSUS PRINTING & CUTTING (DENGAN LABEL/RIBBON SISA & GUDANG UTAMA) -->
           <div id="sectionPrintingCutting" class="border-b pb-5 space-y-4 bg-gray-50 p-4 rounded-xl">
-            <h4 class="text-xs font-bold text-emerald-700 uppercase tracking-wider">2. Rincian Pekerjaan Printing & Cutting (Potong Stok Otomatis)</h4>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <h4 class="text-xs font-bold text-emerald-700 uppercase tracking-wider">2. Rincian Pekerjaan Printing & Cutting (Pemotongan Stok Gudang)</h4>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nomor Print</label>
                 <input type="text" id="nomorPrint" placeholder="NOMOR PRINT..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Pilih Material Label (Potong Stok) *</label>
-                <select id="reportMaterialSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
-                  <!-- Dinamis dari database materials -->
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Label Dipakai (PCS) *</label>
-                <input type="number" id="jumlahLabelDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold text-red-600">
-              </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Ribbon Dipakai (PCS)</label>
-                <input type="number" id="jumlahRibbonDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Print Reject (PCS)</label>
-                <input type="number" id="jumlahReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Tempat Cetak *</label>
@@ -332,7 +312,59 @@
               </div>
             </div>
 
+            <!-- FORM LABEL UTAMA & SISA -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t pt-3">
+              <div class="space-y-3 bg-white p-4 rounded-xl border">
+                <label class="block text-xs font-bold text-gray-900 uppercase">Pilih Material Label (Baru / Full) *</label>
+                <select id="reportMaterialSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+                  <!-- Dinamis dari database materials -->
+                </select>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Label Dipakai (Baru/Full) *</label>
+                  <input type="number" id="jumlahLabelDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold text-red-600">
+                </div>
+                <!-- Checkbox Label Sisa -->
+                <div class="pt-2 border-t space-y-2">
+                  <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="checkLabelSisa" onchange="toggleSisaInput('Label')" class="w-4 h-4 text-emerald-600 rounded">
+                    <span class="text-xs font-bold text-gray-800 uppercase">Ambil dari Label Sisa?</span>
+                  </label>
+                  <div id="containerLabelSisa" class="hidden space-y-1">
+                    <label class="block text-[10px] font-bold text-gray-600 uppercase">Jumlah Label Sisa Dipakai</label>
+                    <input type="number" id="jumlahLabelSisa" min="0" value="0" class="w-full p-2 border rounded-lg text-xs uppercase bg-gray-50 font-bold text-amber-600">
+                  </div>
+                </div>
+              </div>
+
+              <!-- FORM RIBBON UTAMA & SISA -->
+              <div class="space-y-3 bg-white p-4 rounded-xl border">
+                <label class="block text-xs font-bold text-gray-900 uppercase">Pilih Material Ribbon (Baru / Full)</label>
+                <select id="reportRibbonSelect" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold bg-white">
+                  <!-- Dinamis dari database materials -->
+                </select>
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Ribbon Dipakai (Baru/Full)</label>
+                  <input type="number" id="jumlahRibbonDipakai" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white font-bold text-red-600">
+                </div>
+                <!-- Checkbox Ribbon Sisa -->
+                <div class="pt-2 border-t space-y-2">
+                  <label class="flex items-center space-x-2 cursor-pointer">
+                    <input type="checkbox" id="checkRibbonSisa" onchange="toggleSisaInput('Ribbon')" class="w-4 h-4 text-emerald-600 rounded">
+                    <span class="text-xs font-bold text-gray-800 uppercase">Ambil dari Ribbon Sisa?</span>
+                  </label>
+                  <div id="containerRibbonSisa" class="hidden space-y-1">
+                    <label class="block text-[10px] font-bold text-gray-600 uppercase">Jumlah Ribbon Sisa Dipakai</label>
+                    <input type="number" id="jumlahRibbonSisa" min="0" value="0" class="w-full p-2 border rounded-lg text-xs uppercase bg-gray-50 font-bold text-amber-600">
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Print Reject (PCS)</label>
+                <input type="number" id="jumlahReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
+              </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Sudah Pastikan Kondisi Printhead Bersih? *</label>
                 <select id="printheadClean" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
@@ -340,10 +372,11 @@
                   <option value="TIDAK">TIDAK</option>
                 </select>
               </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Kendala / Keterangan Tambahan</label>
-                <input type="text" id="kendalaPrinting" placeholder="TULIS KENDALA JIKA ADA..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
-              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Kendala / Keterangan Tambahan</label>
+              <input type="text" id="kendalaPrinting" placeholder="TULIS KENDALA JIKA ADA..." class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
             </div>
           </div>
 
@@ -549,7 +582,7 @@
           <div><label class="block text-xs font-bold uppercase mb-1">Customer *</label><input type="text" id="customer" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">Produk *</label><input type="text" id="product" required class="w-full p-2.5 border rounded-xl text-sm uppercase"></div>
           <div><label class="block text-xs font-bold uppercase mb-1">QTY Target *</label><input type="number" id="quantity" required class="w-full p-2.5 border rounded-xl text-sm"></div>
-          <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"><option value="Rio">Rio</option><option value="Rivan">Rivan</option><option value="Salman">Salman</option><option value="Syuja">Syuja</option></select></div>
+          <div><label class="block text-xs font-bold uppercase mb-1">PIC *</label><select id="poPic" class="w-full p-2.5 border rounded-xl text-sm uppercase font-bold"><option value="RIO">RIO</option><option value="RIVAN">RIVAN</option><option value="SALMAN">SALMAN</option><option value="SYUJA">SYUJA</option></select></div>
           <div><label class="block text-xs font-bold uppercase mb-1">Status Flow</label><select id="poStatusFlow" class="w-full p-2.5 border rounded-xl text-sm uppercase"><option value="ANTRIAN PEMBAGIAN">ANTRIAN PEMBAGIAN</option><option value="SEDANG DIKERJAKAN">SEDANG DIKERJAKAN</option><option value="SELESAI">SELESAI</option></select></div>
         </div>
         <div class="flex justify-end space-x-3 pt-4 border-t"><button type="button" onclick="closePOModal()" class="px-5 py-2 border rounded-xl text-sm">Batal</button><button type="submit" class="px-5 py-2 bg-[#E06D53] text-white rounded-xl text-xs font-bold uppercase">Simpan PO</button></div>
@@ -682,7 +715,10 @@
     let currentUser = null;
 
     let poList = [{ id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "SEDANG DIKERJAKAN" }];
-    let materials = [{ id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 }];
+    let materials = [
+      { id: 1, code: "EHG0001", name: "STICKER VINYL 100x50mm", unit: "pcs", stock: 100000, minStock: 10000 },
+      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110x300", unit: "roll", stock: 50, minStock: 5 }
+    ];
     let stockHistory = [];
     let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
     let spareparts = [{ id: 1, code: "SP-001", name: "PRINTHEAD HONEYWELL PC42t", unit: "PCS", stock: 3, notes: "SUPPLIER RESMI" }];
@@ -695,7 +731,6 @@
       const pInput = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
 
-      // Pencarian case-insensitive untuk username
       const matchedKey = Object.keys(USERS_DB).find(k => k.toLowerCase() === uInput.toLowerCase());
 
       if (matchedKey && USERS_DB[matchedKey].pass === pInput) {
@@ -705,7 +740,6 @@
         document.getElementById('userRoleDisplay').innerText = currentUser.title;
         document.getElementById('userAvatar').innerText = currentUser.avatar;
         
-        // Otomatis isi nama operator di form laporan PIC sesuai user yang login
         document.getElementById('operatorNameDisplay').value = currentUser.name;
         document.getElementById('maintTech').value = currentUser.name;
         document.getElementById('layoutPic').value = currentUser.name;
@@ -780,11 +814,30 @@
       }
     }
 
+    function toggleSisaInput(type) {
+      if (type === 'Label') {
+        const isChecked = document.getElementById('checkLabelSisa').checked;
+        const container = document.getElementById('containerLabelSisa');
+        if (isChecked) container.classList.remove('hidden');
+        else { container.classList.add('hidden'); document.getElementById('jumlahLabelSisa').value = 0; }
+      } else if (type === 'Ribbon') {
+        const isChecked = document.getElementById('checkRibbonSisa').checked;
+        const container = document.getElementById('containerRibbonSisa');
+        if (isChecked) container.classList.remove('hidden');
+        else { container.classList.add('hidden'); document.getElementById('jumlahRibbonSisa').value = 0; }
+      }
+    }
+
     function setupReportFormMaterials() {
-      const sel = document.getElementById('reportMaterialSelect');
-      sel.innerHTML = '';
+      const selLabel = document.getElementById('reportMaterialSelect');
+      const selRibbon = document.getElementById('reportRibbonSelect');
+      selLabel.innerHTML = '';
+      selRibbon.innerHTML = '';
+
       materials.forEach(m => {
-        sel.innerHTML += `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock.toLocaleString('id-ID')} ${m.unit})</option>`;
+        const opt = `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock.toLocaleString('id-ID')} ${m.unit})</option>`;
+        selLabel.innerHTML += opt;
+        selRibbon.innerHTML += opt;
       });
       toggleReportSection();
     }
@@ -831,35 +884,93 @@
       const poNum = document.getElementById('reportPoNumber').value.toUpperCase();
       const totQty = Number(document.getElementById('reportTotalQty').value);
       const statRes = document.getElementById('reportStatusResult').value;
-      const desc = document.getElementById('reportDesc').value.toUpperCase();
 
       let stockUpdateInfo = "-";
 
-      // Jika jenis pekerjaan Printing & Cutting, otomatis kurangi stok gudang utama
       if (jenis === 'PRINTING & CUTTING') {
-        const matId = document.getElementById('reportMaterialSelect').value;
-        const usedQty = Number(document.getElementById('jumlahLabelDipakai').value);
-        const m = materials.find(item => item.id == matId);
-
-        if (m && usedQty > 0) {
-          if (m.stock < usedQty) {
-            alert(`PERINGATAN: Stok ${m.name} tidak mencukupi! Stok saat ini: ${m.stock}`);
-            return;
+        let notesArr = [];
+        
+        // 1. Pemotongan Label Baru/Full dari Gudang Utama
+        const labelId = document.getElementById('reportMaterialSelect').value;
+        const labelQty = Number(document.getElementById('jumlahLabelDipakai').value);
+        if (labelQty > 0) {
+          const mLabel = materials.find(item => item.id == labelId);
+          if (mLabel) {
+            if (mLabel.stock < labelQty) {
+              alert(`PERINGATAN: Stok ${mLabel.name} tidak mencukupi! Stok saat ini: ${mLabel.stock}`);
+              return;
+            }
+            mLabel.stock -= labelQty;
+            notesArr.push(`LABEL UTAMA: -${labelQty} ${mLabel.unit} (${mLabel.name})`);
+            stockHistory.unshift({
+              date: dateVal,
+              matName: mLabel.name,
+              warehouse: 'GUDANG UTAMA',
+              type: 'PEMAKAIAN PIC',
+              qty: `-${labelQty} ${mLabel.unit}`,
+              pic: currentUser.name,
+              notes: `PO: ${poNum} | CUST: ${cust}`
+            });
           }
-          m.stock -= usedQty;
-          stockUpdateInfo = `POTONG ${usedQty} ${m.unit} (${m.name}) | SISA: ${m.stock}`;
+        }
 
-          // Catat ke histori mutasi stok gudang
+        // 2. Pemotongan Label Sisa jika diceklis
+        const isLabelSisaChecked = document.getElementById('checkLabelSisa').checked;
+        const labelSisaQty = Number(document.getElementById('jumlahLabelSisa').value);
+        if (isLabelSisaChecked && labelSisaQty > 0) {
+          notesArr.push(`LABEL SISA: -${labelSisaQty} (DIAMBIL DARI GUDANG SISA)`);
           stockHistory.unshift({
             date: dateVal,
-            matName: m.name,
-            warehouse: 'GUDANG UTAMA',
-            type: 'PEMAKAIAN PIC',
-            qty: `-${usedQty} ${m.unit}`,
+            matName: 'LABEL SISA',
+            warehouse: 'GUDANG SISA',
+            type: 'PEMAKAIAN SISA',
+            qty: `-${labelSisaQty}`,
             pic: currentUser.name,
             notes: `PO: ${poNum} | CUST: ${cust}`
           });
         }
+
+        // 3. Pemotongan Ribbon Baru/Full dari Gudang Utama
+        const ribbonId = document.getElementById('reportRibbonSelect').value;
+        const ribbonQty = Number(document.getElementById('jumlahRibbonDipakai').value);
+        if (ribbonQty > 0) {
+          const mRibbon = materials.find(item => item.id == ribbonId);
+          if (mRibbon) {
+            if (mRibbon.stock < ribbonQty) {
+              alert(`PERINGATAN: Stok ${mRibbon.name} tidak mencukupi! Stok saat ini: ${mRibbon.stock}`);
+              return;
+            }
+            mRibbon.stock -= ribbonQty;
+            notesArr.push(`RIBBON UTAMA: -${ribbonQty} ${mRibbon.unit} (${mRibbon.name})`);
+            stockHistory.unshift({
+              date: dateVal,
+              matName: mRibbon.name,
+              warehouse: 'GUDANG UTAMA',
+              type: 'PEMAKAIAN PIC',
+              qty: `-${ribbonQty} ${mRibbon.unit}`,
+              pic: currentUser.name,
+              notes: `PO: ${poNum} | CUST: ${cust}`
+            });
+          }
+        }
+
+        // 4. Pemotongan Ribbon Sisa jika diceklis
+        const isRibbonSisaChecked = document.getElementById('checkRibbonSisa').checked;
+        const ribbonSisaQty = Number(document.getElementById('jumlahRibbonSisa').value);
+        if (isRibbonSisaChecked && ribbonSisaQty > 0) {
+          notesArr.push(`RIBBON SISA: -${ribbonSisaQty} (DIAMBIL DARI GUDANG SISA)`);
+          stockHistory.unshift({
+            date: dateVal,
+            matName: 'RIBBON SISA',
+            warehouse: 'GUDANG SISA',
+            type: 'PEMAKAIAN SISA',
+            qty: `-${ribbonSisaQty}`,
+            pic: currentUser.name,
+            notes: `PO: ${poNum} | CUST: ${cust}`
+          });
+        }
+
+        stockUpdateInfo = notesArr.length > 0 ? notesArr.join(' | ') : "TIDAK ADA PEMAKAIAN BAHAN";
       }
 
       dailyReports.unshift({
@@ -872,9 +983,11 @@
         stockInfo: stockUpdateInfo
       });
 
-      alert("LAPORAN PEKERJAAN HARIAN BERHASIL DIKIRIM & STOK GUDANG TERUPDATE!");
+      alert("LAPORAN PEKERJAAN HARIAN BERHASIL DIKIRIM & STOK GUDANG TERUPDATE OTOMATIS!");
       document.getElementById('dailyReportForm').reset();
       document.getElementById('operatorNameDisplay').value = currentUser.name;
+      toggleSisaInput('Label');
+      toggleSisaInput('Ribbon');
       renderDailyReports();
       renderMaterials();
     }
