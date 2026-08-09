@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DIVISI PRINTING - MANAGEMENT SYSTEM V1</title>
+  <title>DIVISI PRINTING - MANAGEMENT SYSTEM V1.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -57,7 +57,7 @@
         <div class="w-9 h-9 bg-[#E06D53] rounded-lg flex items-center justify-center text-white font-bold text-xl">E</div>
         <div>
           <h1 class="font-bold text-white leading-none text-base tracking-wider uppercase">DIVISI PRINTING</h1>
-          <span class="text-[9px] text-gray-400 font-medium tracking-wider">MANAGEMENT SYSTEM V1</span>
+          <span class="text-[9px] text-gray-400 font-medium tracking-wider">MANAGEMENT SYSTEM V1.1</span>
         </div>
       </div>
 
@@ -104,6 +104,7 @@
           <p id="userRoleDisplay" class="text-[9px] text-gray-400 uppercase">SUPERVISOR (ALL ACCESS)</p>
         </div>
       </div>
+      <button onclick="clearLocalData()" class="w-full bg-gray-600/30 hover:bg-gray-600 text-gray-200 hover:text-white py-1.5 rounded-lg text-[10px] font-bold uppercase transition">RESET DATA LOKAL</button>
       <button onclick="logoutSystem()" class="w-full bg-red-600/30 hover:bg-red-600 text-red-200 hover:text-white py-1.5 rounded-lg text-[10px] font-bold uppercase transition">
         LOGOUT AKUN
       </button>
@@ -263,6 +264,9 @@
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Nama Customer *</label>
                 <input type="text" id="reportCustomer" readonly class="w-full p-2.5 border rounded-xl text-sm uppercase bg-gray-50 font-bold">
               </div>
+              <div class="md:col-span-3">
+                <div id="reportTimerInfo" class="bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs font-bold text-blue-800">⏱️ PILIH PO YANG SEDANG DIPROSES.</div>
+              </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-3">
@@ -288,6 +292,27 @@
             <div>
               <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Deskripsi Pekerjaan *</label>
               <textarea id="reportDesc" rows="2" placeholder="DESKRIPSI PEKERJAAN..." required class="w-full p-2.5 border rounded-xl text-sm uppercase outline-none"></textarea>
+            </div>
+
+            <!-- QUALITY TRACKING SEDERHANA -->
+            <div class="border-t pt-4 space-y-3 bg-white p-4 rounded-xl border">
+              <div>
+                <h4 class="text-xs font-bold text-red-700 uppercase tracking-wider">QUALITY — LABEL REJECT</h4>
+                <p class="text-[10px] text-gray-500 mt-1">Cukup catat jumlah label reject. KPI Quality dihitung otomatis dari total qty vs label reject.</p>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Label Reject (PCS)</label>
+                  <input type="number" id="reportRejectQty" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm bg-white font-bold text-red-600">
+                </div>
+                <div class="bg-gray-50 border rounded-xl p-3 text-xs text-gray-500 flex items-center">
+                  <span>⏱️ Durasi tidak diisi manual. Sistem mengambil waktu dari <b>MULAI PROSES</b> sampai <b>SUBMIT LAPORAN</b>.</span>
+                </div>
+              </div>
+              <input type="hidden" id="reportQcResult" value="OK">
+              <input type="hidden" id="reportReprintQty" value="0">
+              <input type="hidden" id="reportQualitySource" value="TIDAK ADA">
+              <input type="hidden" id="reportQualityNote" value="">
             </div>
           </div>
 
@@ -358,10 +383,6 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div>
-                <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Jumlah Print Reject (PCS)</label>
-                <input type="number" id="jumlahReject" min="0" value="0" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
-              </div>
-              <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Sudah Pastikan Kondisi Printhead Bersih? *</label>
                 <select id="printheadClean" class="w-full p-2.5 border rounded-xl text-sm uppercase bg-white">
                   <option value="YA">YA</option>
@@ -401,7 +422,7 @@
               </div>
               <div>
                 <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Link Posisi Layout / Desain Tersimpan *</label>
-                <input type="url" id="devLinkLayout" placeholder="HTTPS://DRIVE.GOOGLE.COM/..." required class="w-full p-2.5 border rounded-xl text-sm bg-white font-mono">
+                <input type="url" id="devLinkLayout" placeholder="HTTPS://DRIVE.GOOGLE.COM/..." class="w-full p-2.5 border rounded-xl text-sm bg-white font-mono">
               </div>
             </div>
           </div>
@@ -423,10 +444,11 @@
                 <th class="pb-3">Total Qty</th>
                 <th class="pb-3">Status</th>
                 <th class="pb-3">Pengurangan Stok</th>
+                <th class="pb-3">Reject / Durasi</th>
               </tr>
             </thead>
             <tbody id="daily-report-history-body" class="divide-y divide-gray-100 text-sm">
-              <tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada laporan harian dikirim.</td></tr>
+              <tr><td colspan="8" class="py-3 text-center text-gray-400">Belum ada laporan harian dikirim.</td></tr>
             </tbody>
           </table>
         </div>
@@ -577,15 +599,38 @@
     <div id="kpiTabSection" class="space-y-8 hidden">
       <div>
         <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">LAPORAN KPI DIVISI PRINTING</h2>
-        <p class="text-sm text-gray-500 mt-1">Rekapitulasi kinerja dan produktivitas harian tim.</p>
+        <p class="text-sm text-gray-500 mt-1">KPI dihitung otomatis dari PO, laporan pekerjaan, PIC, deadline, dan volume produksi yang tersedia di sistem.</p>
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2"><span class="text-xs font-bold text-gray-400 uppercase">Total PO Dikerjakan</span><h3 id="kpi-total-po" class="text-3xl font-extrabold text-gray-900">0</h3></div>
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2"><span class="text-xs font-bold text-gray-400 uppercase">Total QTY Tercetak</span><h3 id="kpi-total-qty" class="text-3xl font-extrabold text-emerald-600">0</h3></div>
-        <div class="bg-white p-6 rounded-2xl border shadow-sm space-y-2"><span class="text-xs font-bold text-gray-400 uppercase">Laporan PIC Masuk</span><h3 id="kpi-total-report" class="text-3xl font-extrabold text-blue-600">0</h3></div>
-      </div>
-    </div>
 
+      <div class="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div><label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Periode Mulai</label><input type="date" id="kpiStartDate" class="w-full p-2.5 border rounded-xl text-sm font-bold" onchange="renderKpiData()"></div>
+          <div><label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">Periode Akhir</label><input type="date" id="kpiEndDate" class="w-full p-2.5 border rounded-xl text-sm font-bold" onchange="renderKpiData()"></div>
+          <div><label class="block text-[10px] font-bold text-gray-500 uppercase mb-1">PIC</label><select id="kpiPicFilter" class="w-full p-2.5 border rounded-xl text-sm font-bold uppercase" onchange="renderKpiData()"><option value="ALL">SEMUA PIC</option><option value="RIO">RIO</option><option value="SALMAN">SALMAN</option><option value="RIVAN">RIVAN</option></select></div>
+          <div class="flex items-end"><button onclick="resetKpiFilter()" class="w-full p-2.5 bg-gray-900 text-white rounded-xl text-xs font-bold uppercase">Bulan Berjalan</button></div>
+        </div>
+        <div class="mt-4 text-[10px] text-gray-400 uppercase font-bold">Bobot: Produktivitas 30% · Ketepatan Waktu 25% · Kualitas 20% · Efisiensi 10% · Disiplin Laporan 10% · Responsibility 5%</div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+        <div class="bg-white p-5 rounded-2xl border shadow-sm"><span class="text-[10px] font-bold text-gray-400 uppercase">PO Dalam Periode</span><h3 id="kpi-total-po" class="text-3xl font-extrabold text-gray-900 mt-1">0</h3></div>
+        <div class="bg-white p-5 rounded-2xl border shadow-sm"><span class="text-[10px] font-bold text-gray-400 uppercase">PO Selesai</span><h3 id="kpi-total-finished" class="text-3xl font-extrabold text-emerald-600 mt-1">0</h3></div>
+        <div class="bg-white p-5 rounded-2xl border shadow-sm"><span class="text-[10px] font-bold text-gray-400 uppercase">On-Time Rate</span><h3 id="kpi-total-ontime" class="text-3xl font-extrabold text-blue-600 mt-1">0%</h3></div>
+        <div class="bg-white p-5 rounded-2xl border shadow-sm"><span class="text-[10px] font-bold text-gray-400 uppercase">Total QTY</span><h3 id="kpi-total-qty" class="text-3xl font-extrabold text-[#E06D53] mt-1">0</h3></div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+        <div class="flex justify-between items-center mb-4"><div><h3 class="text-lg font-bold uppercase">🏆 Ranking KPI Individu</h3><p class="text-xs text-gray-400 mt-1">Skor menggunakan data yang benar-benar tersedia. Metrik yang belum dicatat sistem tidak dipaksakan menjadi angka.</p></div><span id="kpi-data-coverage" class="text-[10px] font-bold px-3 py-1 rounded-full bg-gray-100 text-gray-600 uppercase">Coverage 0%</span></div>
+        <div class="overflow-x-auto"><table class="w-full text-left"><thead><tr class="border-b text-[10px] uppercase text-gray-400"><th class="pb-3">Rank</th><th class="pb-3">PIC</th><th class="pb-3">KPI</th><th class="pb-3">Job</th><th class="pb-3">Qty</th><th class="pb-3">On-Time</th><th class="pb-3">Reject Label</th><th class="pb-3">Rata² Proses</th><th class="pb-3">Selesai</th></tr></thead><tbody id="kpi-ranking-body" class="divide-y divide-gray-100 text-sm"></tbody></table></div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h3 class="text-lg font-bold uppercase mb-4">📊 Detail KPI PIC</h3><div id="kpi-detail" class="text-sm text-gray-500">Pilih PIC untuk melihat detail.</div></div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h3 class="text-lg font-bold uppercase mb-4">⚖️ Analisis Beban Kerja</h3><div id="kpi-workload" class="space-y-3"></div></div>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"><h3 class="text-lg font-bold uppercase mb-4">⚠️ Bottleneck Divisi</h3><div id="kpi-bottleneck" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div></div>
+    </div>
   </main>
 
   <!-- MODAL MODUL -->
@@ -803,7 +848,7 @@
     <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom: 20px;">
       <h1 style="font-size: 22px; font-weight: bold; margin: 0; text-transform: uppercase;">CV. EXCELINDO HASIL GUNA</h1>
       <p style="font-size: 13px; font-weight: bold; margin: 4px 0 0 0;">BERITA ACARA AUDIT LAPORAN STOK GUDANG PRINTING</p>
-      <p style="font-size: 11px; margin: 2px 0 0 0;">PRINT MANAGEMENT SYSTEM V1</p>
+      <p style="font-size: 11px; margin: 2px 0 0 0;">PRINT MANAGEMENT SYSTEM V1.1</p>
     </div>
     <table style="width: 100%; border-collapse: collapse; font-size: 11px; text-align: left;">
       <thead id="printTableHead"><tr><th>Tanggal</th><th>Nama Bahan</th><th>Gudang</th><th>Tipe</th><th>Jumlah</th><th>Petugas</th><th>Catatan</th></tr></thead>
@@ -830,8 +875,8 @@
       { id: 1, number: "PO-2026-001", customer: "PT SERI RASA", product: "LABEL JAMU BOTOL", qty: 25000, priority: "NORMAL", deadline: "2026-08-15", pic: "RIO", status: "PO MENUNGGU ANTRIAN", finishedDate: null }
     ];
     let materials = [
-      { id: 1, code: "EHG0001", name: "STICKER VINYL 100X50MM", unit: "pcs", stock: 100000, minStock: 10000, notes: "UTAMA" },
-      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110X300", unit: "roll", stock: 50, minStock: 5, notes: "UTAMA" }
+      { id: 1, code: "EHG0001", name: "STICKER VINYL 100X50MM", unit: "pcs", stock: 100000, stockSisa: 0, minStock: 10000, notes: "UTAMA" },
+      { id: 2, code: "EHG0002", name: "RIBBON WAX RESIN 110X300", unit: "roll", stock: 50, stockSisa: 0, minStock: 5, notes: "UTAMA" }
     ];
     let stockHistory = [];
     let printers = [{ id: 1, name: "HONEYWELL PC42t", sn: "SN-HW2026-001", condition: "NORMAL / GOOD", usedBy: "MEJA PACKING 1", borrowStatus: "TERSEDIA" }];
@@ -842,20 +887,105 @@
     ];
     let dailyReports = [];
 
+    normalizeState();
+
+    // =========================
+    // V1.1: STORAGE & UTILITIES
+    // =========================
+    const STORAGE_KEY = 'divisiPrintingManagementSystemV11';
+
+    function todayISO() {
+      const d = new Date();
+      const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000);
+      return local.toISOString().split('T')[0];
+    }
+
+    function safeNumber(value, fallback = 0) {
+      const n = Number(value);
+      return Number.isFinite(n) ? n : fallback;
+    }
+
+    function nextId(list) {
+      return list.reduce((max, item) => Math.max(max, safeNumber(item.id, 0)), 0) + 1;
+    }
+
+    function persistState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          poList, materials, stockHistory, printers, spareparts, maintenanceHistory, layoutList, dailyReports, activeJobs
+        }));
+      } catch (err) {
+        console.warn('Gagal menyimpan data lokal:', err);
+      }
+    }
+
+    function normalizeState() {
+      materials.forEach(m => {
+        m.stock = safeNumber(m.stock);
+        m.stockSisa = safeNumber(m.stockSisa, 0);
+        m.minStock = safeNumber(m.minStock, 0);
+      });
+      poList.forEach(p => { p.qty = safeNumber(p.qty); });
+      activeJobs = Array.isArray(activeJobs) ? activeJobs : [];
+      activeJobs.forEach(j => { j.startedAt = Number(j.startedAt) || Date.now(); });
+      dailyReports.forEach(r => {
+        r.totalQty = safeNumber(r.totalQty);
+        r.qtyParsial = safeNumber(r.qtyParsial, 0);
+        r.rejectQty = safeNumber(r.rejectQty, 0);
+        r.reprintQty = safeNumber(r.reprintQty, 0);
+        r.qualityTracked = r.qualityTracked !== false;
+        r.labelRejectQty = safeNumber(r.labelRejectQty, r.jenisPekerjaan === 'PRINTING & CUTTING' ? r.rejectQty : 0);
+        r.processDurationMs = safeNumber(r.processDurationMs, 0);
+        r.processDurationMinutes = safeNumber(r.processDurationMinutes, Math.round(r.processDurationMs / 60000));
+      });
+    }
+
+    function loadPersistedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const saved = JSON.parse(raw);
+        if (Array.isArray(saved.poList)) poList = saved.poList;
+        if (Array.isArray(saved.materials)) materials = saved.materials;
+        if (Array.isArray(saved.stockHistory)) stockHistory = saved.stockHistory;
+        if (Array.isArray(saved.printers)) printers = saved.printers;
+        if (Array.isArray(saved.spareparts)) spareparts = saved.spareparts;
+        if (Array.isArray(saved.maintenanceHistory)) maintenanceHistory = saved.maintenanceHistory;
+        if (Array.isArray(saved.layoutList)) layoutList = saved.layoutList;
+        if (Array.isArray(saved.dailyReports)) dailyReports = saved.dailyReports;
+        if (Array.isArray(saved.activeJobs)) activeJobs = saved.activeJobs;
+        normalizeState();
+      } catch (err) {
+        console.warn('Data lokal V1.1 tidak dapat dibaca, menggunakan data awal.', err);
+      }
+    }
+
+    function clearLocalData() {
+      if (!confirm('Hapus seluruh data lokal V1.1 dan kembali ke data awal?')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
+    }
+
     function checkAutoDeleteFinishedPOs() {
-      const today = new Date("2026-08-09");
+      const today = new Date(todayISO() + 'T00:00:00');
+      let changed = false;
       poList = poList.filter(p => {
         if (p.status === "PO SELESAI (ARSIP)" && p.finishedDate) {
-          const finishedDt = new Date(p.finishedDate);
-          const diffTime = today - finishedDt;
-          const diffDays = diffTime / (1000 * 60 * 60 * 24);
+          const finishedDt = new Date(p.finishedDate + 'T00:00:00');
+          const diffDays = Math.floor((today - finishedDt) / (1000 * 60 * 60 * 24));
           if (diffDays > 7) {
             layoutList = layoutList.filter(l => l.poNumber !== p.number);
+            changed = true;
             return false;
           }
         }
         return true;
       });
+      if (changed) persistState();
     }
 
     function handleLogin() {
@@ -867,6 +997,8 @@
 
       if (matchedKey && USERS_DB[matchedKey].pass === pInput) {
         currentUser = USERS_DB[matchedKey];
+        errBox.classList.add('hidden');
+        loadPersistedState();
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('userNameDisplay').innerText = currentUser.name;
         document.getElementById('userRoleDisplay').innerText = currentUser.title;
@@ -972,7 +1104,7 @@
       selRibbon.innerHTML = '';
 
       materials.forEach(m => {
-        const opt = `<option value="${m.id}">${m.code} - ${m.name} (Stok: ${m.stock.toLocaleString('id-ID')} ${m.unit})</option>`;
+        const opt = `<option value="${m.id}">${m.code} - ${m.name} (Utama: ${m.stock.toLocaleString('id-ID')} ${m.unit} | Sisa: ${safeNumber(m.stockSisa).toLocaleString('id-ID')} ${m.unit})</option>`;
         selLabel.innerHTML += opt;
         selRibbon.innerHTML += opt;
       });
@@ -998,6 +1130,72 @@
       if (found) {
         document.getElementById('reportCustomer').value = found.customer;
         document.getElementById('reportTotalQty').value = found.qty;
+      }
+      updateReportTimerInfo();
+    }
+
+    function formatDuration(ms) {
+      const totalMin = Math.max(0, Math.floor(safeNumber(ms) / 60000));
+      const h = Math.floor(totalMin / 60);
+      const m = totalMin % 60;
+      return h > 0 ? `${h} jam ${String(m).padStart(2,'0')} menit` : `${m} menit`;
+    }
+
+    function getActiveJob(poNumber) {
+      return activeJobs.find(j => j.poNumber === poNumber);
+    }
+
+    function startPoProcess(poNumber) {
+      const po = poList.find(p => p.number === poNumber);
+      if (!po) return;
+      const allowedAll = currentUser && ['Syuja','Manager'].includes(currentUser.role);
+      if (!allowedAll && String(po.pic || '').toUpperCase() !== String(currentUser?.name || '').toUpperCase()) {
+        alert(`PO ${poNumber} ditugaskan ke ${po.pic || 'PIC BELUM DITENTUKAN'}.`);
+        return;
+      }
+      const existing = getActiveJob(poNumber);
+      if (existing) {
+        alert(`PO ${poNumber} sedang diproses oleh ${existing.pic} sejak ${new Date(existing.startedAt).toLocaleString('id-ID')}.`);
+        return;
+      }
+      const startedAt = Date.now();
+      activeJobs.push({ poNumber, pic: currentUser.name, startedAt, jenis: 'PRINTING & CUTTING' });
+      po.processStartedAt = startedAt;
+      if (po.status === 'PO MENUNGGU ANTRIAN' || po.status === 'PO URGENT') po.status = 'PO SEDANG DIPROSES';
+      persistState();
+      renderPoTable();
+      updateReportTimerInfo();
+      alert(`PEKERJAAN PO ${poNumber} DIMULAI. TIMER AKTIF.`);
+    }
+
+    function stopPoProcess(poNumber) {
+      const job = getActiveJob(poNumber);
+      if (!job) return null;
+      const endedAt = Date.now();
+      const durationMs = Math.max(0, endedAt - Number(job.startedAt));
+      activeJobs = activeJobs.filter(j => j !== job);
+      const po = poList.find(p => p.number === poNumber);
+      if (po) po.processStartedAt = null;
+      return { startedAt: Number(job.startedAt), endedAt, durationMs, pic: job.pic };
+    }
+
+    function updateReportTimerInfo() {
+      const el = document.getElementById('reportTimerInfo');
+      if (!el) return;
+      const poNum = document.getElementById('reportPoSelect')?.value;
+      const job = poNum ? getActiveJob(poNum) : null;
+      if (job && String(job.pic).toUpperCase() === String(currentUser?.name || '').toUpperCase()) {
+        el.className = 'bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3 text-xs font-bold text-emerald-800';
+        el.innerHTML = `⏱️ TIMER AKTIF — DIMULAI ${new Date(job.startedAt).toLocaleString('id-ID')} · DURASI ${formatDuration(Date.now() - job.startedAt)}<br><span class="font-normal">Saat laporan dikirim, timer akan berhenti otomatis.</span>`;
+      } else if (job) {
+        el.className = 'bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 text-xs font-bold text-amber-800';
+        el.innerText = `⏱️ PO SEDANG DIPROSES OLEH ${job.pic} SEJAK ${new Date(job.startedAt).toLocaleString('id-ID')}.`;
+      } else if (poNum) {
+        el.className = 'bg-red-50 border border-red-100 rounded-xl px-4 py-3 text-xs font-bold text-red-700';
+        el.innerText = '⏱️ TIMER BELUM DIMULAI. KEMBALI KE ANTRIAN PO DAN KLIK MULAI PROSES.';
+      } else {
+        el.className = 'bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs font-bold text-blue-800';
+        el.innerText = '⏱️ PILIH PO YANG SEDANG DIPROSES.';
       }
     }
 
@@ -1058,9 +1256,19 @@
       const picVal = document.getElementById('poPic').value.toUpperCase();
       const statusVal = document.getElementById('poStatusFlow').value.toUpperCase();
 
+      if (!num || !cust || !prod || qtyVal <= 0 || !picVal || !statusVal) {
+        alert('Mohon lengkapi data PO dan pastikan Qty lebih dari 0.');
+        return;
+      }
+      const duplicate = poList.findIndex((p, i) => p.number === num && i !== idx);
+      if (duplicate !== -1) {
+        alert('Nomor PO sudah terdaftar. Gunakan nomor PO yang berbeda.');
+        return;
+      }
+
       let finishedDt = null;
       if (statusVal === "PO SELESAI (ARSIP)") {
-        finishedDt = new Date().toISOString().split('T')[0];
+        finishedDt = todayISO();
       }
 
       if (idx > -1) {
@@ -1069,14 +1277,16 @@
         poList[idx].product = prod;
         poList[idx].qty = qtyVal;
         poList[idx].pic = picVal;
-        if (poList[idx].status !== "PO SELESAI (ARSIP)" && statusVal === "PO SELESAI (ARSIP)") {
-          poList[idx].finishedDate = finishedDt;
+        if (statusVal === "PO SELESAI (ARSIP)") {
+          if (poList[idx].status !== "PO SELESAI (ARSIP)" || !poList[idx].finishedDate) poList[idx].finishedDate = finishedDt;
+        } else {
+          poList[idx].finishedDate = null;
         }
         poList[idx].status = statusVal;
         alert("PO BERHASIL DIPERBARUI!");
       } else {
         poList.push({
-          id: poList.length + 1,
+          id: nextId(poList),
           number: num,
           customer: cust,
           product: prod,
@@ -1090,6 +1300,7 @@
         alert("PO BARU BERHASIL DISIMPAN!");
       }
 
+      persistState();
       closePOModal(); 
       renderPoTitleCount();
       renderPoTable();
@@ -1103,6 +1314,7 @@
         renderPoTitleCount();
         renderPoTable();
         renderLayoutTable();
+        persistState();
         alert("PO BERHASIL DIHAPUS.");
       }
     }
@@ -1119,19 +1331,36 @@
         tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-gray-400">Tidak ada antrian PO aktif.</td></tr>`;
         return;
       }
-      poList.forEach((p, idx) => {
+      const keyword = (document.getElementById('searchPoInput')?.value || '').trim().toLowerCase();
+      const visible = poList.map((p, idx) => ({ p, idx })).filter(({p}) =>
+        !keyword || [p.number, p.customer, p.product, p.pic, p.status].some(v => String(v || '').toLowerCase().includes(keyword))
+      );
+      if (visible.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-gray-400">Tidak ada PO yang cocok dengan pencarian.</td></tr>`;
+        return;
+      }
+      visible.forEach(({p, idx}) => {
         let statusBadgeColor = "bg-blue-100 text-blue-700";
         if (p.status === "PO URGENT") statusBadgeColor = "bg-red-100 text-red-700";
         else if (p.status === "PO HOLD") statusBadgeColor = "bg-amber-100 text-amber-700";
         else if (p.status === "PO SELESAI (ARSIP)") statusBadgeColor = "bg-emerald-100 text-emerald-800";
 
         let finDateText = p.finishedDate ? p.finishedDate : "-";
+        const active = getActiveJob(p.number);
+        const allowedAll = currentUser && ['Syuja','Manager'].includes(currentUser.role);
+        const isAssigned = String(p.pic || '').toUpperCase() === String(currentUser?.name || '').toUpperCase();
+        let processAction = '';
+        if (active) {
+          processAction = `<div class="mt-1 text-[10px] font-bold text-emerald-700">⏱️ ${escapeHtml(active.pic)} · ${formatDuration(Date.now()-active.startedAt)}</div>`;
+        } else if (!['PO SELESAI (ARSIP)','PO HOLD'].includes(p.status) && (allowedAll || isAssigned)) {
+          processAction = `<button onclick="startPoProcess('${String(p.number).replace(/'/g, "\'")}')" class="mt-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold px-2 py-1 rounded-lg">▶ MULAI PROSES</button>`;
+        }
 
         tbody.innerHTML += `<tr class="hover:bg-gray-50">
           <td class="py-3 text-xs font-bold text-[#E06D53]">${p.number}</td>
           <td class="py-3 text-xs font-bold">${p.customer} - ${p.product}</td>
           <td class="py-3 text-xs">${p.qty.toLocaleString('id-ID')}</td>
-          <td class="py-3 text-xs">${p.pic}</td>
+          <td class="py-3 text-xs">${p.pic}${processAction}</td>
           <td class="py-3 text-xs"><span class="px-2 py-0.5 rounded ${statusBadgeColor} font-bold">${p.status}</span></td>
           <td class="py-3 text-xs font-mono">${finDateText}</td>
           <td class="py-3 text-xs space-x-2">
@@ -1145,120 +1374,128 @@
     function saveDailyReport(e) {
       e.preventDefault();
       const jenis = document.getElementById('jenisPekerjaan').value;
-      const dateVal = document.getElementById('reportDate').value || new Date().toISOString().split('T')[0];
-      const cust = document.getElementById('reportCustomer').value.toUpperCase();
-      const poNum = document.getElementById('reportPoSelect').value.toUpperCase();
-      const totQty = Number(document.getElementById('reportTotalQty').value);
+      const dateVal = document.getElementById('reportDate').value || todayISO();
+      const cust = document.getElementById('reportCustomer').value.trim().toUpperCase();
+      const poNum = document.getElementById('reportPoSelect').value.trim().toUpperCase();
+      const totQty = safeNumber(document.getElementById('reportTotalQty').value);
+      const qtyParsial = safeNumber(document.getElementById('reportQtyParsial').value);
       const statRes = document.getElementById('reportStatusResult').value;
+      const qcResult = document.getElementById('reportQcResult').value;
+      const qualityRejectQty = safeNumber(document.getElementById('reportRejectQty').value);
+      const qualityReprintQty = safeNumber(document.getElementById('reportReprintQty').value);
+      const qualitySource = document.getElementById('reportQualitySource').value;
+      const qualityNote = document.getElementById('reportQualityNote').value.trim().toUpperCase();
 
-      let stockUpdateInfo = "-";
-
-      if (jenis === 'PRINTING & CUTTING') {
-        let notesArr = [];
-        
-        const labelId = document.getElementById('reportMaterialSelect').value;
-        const labelQty = Number(document.getElementById('jumlahLabelDipakai').value);
-        if (labelQty > 0) {
-          const mLabel = materials.find(item => item.id == labelId);
-          if (mLabel) {
-            if (mLabel.stock < labelQty) {
-              alert(`PERINGATAN: Stok ${mLabel.name} tidak mencukupi! Stok saat ini: ${mLabel.stock}`);
-              return;
-            }
-            mLabel.stock -= labelQty;
-            notesArr.push(`LABEL UTAMA: -${labelQty} ${mLabel.unit} (${mLabel.name})`);
-            stockHistory.unshift({
-              date: dateVal,
-              matName: mLabel.name,
-              warehouse: 'GUDANG UTAMA',
-              type: 'PEMAKAIAN PIC',
-              qty: `-${labelQty} ${mLabel.unit}`,
-              pic: currentUser.name,
-              notes: `PO: ${poNum} | CUST: ${cust}`
-            });
-          }
-        }
-
-        const isLabelSisaChecked = document.getElementById('checkLabelSisa').checked;
-        const labelSisaQty = Number(document.getElementById('jumlahLabelSisa').value);
-        if (isLabelSisaChecked && labelSisaQty > 0) {
-          notesArr.push(`LABEL SISA: -${labelSisaQty} (DIAMBIL DARI GUDANG SISA)`);
-          stockHistory.unshift({
-            date: dateVal,
-            matName: 'LABEL SISA',
-            warehouse: 'GUDANG SISA',
-            type: 'PEMAKAIAN SISA',
-            qty: `-${labelSisaQty}`,
-            pic: currentUser.name,
-            notes: `PO: ${poNum} | CUST: ${cust}`
-          });
-        }
-
-        const ribbonId = document.getElementById('reportRibbonSelect').value;
-        const ribbonQty = Number(document.getElementById('jumlahRibbonDipakai').value);
-        if (ribbonQty > 0) {
-          const mRibbon = materials.find(item => item.id == ribbonId);
-          if (mRibbon) {
-            if (mRibbon.stock < ribbonQty) {
-              alert(`PERINGATAN: Stok ${mRibbon.name} tidak mencukupi! Stok saat ini: ${mRibbon.stock}`);
-              return;
-            }
-            mRibbon.stock -= ribbonQty;
-            notesArr.push(`RIBBON UTAMA: -${ribbonQty} ${mRibbon.unit} (${mRibbon.name})`);
-            stockHistory.unshift({
-              date: dateVal,
-              matName: mRibbon.name,
-              warehouse: 'GUDANG UTAMA',
-              type: 'PEMAKAIAN PIC',
-              qty: `-${ribbonQty} ${mRibbon.unit}`,
-              pic: currentUser.name,
-              notes: `PO: ${poNum} | CUST: ${cust}`
-            });
-          }
-        }
-
-        const isRibbonSisaChecked = document.getElementById('checkRibbonSisa').checked;
-        const ribbonSisaQty = Number(document.getElementById('jumlahRibbonSisa').value);
-        if (isRibbonSisaChecked && ribbonSisaQty > 0) {
-          notesArr.push(`RIBBON SISA: -${ribbonSisaQty} (DIAMBIL DARI GUDANG SISA)`);
-          stockHistory.unshift({
-            date: dateVal,
-            matName: 'RIBBON SISA',
-            warehouse: 'GUDANG SISA',
-            type: 'PEMAKAIAN SISA',
-            qty: `-${ribbonSisaQty}`,
-            pic: currentUser.name,
-            notes: `PO: ${poNum} | CUST: ${cust}`
-          });
-        }
-
-        stockUpdateInfo = notesArr.length > 0 ? notesArr.join(' | ') : "TIDAK ADA PEMAKAIAN BAHAN";
+      if (!jenis || !poNum || !cust || totQty <= 0) {
+        alert('Mohon lengkapi jenis pekerjaan, PO, customer, dan total qty.');
+        return;
       }
 
+      const po = poList.find(p => p.number === poNum);
+      if (!po) { alert('PO tidak ditemukan.'); return; }
+      const activeJob = getActiveJob(poNum);
+      if (!activeJob || String(activeJob.pic).toUpperCase() !== String(currentUser.name).toUpperCase()) {
+        alert('TIMER PEKERJAAN BELUM AKTIF UNTUK PO INI. MULAIKAN PEKERJAAN DARI MENU ANTRIAN PO TERLEBIH DAHULU.');
+        return;
+      }
+      if (qualityRejectQty > totQty) {
+        alert('Jumlah Label Reject tidak boleh melebihi Total Qty pekerjaan.');
+        return;
+      }
+      if (statRes === 'SELESAI' && qcResult === 'REJECT') {
+        alert('Pekerjaan berstatus SELESAI tidak boleh memiliki hasil QC REJECT. Gunakan REWORK atau perbaiki hasil QC.');
+        return;
+      }
+
+      let stockUpdateInfo = "-";
+      const stockChanges = [];
+
+      if (jenis === 'PRINTING & CUTTING') {
+        const labelId = document.getElementById('reportMaterialSelect').value;
+        const labelQty = safeNumber(document.getElementById('jumlahLabelDipakai').value);
+        const ribbonId = document.getElementById('reportRibbonSelect').value;
+        const ribbonQty = safeNumber(document.getElementById('jumlahRibbonDipakai').value);
+        const labelSisaQty = document.getElementById('checkLabelSisa').checked ? safeNumber(document.getElementById('jumlahLabelSisa').value) : 0;
+        const ribbonSisaQty = document.getElementById('checkRibbonSisa').checked ? safeNumber(document.getElementById('jumlahRibbonSisa').value) : 0;
+        const printingRejectQty = qualityRejectQty;
+        const printingReprintQty = 0;
+
+        const label = materials.find(item => item.id == labelId);
+        const ribbon = materials.find(item => item.id == ribbonId);
+        if (labelQty > 0 && !label) { alert('Material label utama tidak ditemukan.'); return; }
+        if (ribbonQty > 0 && !ribbon) { alert('Material ribbon utama tidak ditemukan.'); return; }
+        if (labelSisaQty > 0 && !label) { alert('Material label untuk stok sisa tidak ditemukan.'); return; }
+        if (ribbonSisaQty > 0 && !ribbon) { alert('Material ribbon untuk stok sisa tidak ditemukan.'); return; }
+
+        // Pre-check SEMUA stok sebelum satu pun dikurangi, agar transaksi tidak setengah jalan.
+        if (label && labelQty > label.stock) { alert(`Stok utama ${label.name} tidak mencukupi. Tersedia: ${label.stock}`); return; }
+        if (ribbon && ribbonQty > ribbon.stock) { alert(`Stok utama ${ribbon.name} tidak mencukupi. Tersedia: ${ribbon.stock}`); return; }
+        if (label && labelSisaQty > safeNumber(label.stockSisa)) { alert(`Stok sisa ${label.name} tidak mencukupi. Tersedia: ${safeNumber(label.stockSisa)}`); return; }
+        if (ribbon && ribbonSisaQty > safeNumber(ribbon.stockSisa)) { alert(`Stok sisa ${ribbon.name} tidak mencukupi. Tersedia: ${safeNumber(ribbon.stockSisa)}`); return; }
+
+        const addMovement = (m, qty, warehouse, type, note) => {
+          if (!m || qty <= 0) return;
+          if (warehouse === 'GUDANG UTAMA') m.stock -= qty;
+          else m.stockSisa = safeNumber(m.stockSisa) - qty;
+          stockHistory.unshift({ date: dateVal, matName: `[${m.code}] ${m.name}`, warehouse, type, qty: `-${qty} ${m.unit}`, petugas: currentUser.name, notes: `PO: ${poNum} | CUST: ${cust} | ${note}` });
+          stockChanges.push(`${warehouse}: -${qty} ${m.unit} ${m.name}`);
+        };
+
+        addMovement(label, labelQty, 'GUDANG UTAMA', 'PEMAKAIAN PIC', 'LABEL UTAMA');
+        addMovement(label, labelSisaQty, 'GUDANG SISA', 'PEMAKAIAN SISA', 'LABEL SISA');
+        addMovement(ribbon, ribbonQty, 'GUDANG UTAMA', 'PEMAKAIAN PIC', 'RIBBON UTAMA');
+        addMovement(ribbon, ribbonSisaQty, 'GUDANG SISA', 'PEMAKAIAN SISA', 'RIBBON SISA');
+        stockUpdateInfo = stockChanges.length ? stockChanges.join(' | ') : 'TIDAK ADA PEMAKAIAN BAHAN';
+      }
+
+      if (jenis === 'DEVELOP & APPROVAL') {
+        const link = document.getElementById('devLinkLayout').value.trim();
+        if (!link) { alert('Link layout/develop wajib diisi untuk pekerjaan Develop & Approval.'); return; }
+      }
+
+      const processTiming = stopPoProcess(poNum);
+      if (!processTiming) { alert('Timer pekerjaan tidak ditemukan. Silakan mulai proses dari Antrian PO.'); return; }
+
+      const labelRejectQty = jenis === 'PRINTING & CUTTING' ? qualityRejectQty : 0;
       dailyReports.unshift({
-        date: dateVal,
-        operator: currentUser.name,
-        jenisPekerjaan: jenis,
-        customerAndPo: `${cust} (${poNum})`,
-        totalQty: totQty,
-        status: statRes,
-        stockInfo: stockUpdateInfo
+        id: nextId(dailyReports), date: dateVal, operator: currentUser.name, jenisPekerjaan: jenis,
+        customerAndPo: `${cust} (${poNum})`, poNumber: poNum, customer: cust,
+        totalQty: totQty, qtyParsial, status: statRes, stockInfo: stockUpdateInfo,
+        qcResult, rejectQty: jenis === 'PRINTING & CUTTING' ? printingRejectQty : qualityRejectQty,
+        reprintQty: jenis === 'PRINTING & CUTTING' ? printingReprintQty : qualityReprintQty,
+        qualitySource, qualityNote, qualityTracked: true,
+        labelRejectQty, processStartedAt: processTiming.startedAt, processEndedAt: processTiming.endedAt, processDurationMs: processTiming.durationMs,
+        processDurationMinutes: Math.round(processTiming.durationMs / 60000)
       });
 
-      alert("LAPORAN PEKERJAAN HARIAN BERHASIL DIKIRIM & STOK GUDANG TERUPDATE OTOMATIS!");
+      // Sinkronisasi status PO berdasarkan hasil pekerjaan.
+      if (statRes === 'SELESAI') {
+        po.status = 'PO SELESAI (ARSIP)';
+        po.finishedDate = dateVal;
+      } else if (statRes === 'PARSIAL') {
+        if (po.status === 'PO SELESAI (ARSIP)') po.status = 'PO MENUNGGU ANTRIAN';
+        po.finishedDate = null;
+      }
+
+      persistState();
+      alert("LAPORAN PEKERJAAN HARIAN BERHASIL DIKIRIM & STOK GUDANG DIPERBARUI!");
       document.getElementById('dailyReportForm').reset();
       document.getElementById('operatorNameDisplay').value = currentUser.name;
       toggleSisaInput('Label');
       toggleSisaInput('Ribbon');
+      toggleReportSection();
+      setupReportFormMaterials();
       renderDailyReports();
       renderMaterials();
+      renderPoTable();
+      updateReportTimerInfo();
     }
 
     function renderDailyReports() {
       const body = document.getElementById('daily-report-history-body');
       body.innerHTML = dailyReports.length === 0 ? '<tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada laporan harian dikirim.</td></tr>' : '';
       dailyReports.forEach(r => {
-        body.innerHTML += `<tr><td class="py-3 text-xs">${r.date}</td><td class="py-3 text-xs font-bold">${r.operator}</td><td class="py-3 text-xs font-bold text-[#E06D53]">${r.jenisPekerjaan}</td><td class="py-3 text-xs">${r.customerAndPo}</td><td class="py-3 text-xs font-bold">${r.totalQty.toLocaleString('id-ID')}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${r.status}</span></td><td class="py-3 text-xs text-blue-700 font-bold">${r.stockInfo}</td></tr>`;
+        body.innerHTML += `<tr><td class="py-3 text-xs">${r.date}</td><td class="py-3 text-xs font-bold">${r.operator}</td><td class="py-3 text-xs font-bold text-[#E06D53]">${r.jenisPekerjaan}</td><td class="py-3 text-xs">${r.customerAndPo}</td><td class="py-3 text-xs font-bold">${r.totalQty.toLocaleString('id-ID')}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${r.status}</span></td><td class="py-3 text-xs text-blue-700 font-bold">${r.stockInfo}</td><td class="py-3 text-xs"><span class="px-2 py-0.5 rounded ${String(r.qcResult||'').includes('REJECT')?'bg-red-100 text-red-700':'bg-emerald-100 text-emerald-700'} font-bold">${escapeHtml(r.qcResult || 'BELUM ADA')}</span><div class="text-[10px] text-gray-500 mt-1">Reject Label ${safeNumber(r.labelRejectQty)} · Durasi ${safeNumber(r.processDurationMinutes)} menit</div><div class="text-[9px] text-gray-400 mt-1">${r.processStartedAt ? new Date(r.processStartedAt).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) : '-'} → ${r.processEndedAt ? new Date(r.processEndedAt).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) : '-'}</div></td></tr>`;
       });
     }
 
@@ -1315,6 +1552,8 @@
       const ver = document.getElementById('layoutVersion').value.toUpperCase();
       const lnk = document.getElementById('layoutLink').value;
       const stat = document.getElementById('layoutStatus').value.toUpperCase();
+      if (!poNum || !cust || !outType || !ver) { alert('Mohon lengkapi data layout.'); return; }
+      if (stat.includes('APPROVED') && !lnk) { alert('Link desain wajib diisi sebelum approval.'); return; }
 
       if (idx > -1) {
         layoutList[idx].poNumber = poNum;
@@ -1331,7 +1570,7 @@
         alert("LAYOUT & APPROVAL BERHASIL DIPERBARUI!");
       } else {
         layoutList.push({
-          id: layoutList.length + 1,
+          id: nextId(layoutList),
           poNumber: poNum,
           customer: cust,
           outputType: outType,
@@ -1347,6 +1586,7 @@
         alert("LAYOUT BERHASIL DISIMPAN!");
       }
 
+      persistState();
       closeLayoutModal(); 
       renderLayoutTable();
       renderPoTable();
@@ -1355,6 +1595,7 @@
     function deleteLayout(idx) {
       if (confirm(`Yakin ingin menghapus data layout untuk PO ${layoutList[idx].poNumber}?`)) {
         layoutList.splice(idx, 1);
+        persistState();
         renderLayoutTable();
         alert("LAYOUT BERHASIL DIHAPUS.");
       }
@@ -1368,6 +1609,7 @@
         if (p) {
           p.status = "PO MENUNGGU ANTRIAN";
         }
+        persistState();
         alert(`Layout PO ${l.poNumber} telah di-APPROVE! Status PO kini berubah menjadi PO MENUNGGU ANTRIAN.`);
         renderLayoutTable();
         renderPoTable();
@@ -1391,7 +1633,7 @@
           <td class="py-3 text-xs">${l.customer}</td>
           <td class="py-3 text-xs">${l.outputType}</td>
           <td class="py-3 text-xs font-mono">${l.version}</td>
-          <td class="py-3 text-xs"><a href="${l.link}" target="_blank" class="text-blue-600 underline font-mono">Buka Link Desain</a></td>
+          <td class="py-3 text-xs"><a href="${escapeHtml(l.link)}" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-mono">Buka Link Desain</a></td>
           <td class="py-3 text-xs">${l.pic}</td>
           <td class="py-3 text-xs"><span class="px-2 py-0.5 rounded bg-pink-100 text-pink-800 font-bold">${l.status}</span></td>
           <td class="py-3 text-xs space-x-2">
@@ -1406,6 +1648,7 @@
     function deleteMasterMaterial(idx) {
       if (confirm(`Yakin ingin menghapus master material ${materials[idx].name}?`)) {
         materials.splice(idx, 1);
+        persistState();
         renderMaterials();
         alert("MATERIAL BERHASIL DIHAPUS.");
       }
@@ -1420,7 +1663,7 @@
       const filteredMaterials = materials.filter(m => m.code.toLowerCase().includes(searchKeyword) || m.name.toLowerCase().includes(searchKeyword));
 
       materials.forEach(m => {
-        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold uppercase">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3></div>`;
+        grid.innerHTML += `<div class="bg-white p-5 rounded-2xl border shadow-sm space-y-1"><span class="text-[10px] font-bold text-[#E06D53]">${m.code}</span><h4 class="text-sm font-bold uppercase">${m.name}</h4><h3 class="text-2xl font-bold">${m.stock.toLocaleString('id-ID')} ${m.unit}</h3><p class="text-[10px] text-amber-600 font-bold">SISA: ${safeNumber(m.stockSisa).toLocaleString('id-ID')} ${m.unit}</p></div>`;
       });
 
       if (filteredMaterials.length === 0) {
@@ -1432,7 +1675,7 @@
             <td class="py-3 text-xs font-bold font-mono text-[#E06D53]">${m.code}</td>
             <td class="py-3 text-xs font-bold uppercase">${m.name}</td>
             <td class="py-3 text-xs uppercase">${m.unit}</td>
-            <td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')}</td>
+            <td class="py-3 text-xs font-bold">${m.stock.toLocaleString('id-ID')} <span class="text-amber-600">(+${safeNumber(m.stockSisa).toLocaleString('id-ID')} sisa)</span></td>
             <td class="py-3 text-xs">${m.minStock}</td>
             <td class="py-3 text-xs space-x-2">
               <button onclick="alert('EDIT')" class="text-blue-600 font-bold">EDIT</button>
@@ -1445,7 +1688,7 @@
       const historyBody = document.getElementById('stock-history-body');
       historyBody.innerHTML = stockHistory.length === 0 ? '<tr><td colspan="7" class="py-3 text-center text-gray-400">Belum ada mutasi stok.</td></tr>' : '';
       stockHistory.forEach(h => {
-        historyBody.innerHTML += `<tr><td class="py-3 text-xs">${h.date}</td><td class="py-3 text-xs font-bold uppercase">${h.matName}</td><td class="py-3 text-xs uppercase">${h.warehouse}</td><td class="py-3 text-xs font-bold uppercase">${h.type}</td><td class="py-3 text-xs font-bold">${h.qty}</td><td class="py-3 text-xs uppercase">${h.petugas}</td><td class="py-3 text-xs uppercase">${h.notes}</td></tr>`;
+        historyBody.innerHTML += `<tr><td class="py-3 text-xs">${h.date}</td><td class="py-3 text-xs font-bold uppercase">${h.matName}</td><td class="py-3 text-xs uppercase">${h.warehouse}</td><td class="py-3 text-xs font-bold uppercase">${h.type}</td><td class="py-3 text-xs font-bold">${h.qty}</td><td class="py-3 text-xs uppercase">${h.petugas || h.pic || '-'}</td><td class="py-3 text-xs uppercase">${h.notes}</td></tr>`;
       });
     }
 
@@ -1469,12 +1712,134 @@
       });
     }
 
-    function renderKpiData() {
-      document.getElementById('kpi-total-po').innerText = poList.length;
-      let totalQty = poList.reduce((acc, curr) => acc + curr.qty, 0);
-      document.getElementById('kpi-total-qty').innerText = totalQty.toLocaleString('id-ID');
-      document.getElementById('kpi-total-report').innerText = dailyReports.length;
+    function resetKpiFilter() {
+      const now = new Date();
+      const first = new Date(now.getFullYear(), now.getMonth(), 1);
+      const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      const fmt = d => { const y=d.getFullYear(); const m=String(d.getMonth()+1).padStart(2,'0'); const day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}`; };
+      document.getElementById('kpiStartDate').value = fmt(first);
+      document.getElementById('kpiEndDate').value = fmt(last);
+      document.getElementById('kpiPicFilter').value = 'ALL';
+      renderKpiData();
     }
+
+    function kpiDateInRange(value, start, end) {
+      if (!value) return false;
+      return value >= start && value <= end;
+    }
+
+    function kpiGetReports(start, end, pic) {
+      return dailyReports.filter(r => kpiDateInRange(r.date, start, end) && (pic === 'ALL' || String(r.operator || '').toUpperCase() === pic));
+    }
+
+    function kpiGetPOs(start, end, pic) {
+      const reportedPoNumbers = new Set(kpiGetReports(start, end, pic).map(r => r.poNumber));
+      return poList.filter(p => {
+        const reportDate = p.finishedDate || p.createdDate || p.date;
+        const matchesReported = reportedPoNumbers.has(p.number);
+        const matchesDate = reportDate ? kpiDateInRange(reportDate, start, end) : false;
+        const matchesPic = pic === 'ALL' || String(p.pic || '').toUpperCase() === pic;
+        return (matchesReported || matchesDate) && matchesPic;
+      });
+    }
+
+    function kpiPercent(n, d) { return d > 0 ? Math.round((n / d) * 100) : 0; }
+
+    function kpiScore(metrics) {
+      const weighted = [
+        ['productivity', metrics.productivity, 35],
+        ['ontime', metrics.ontime, 30],
+        ['quality', metrics.quality, 25],
+        ['discipline', metrics.discipline, 10]
+      ].filter(x => x[1] !== null && Number.isFinite(x[1]));
+      const totalWeight = weighted.reduce((a,x) => a+x[2], 0);
+      if (!totalWeight) return 0;
+      return Math.round(weighted.reduce((a,x) => a + x[1] * x[2], 0) / totalWeight);
+    }
+
+    function buildKpiForPic(pic, reports, pos) {
+      const jobs = reports.length;
+      const finished = reports.filter(r => String(r.status || '').toUpperCase() === 'SELESAI').length;
+      const partial = reports.filter(r => String(r.status || '').toUpperCase() === 'PARSIAL').length;
+      const qty = reports.reduce((a,r) => a + safeNumber(r.totalQty), 0);
+      const productivity = Math.min(100, jobs > 0 ? Math.max(0, (finished + partial * 0.5) / jobs * 100) : 0);
+
+      let ontimeCount = 0, deadlineComparable = 0;
+      reports.forEach(r => {
+        const po = poList.find(p => p.number === r.poNumber);
+        if (po && po.deadline) {
+          deadlineComparable++;
+          if (r.date <= po.deadline) ontimeCount++;
+        }
+      });
+      const ontime = deadlineComparable ? kpiPercent(ontimeCount, deadlineComparable) : null;
+
+      // QUALITY SEDERHANA: hanya menggunakan jumlah LABEL REJECT dari pekerjaan printing.
+      const printingReports = reports.filter(r => String(r.jenisPekerjaan || '').toUpperCase() === 'PRINTING & CUTTING' && (r.processDurationMs > 0 || r.labelRejectQty !== undefined));
+      const inspectedQty = printingReports.reduce((a,r) => a + safeNumber(r.totalQty), 0);
+      const rejectQty = printingReports.reduce((a,r) => a + Math.min(safeNumber(r.labelRejectQty, r.rejectQty), safeNumber(r.totalQty)), 0);
+      const quality = inspectedQty > 0 ? Math.max(0, Math.min(100, Math.round((1 - rejectQty / inspectedQty) * 100))) : null;
+
+      // DURASI: bukan angka yang bisa diisi manual; berasal dari timer MULAI PROSES -> SUBMIT LAPORAN.
+      const timed = reports.filter(r => safeNumber(r.processDurationMs) > 0);
+      const totalDurationMs = timed.reduce((a,r) => a + safeNumber(r.processDurationMs), 0);
+      const avgDurationMinutes = timed.length ? Math.round(totalDurationMs / timed.length / 60000) : null;
+      const efficiency = null; // belum diberi target waktu, sehingga tidak dipaksakan menjadi skor.
+
+      const discipline = jobs > 0 ? Math.min(100, kpiPercent(reports.filter(r => r.date && r.operator).length, jobs)) : 0;
+      const responsibility = null; // sengaja tidak dinilai manual pada versi sederhana ini.
+      const score = kpiScore({ productivity, ontime, quality, efficiency, discipline, responsibility });
+      return { pic, jobs, finished, partial, qty, productivity: Math.round(productivity), ontime, quality, efficiency, discipline, responsibility, score, timedJobs: timed.length, totalDurationMinutes: Math.round(totalDurationMs / 60000), avgDurationMinutes, rejectQty };
+    }
+
+    function renderKpiData() {
+      const startEl = document.getElementById('kpiStartDate');
+      const endEl = document.getElementById('kpiEndDate');
+      if (!startEl.value || !endEl.value) resetKpiFilter();
+      const start = startEl.value, end = endEl.value, pic = document.getElementById('kpiPicFilter').value;
+      const reports = kpiGetReports(start, end, pic);
+      const pos = kpiGetPOs(start, end, pic);
+      const finished = reports.filter(r => String(r.status || '').toUpperCase() === 'SELESAI');
+      let ontimeN=0, ontimeD=0;
+      reports.forEach(r => { const po=poList.find(p=>p.number===r.poNumber); if(po&&po.deadline){ontimeD++; if(r.date<=po.deadline) ontimeN++;} });
+
+      document.getElementById('kpi-total-po').innerText = pos.length;
+      document.getElementById('kpi-total-finished').innerText = finished.length;
+      document.getElementById('kpi-total-ontime').innerText = ontimeD ? kpiPercent(ontimeN, ontimeD) + '%' : 'N/A';
+      document.getElementById('kpi-total-qty').innerText = reports.reduce((a,r)=>a+safeNumber(r.totalQty),0).toLocaleString('id-ID');
+
+      const pics = pic === 'ALL' ? ['RIO','SALMAN','RIVAN'] : [pic];
+      const rows = pics.map(name => buildKpiForPic(name, kpiGetReports(start,end,name), kpiGetPOs(start,end,name))).sort((a,b)=>b.score-a.score);
+      const body=document.getElementById('kpi-ranking-body');
+      body.innerHTML = rows.map((r,i)=>`<tr><td class="py-3 font-bold">${i+1}</td><td class="py-3 font-bold uppercase">${escapeHtml(r.pic)}</td><td class="py-3"><span class="px-2.5 py-1 rounded-full font-extrabold ${r.score>=90?'bg-emerald-100 text-emerald-700':r.score>=75?'bg-blue-100 text-blue-700':'bg-amber-100 text-amber-700'}">${r.score}%</span></td><td class="py-3">${r.jobs}</td><td class="py-3">${r.qty.toLocaleString('id-ID')}</td><td class="py-3">${r.ontime===null?'N/A':r.ontime+'%'}</td><td class="py-3 text-red-700 font-bold">${r.rejectQty.toLocaleString('id-ID')}</td><td class="py-3">${r.avgDurationMinutes===null?'N/A':r.avgDurationMinutes+' menit'}</td><td class="py-3">${r.finished}</td></tr>`).join('');
+
+      const selected = rows[0];
+      const detail = document.getElementById('kpi-detail');
+      if (!selected) detail.innerHTML='Belum ada data KPI pada periode ini.';
+      else detail.innerHTML = `<div class="grid grid-cols-2 gap-3">${[['Produktivitas',selected.productivity+'%',35],['Ketepatan Waktu',selected.ontime===null?'N/A':selected.ontime+'%',30],['Kualitas / Reject Label',selected.quality===null?'Belum ada data':selected.quality+'%',25],['Disiplin Laporan',selected.discipline+'%',10],['Rata-rata Proses',selected.avgDurationMinutes===null?'N/A':selected.avgDurationMinutes+' menit',0],['Total Reject Label',selected.rejectQty.toLocaleString('id-ID')+' PCS',0]].map(x=>`<div class="bg-gray-50 p-3 rounded-xl"><div class="flex justify-between"><span class="text-[10px] font-bold uppercase text-gray-500">${x[0]}</span><span class="text-[9px] text-gray-400">${x[2]}%</span></div><div class="font-extrabold text-lg text-gray-900 mt-1">${x[1]}</div></div>`).join('')}</div><div class="mt-4 text-xs text-gray-500">Detail menampilkan ${selected.pic}. Gunakan filter PIC untuk membedah individu lain.</div>`;
+
+      const maxQty=Math.max(1,...rows.map(r=>r.qty));
+      document.getElementById('kpi-workload').innerHTML = rows.map(r=>`<div><div class="flex justify-between text-xs font-bold uppercase"><span>${escapeHtml(r.pic)} · ${r.jobs} JOB</span><span>${r.qty.toLocaleString('id-ID')} QTY · ${r.avgDurationMinutes===null?'N/A':r.avgDurationMinutes+' MENIT/ JOB'}</span></div><div class="h-2 bg-gray-100 rounded-full mt-1"><div class="h-2 bg-[#E06D53] rounded-full" style="width:${Math.max(2,Math.round(r.qty/maxQty*100))}%"></div></div></div>`).join('');
+
+      const bottlenecks=[];
+      const late=reports.filter(r=>{const po=poList.find(p=>p.number===r.poNumber);return po&&po.deadline&&r.date>po.deadline;}).length;
+      if(late) bottlenecks.push(`⚠️ ${late} laporan selesai melewati deadline.`);
+      const hold=poList.filter(p=>p.status==='PO HOLD' && (!p.finishedDate || kpiDateInRange(p.finishedDate,start,end))).length;
+      if(hold) bottlenecks.push(`⚠️ ${hold} PO masih HOLD.`);
+      const noDeadline=reports.filter(r=>{const po=poList.find(p=>p.number===r.poNumber);return !po||!po.deadline;}).length;
+      if(noDeadline) bottlenecks.push(`⚠️ ${noDeadline} laporan belum bisa dinilai on-time karena PO tidak memiliki deadline.`);
+      document.getElementById('kpi-bottleneck').innerHTML=(bottlenecks.length?bottlenecks:['✅ Tidak ada bottleneck yang terdeteksi dari data yang tersedia.']).map(x=>`<div class="p-4 rounded-xl bg-gray-50 text-xs font-bold text-gray-700">${x}</div>`).join('');
+
+      const qualityCoverage = reports.length ? Math.round(reports.filter(r => r.qualityTracked !== false && (r.qcResult || r.rejectQty !== undefined || r.reprintQty !== undefined)).length / reports.length * 20) : 0;
+      const availableWeight = 30 + 10 + (ontimeD ? 25 : 0) + qualityCoverage + 5;
+      document.getElementById('kpi-data-coverage').innerText = `Coverage ${Math.round(availableWeight)}%`;
+    }
+
+    setInterval(() => {
+      updateReportTimerInfo();
+      if (document.getElementById('poTabSection') && !document.getElementById('poTabSection').classList.contains('hidden')) renderPoTable();
+    }, 1000);
+    window.addEventListener('beforeunload', persistState);
 
     // TOMBOL 1: BARANG/JASA BARU
     function openNewMaterialModal() {
@@ -1494,10 +1859,12 @@
       const name = document.getElementById('matName').value.toUpperCase();
       const unit = document.getElementById('matUnit').value.toLowerCase();
       const stock = Number(document.getElementById('matInitStock').value);
-      const notes = document.getElementById('matNotes').value.toUpperCase() || ' UTAMA';
-
-      materials.push({ id: materials.length + 1, code: code, name: name, unit: unit, stock: stock, minStock: 1000, notes: notes });
+      const notes = document.getElementById('matNotes').value.toUpperCase() || 'UTAMA';
+      if (!name || stock < 0) { alert('Nama material wajib diisi dan stok awal tidak boleh negatif.'); return; }
+      if (materials.some(m => m.code.toUpperCase() === code.toUpperCase())) { alert('Kode material sudah digunakan.'); return; }
+      materials.push({ id: nextId(materials), code: code, name: name, unit: unit, stock: stock, stockSisa: 0, minStock: 1000, notes: notes });
       alert("BARANG/JASA BARU BERHASIL DISIMPAN!"); 
+      persistState();
       closeNewMaterialModal(); 
       renderMaterials();
     }
@@ -1554,24 +1921,18 @@
       e.preventDefault();
       const wh = document.getElementById('opnameWarehouse').value;
       const m = materials.find(item => item.id == document.getElementById('opnameItemSelect').value);
-      const bal = Number(document.getElementById('opnameBalancedQty').value);
-      const petugas = document.getElementById('opnamePetugas').value;
-      const reason = document.getElementById('opnameReason').value.toUpperCase();
-
-      if (m) { 
-        m.stock = bal; 
-        stockHistory.unshift({ 
-          date: new Date().toISOString().split('T')[0], 
-          matName: `[${m.code}] ${m.name}`, 
-          warehouse: wh, 
-          type: 'STOCK OPNAME', 
-          qty: `${bal} ${m.unit}`, 
-          petugas: petugas, 
-          notes: reason 
-        }); 
-      }
-      alert("STOCK OPNAME BERHASIL DISIMPAN!"); 
-      closeOpnameModal(); 
+      const bal = safeNumber(document.getElementById('opnameBalancedQty').value);
+      const petugas = document.getElementById('opnamePetugas').value || currentUser?.name || '-';
+      const reason = document.getElementById('opnameReason').value.trim().toUpperCase();
+      if (!m || bal < 0) { alert('Material tidak valid atau jumlah tidak boleh negatif.'); return; }
+      if (!reason) { alert('Alasan stock opname wajib diisi.'); return; }
+      const old = wh === 'GUDANG SISA' ? safeNumber(m.stockSisa) : safeNumber(m.stock);
+      const delta = bal - old;
+      if (wh === 'GUDANG SISA') m.stockSisa = bal; else m.stock = bal;
+      stockHistory.unshift({ date: todayISO(), matName: `[${m.code}] ${m.name}`, warehouse: wh, type: 'STOCK OPNAME', qty: `${delta >= 0 ? '+' : ''}${delta} ${m.unit}`, petugas, notes: `Saldo fisik: ${bal} ${m.unit} | ${reason}` });
+      persistState();
+      alert("STOCK OPNAME BERHASIL DISIMPAN!");
+      closeOpnameModal();
       renderMaterials();
     }
 
@@ -1615,25 +1976,17 @@
       e.preventDefault();
       const m = materials.find(item => item.id == document.getElementById('stockItemSelect').value);
       const wh = document.getElementById('stockWarehouse').value;
-      const qty = Number(document.getElementById('stockQty').value);
-      const unit = document.getElementById('stockUnit').value;
-      const petugas = document.getElementById('stockPetugas').value;
-      const spk = document.getElementById('stockSpk').value.toUpperCase();
-
-      if (m) { 
-        m.stock += qty; 
-        stockHistory.unshift({ 
-          date: new Date().toISOString().split('T')[0], 
-          matName: `[${m.code}] ${m.name}`, 
-          warehouse: wh, 
-          type: 'BARANG MASUK', 
-          qty: `+${qty} ${unit}`, 
-          petugas: petugas, 
-          notes: spk ? `NO SPK: ${spk}` : 'TANPA SPK' 
-        }); 
-      }
-      alert("BARANG MASUK BERHASIL DISIMPAN!"); 
-      closeStockModal(); 
+      const qty = safeNumber(document.getElementById('stockQty').value);
+      const unit = m ? m.unit : document.getElementById('stockUnit').value;
+      const petugas = document.getElementById('stockPetugas').value || currentUser?.name || '-';
+      const spk = document.getElementById('stockSpk').value.trim().toUpperCase();
+      if (!m || qty <= 0) { alert('Material dan jumlah barang masuk wajib valid.'); return; }
+      if (wh === 'GUDANG SISA') m.stockSisa = safeNumber(m.stockSisa) + qty;
+      else m.stock += qty;
+      stockHistory.unshift({ date: todayISO(), matName: `[${m.code}] ${m.name}`, warehouse: wh, type: 'BARANG MASUK', qty: `+${qty} ${unit}`, petugas, notes: spk ? `NO SPK: ${spk}` : 'TANPA SPK' });
+      persistState();
+      alert("BARANG MASUK BERHASIL DISIMPAN!");
+      closeStockModal();
       renderMaterials();
     }
 
@@ -1641,23 +1994,27 @@
     function closePrinterModal() { document.getElementById('printerModal').classList.add('hidden'); document.getElementById('printerModal').classList.remove('flex'); }
     function savePrinterUnit(e) {
       e.preventDefault();
-      printers.push({ id: printers.length + 1, name: document.getElementById('printerName').value.toUpperCase(), sn: document.getElementById('printerSn').value.toUpperCase(), condition: document.getElementById('printerCondition').value.toUpperCase(), usedBy: document.getElementById('printerUsedBy').value.toUpperCase(), borrowStatus: "TERSEDIA" });
-      alert("PRINTER DISIMPAN!"); closePrinterModal(); renderDevicesAndSpareparts();
+      const sn = document.getElementById('printerSn').value.trim().toUpperCase();
+      if (printers.some(p => p.sn.toUpperCase() === sn)) { alert('Serial number printer sudah terdaftar.'); return; }
+      printers.push({ id: nextId(printers), name: document.getElementById('printerName').value.toUpperCase(), sn: sn, condition: document.getElementById('printerCondition').value.toUpperCase(), usedBy: document.getElementById('printerUsedBy').value.toUpperCase(), borrowStatus: "TERSEDIA" });
+      persistState(); alert("PRINTER DISIMPAN!"); closePrinterModal(); renderDevicesAndSpareparts();
     }
 
     function openSparepartModal() { document.getElementById('sparepartModal').classList.remove('hidden'); document.getElementById('sparepartModal').classList.add('flex'); }
     function closeSparepartModal() { document.getElementById('sparepartModal').classList.add('hidden'); document.getElementById('sparepartModal').classList.remove('flex'); }
     function saveSparepart(e) {
       e.preventDefault();
+      const spCode = document.getElementById('spCode').value.trim().toUpperCase();
+      if (spareparts.some(sp => sp.code.toUpperCase() === spCode)) { alert('Kode sparepart sudah terdaftar.'); return; }
       spareparts.push({
-        id: spareparts.length + 1,
-        code: document.getElementById('spCode').value.toUpperCase(),
+        id: nextId(spareparts),
+        code: spCode,
         name: document.getElementById('spName').value.toUpperCase(),
         unit: document.getElementById('spUnit').value.toUpperCase(),
         stock: Number(document.getElementById('spStock').value),
         notes: document.getElementById('spNotes').value.toUpperCase() || '-'
       });
-      alert("SPAREPART BERHASIL DISIMPAN!"); closeSparepartModal(); renderDevicesAndSpareparts();
+      persistState(); alert("SPAREPART BERHASIL DISIMPAN!"); closeSparepartModal(); renderDevicesAndSpareparts();
     }
 
     function openMaintenanceModal() {
@@ -1669,6 +2026,7 @@
     function closeMaintenanceModal() { document.getElementById('maintenanceModal').classList.add('hidden'); document.getElementById('maintenanceModal').classList.remove('flex'); }
     function saveMaintenance(e) {
       e.preventDefault();
+      if (!document.getElementById('maintPrinterSelect').value) { alert('Pilih printer terlebih dahulu.'); return; }
       maintenanceHistory.unshift({
         date: document.getElementById('maintDate').value || new Date().toISOString().split('T')[0],
         printerName: document.getElementById('maintPrinterSelect').value,
@@ -1676,7 +2034,7 @@
         tech: document.getElementById('maintTech').value.toUpperCase(),
         notes: document.getElementById('maintNotes').value.toUpperCase() || '-'
       });
-      alert("CATATAN MAINTENANCE BERHASIL DISIMPAN!"); closeMaintenanceModal(); renderDevicesAndSpareparts();
+      persistState(); alert("CATATAN MAINTENANCE BERHASIL DISIMPAN!"); closeMaintenanceModal(); renderDevicesAndSpareparts();
     }
 
     function printStockReport(t) {
