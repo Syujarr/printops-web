@@ -20,6 +20,89 @@
       th, td { border: 1px solid #000 !important; padding: 6px !important; }
     }
   </style>
+
+<!-- =========================================================
+ PRINTOPS V1.1 — SUPABASE SOURCE OF TRUTH BRIDGE V3
+ Supabase jobs menjadi sumber data PO setelah login.
+ Tidak menyimpan PO Supabase ke localStorage.
+========================================================= -->
+<script>
+window.PRINTOPS_SUPABASE = {
+  url: "https://psmgrogunmyusexxfjvn.supabase.co",
+  publishableKey: "sb_publishable_7DmYYuur18JSQjk9Y0tv5w_orcRJBHQ"
+};
+
+window.syncPrintOpsJobsFromSupabase = async function () {
+  const cfg = window.PRINTOPS_SUPABASE;
+
+  if (!cfg.publishableKey || cfg.publishableKey === "PASTE_SUPABASE_PUBLISHABLE_KEY_HERE") {
+    console.warn("[PrintOps] Supabase: Publishable Key belum diisi.");
+    return false;
+  }
+
+  try {
+    const response = await fetch(
+      `${cfg.url}/rest/v1/jobs?select=id,created_at,job_id,po_number,customer,product,quantity,deadline,priority,pic,status,gdrive_link,total_print_numbers&order=created_at.desc`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": cfg.publishableKey,
+          "Authorization": `Bearer ${cfg.publishableKey}`
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(typeof data === "string" ? data : JSON.stringify(data));
+    }
+
+    const normalizeStatus = (status, priority) => {
+      const s = String(status || "").trim().toLowerCase();
+      const p = String(priority || "").trim().toLowerCase();
+
+      if (s.includes("selesai")) return "PO SELESAI (ARSIP)";
+      if (s.includes("hold")) return "PO HOLD";
+      if (s.includes("berjalan") || s.includes("proses")) return "PO SEDANG DIPROSES";
+      if (p.includes("mendesak") || p.includes("urgent")) return "PO URGENT";
+      return "PO MENUNGGU ANTRIAN";
+    };
+
+    poList = (Array.isArray(data) ? data : []).map((j, index) => ({
+      id: Number(j.id || index + 1),
+      number: j.po_number || j.job_id || "-",
+      customer: j.customer || "-",
+      product: j.product || "-",
+      qty: Number(j.quantity || 0),
+      priority: String(j.priority || "NORMAL").toUpperCase(),
+      deadline: j.deadline || "",
+      pic: j.pic || "BELUM DITUGASKAN",
+      status: normalizeStatus(j.status, j.priority),
+      finishedDate: String(j.status || "").toLowerCase().includes("selesai")
+        ? String(j.created_at || "").slice(0, 10)
+        : null,
+      jobId: j.job_id || null,
+      supabaseId: j.id,
+      gdriveLink: j.gdrive_link || null,
+      totalPrintNumbers: Number(j.total_print_numbers || 0)
+    }));
+
+    normalizeState();
+
+    if (typeof renderPoTitleCount === "function") renderPoTitleCount();
+    if (typeof renderPoTable === "function") renderPoTable();
+    if (typeof renderDashboardCatalogPreviews === "function") renderDashboardCatalogPreviews();
+
+    console.info("[PrintOps] SYNC SUPABASE BERHASIL:", poList);
+    return true;
+  } catch (error) {
+    console.error("[PrintOps] SYNC SUPABASE GAGAL:", error);
+    return false;
+  }
+};
+</script>
+
 </head>
 <body class="bg-[#F9F8F6] text-gray-800 flex h-screen overflow-hidden">
 
@@ -988,7 +1071,7 @@
       if (changed) persistState();
     }
 
-    function handleLogin() {
+    async function handleLogin() {
       const uInput = document.getElementById('loginUsername').value.trim();
       const pInput = document.getElementById('loginPassword').value.trim();
       const errBox = document.getElementById('loginError');
@@ -999,6 +1082,13 @@
         currentUser = USERS_DB[matchedKey];
         errBox.classList.add('hidden');
         loadPersistedState();
+
+        // Supabase menjadi sumber data PO setelah data lokal selesai dimuat.
+        // Ini mencegah localStorage lama (mis. PO-ALP-0842) menimpa data Supabase.
+        if (typeof window.syncPrintOpsJobsFromSupabase === 'function') {
+          await window.syncPrintOpsJobsFromSupabase();
+        }
+
         document.getElementById('loginModal').classList.add('hidden');
         document.getElementById('userNameDisplay').innerText = currentUser.name;
         document.getElementById('userRoleDisplay').innerText = currentUser.title;
